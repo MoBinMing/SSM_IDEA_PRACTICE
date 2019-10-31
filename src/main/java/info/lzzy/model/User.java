@@ -1,4 +1,4 @@
-package com.xjt.model;
+package info.lzzy.model;
 
 public class User {
 

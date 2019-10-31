@@ -1,6 +1,6 @@
-package com.xjt.dao;
+package info.lzzy.dao;
 
-import com.xjt.model.User;
+import info.lzzy.model.User;
 
 public interface IUserDao {
 

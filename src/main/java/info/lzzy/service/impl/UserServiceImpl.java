@@ -1,8 +1,8 @@
-package com.xjt.service.impl;
+package info.lzzy.service.impl;
 
-import com.xjt.dao.IUserDao;
-import com.xjt.model.User;
-import com.xjt.service.IUserService;
+import info.lzzy.dao.IUserDao;
+import info.lzzy.model.User;
+import info.lzzy.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

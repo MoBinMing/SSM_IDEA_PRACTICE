@@ -1,7 +1,7 @@
-package com.xjt.controller;
+package info.lzzy.controller;
 
-import com.xjt.model.User;
-import com.xjt.service.IUserService;
+import info.lzzy.model.User;
+import info.lzzy.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

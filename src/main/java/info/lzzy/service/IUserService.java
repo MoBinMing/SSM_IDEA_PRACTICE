@@ -1,6 +1,6 @@
-package com.xjt.service;
+package info.lzzy.service;
 
-import com.xjt.model.User;
+import info.lzzy.model.User;
 
 public interface IUserService {
 
