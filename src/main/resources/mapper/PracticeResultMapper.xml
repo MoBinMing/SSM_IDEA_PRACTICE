@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="info.lzzy.dao.PracticeResultMapper">
+	<resultMap id="BaseResultMap"
+		type="info.lzzy.models.PracticeResult">
+		<id property="id" jdbcType="INTEGER" column="id" />
+		<result property="practiceId" jdbcType="INTEGER"
+			column="practice_id" />
+		<result property="studentId" jdbcType="VARCHAR"
+			column="student_id" />
+		<result property="questionId" jdbcType="INTEGER"
+			column="question_id" />
+		<result property="wrongType" jdbcType="INTEGER"
+			column="wrong_tpye" />
+		<result property="studentAnswer" jdbcType="VARCHAR"
+			column="student_answer" />
+	</resultMap>
+
+	<sql id="Base_Column_List">id, practice_id, student_id, question_id, wrong_tpye,
+		student_answer </sql>
+	<select id="getIdByMax" resultType="java.lang.Integer">
+		select max(id) from
+		practice_results
+	</select>
+	<select id="selectBySIdAndPIdAndQId"
+		resultMap="BaseResultMap">
+		SELECT * FROM practice_results WHERE practice_id=#{practiceId} AND
+		student_id=#{studentId} AND
+		question_id=#{questionId}
+	</select>
+	<insert id="insert" parameterType="info.lzzy.models.PracticeResult">
+    insert into practice_results (id, practice_id, student_id, 
+      question_id, wrong_tpye, student_answer
+      )
+    values (#{id,jdbcType=INTEGER}, #{practiceId,jdbcType=INTEGER}, #{studentId,jdbcType=VARCHAR}, 
+      #{questionId,jdbcType=INTEGER}, #{wrongType,jdbcType=INTEGER}, #{studentAnswer,jdbcType=VARCHAR}
+      )
+  </insert>
+<!--   <insert id="insertSelective" parameterType="info.lzzy.models.PracticeResult">
+    insert into practice_results
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="practiceId != null">
+        practice_id,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="wrongType != null">
+        wrong_tpye,
+      </if>
+      <if test="studentAnswer != null">
+        student_answer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="practiceId != null">
+        #{practiceId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="wrongType != null">
+        #{wrongType,jdbcType=INTEGER},
+      </if>
+      <if test="studentAnswer != null">
+        #{studentAnswer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert> -->
+</mapper>

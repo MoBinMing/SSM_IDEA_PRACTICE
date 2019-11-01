@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="info.lzzy.dao.QuestionMapper">
+	<resultMap id="BaseResultMap" type="info.lzzy.models.Question">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="content" jdbcType="VARCHAR" property="content" />
+		<result column="question_type" jdbcType="INTEGER"
+				property="questionType" />
+		<result column="number" jdbcType="INTEGER" property="number" />
+		<result column="practice_id" jdbcType="INTEGER"
+				property="practiceId" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+			   type="info.lzzy.models.Question">
+		<result column="analysis" jdbcType="LONGVARCHAR"
+				property="analysis" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, content, question_type, number, practice_id
+	</sql>
+	<sql id="Blob_Column_List">
+		analysis
+	</sql>
+	<select id="getIdByMax" resultType="java.lang.Integer">
+		select max(id) from questions
+	</select>
+	<select id="getQuestionByPracticeId"
+			parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from questions
+		where practice_id = #{practiceId}
+		order by number asc
+	</select>
+	<insert id="insert" parameterType="info.lzzy.models.Question">
+    insert into questions (id, content, question_type,
+      number, practice_id, analysis
+      )
+    values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{questionType,jdbcType=INTEGER},
+      #{number,jdbcType=INTEGER}, #{practiceId,jdbcType=INTEGER}, #{analysis,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from questions
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+	<update id="updateByPrimaryKey" parameterType="info.lzzy.models.Question">
+    update questions
+    set content = #{content,jdbcType=VARCHAR},
+      question_type = #{questionType,jdbcType=INTEGER},
+      number = #{number,jdbcType=INTEGER},
+      practice_id = #{practiceId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+	<!-- <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from questions where id = #{id,jdbcType=INTEGER} </delete> <insert
+		id="insert" parameterType="info.lzzy.models.Question"> insert into questions
+		(id, content, question_type, number, practice_id, analysis ) values (#{id,jdbcType=INTEGER},
+		#{content,jdbcType=VARCHAR}, #{questionType,jdbcType=INTEGER}, #{number,jdbcType=INTEGER},
+		#{practiceId,jdbcType=INTEGER}, #{analysis,jdbcType=LONGVARCHAR} ) </insert>
+		<insert id="insertSelective" parameterType="info.lzzy.models.Question"> insert
+		into questions <trim prefix="(" suffix=")" suffixOverrides=","> <if test="id
+		!= null"> id, </if> <if test="content != null"> content, </if> <if test="questionType
+		!= null"> question_type, </if> <if test="number != null"> number, </if> <if
+		test="practiceId != null"> practice_id, </if> <if test="analysis != null">
+		analysis, </if> </trim> <trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="id != null"> #{id,jdbcType=INTEGER}, </if> <if test="content !=
+		null"> #{content,jdbcType=VARCHAR}, </if> <if test="questionType != null">
+		#{questionType,jdbcType=INTEGER}, </if> <if test="number != null"> #{number,jdbcType=INTEGER},
+		</if> <if test="practiceId != null"> #{practiceId,jdbcType=INTEGER}, </if>
+		<if test="analysis != null"> #{analysis,jdbcType=LONGVARCHAR}, </if> </trim>
+		</insert> <update id="updateByPrimaryKeySelective" parameterType="info.lzzy.models.Question">
+		update questions <set> <if test="content != null"> content = #{content,jdbcType=VARCHAR},
+		</if> <if test="questionType != null"> question_type = #{questionType,jdbcType=INTEGER},
+		</if> <if test="number != null"> number = #{number,jdbcType=INTEGER}, </if>
+		<if test="practiceId != null"> practice_id = #{practiceId,jdbcType=INTEGER},
+		</if> <if test="analysis != null"> analysis = #{analysis,jdbcType=LONGVARCHAR},
+		</if> </set> where id = #{id,jdbcType=INTEGER} </update> <update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="info.lzzy.models.Question"> update questions set content =
+		#{content,jdbcType=VARCHAR}, question_type = #{questionType,jdbcType=INTEGER},
+		number = #{number,jdbcType=INTEGER}, practice_id = #{practiceId,jdbcType=INTEGER},
+		analysis = #{analysis,jdbcType=LONGVARCHAR} where id = #{id,jdbcType=INTEGER}
+		</update> <update id="updateByPrimaryKey" parameterType="info.lzzy.models.Question">
+		update questions set content = #{content,jdbcType=VARCHAR}, question_type
+		= #{questionType,jdbcType=INTEGER}, number = #{number,jdbcType=INTEGER},
+		practice_id = #{practiceId,jdbcType=INTEGER} where id = #{id,jdbcType=INTEGER}
+		</update> -->
+</mapper>

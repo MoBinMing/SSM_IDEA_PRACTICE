@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="info.lzzy.dao.TeacherMapper">
+	<resultMap id="BaseResultMap" type="info.lzzy.models.Teacher">
+		<id column="teacher_id" jdbcType="VARCHAR" property="teacherId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="password" jdbcType="VARCHAR"
+			property="password" />
+		<result column="iphone" jdbcType="VARCHAR" property="iphone" />
+		<result column="gender" jdbcType="VARCHAR" property="gender" />
+		<result column="valid" jdbcType="INTEGER" property="valid" />
+		<result column="imgHead" jdbcType="VARCHAR" property="imghead" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		teacher_id, name, email, password, iphone, gender, valid, imgHead
+	</sql>
+	<select id="selectTeacherByIphoneAndPaw"
+		resultMap="BaseResultMap">
+		SELECT * FROM teachers WHERE iphone=#{iphone} AND
+		password=#{password}
+	</select>
+	<select id="selectTeacherByEmail" resultMap="BaseResultMap">
+		SELECT * FROM
+		teachers WHERE email=#{email}
+	</select>
+	<select id="selectTeacherById" resultMap="BaseResultMap">
+		SELECT * FROM teachers
+		WHERE teacher_id=#{id}
+	</select>
+	<select id="selectTeacherByIphone" resultMap="BaseResultMap">
+		SELECT * FROM
+		teachers WHERE iphone=#{iphone}
+	</select>
+	<select id="selectAllTeacher" resultMap="BaseResultMap">
+		SELECT * FROM
+		teachers
+	</select>
+	<insert id="insert" parameterType="info.lzzy.models.Teacher">
+		insert into teachers (teacher_id, name, email, 
+      password, iphone, gender, 
+      valid, imgHead)
+    values (#{teacherId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{iphone,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
+      #{valid,jdbcType=INTEGER}, #{imghead,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="info.lzzy.models.Teacher">
+    update teachers
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null">
+        iphone = #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="imghead != null">
+        imgHead = #{imghead,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where teacher_id = #{teacherId,jdbcType=VARCHAR}
+  </update>
+	<!-- <insert id="insertSelective" parameterType="info.lzzy.models.Teacher">
+    insert into teachers
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teacherId != null">
+        teacher_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="iphone != null">
+        iphone,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="valid != null">
+        valid,
+      </if>
+      <if test="imghead != null">
+        imgHead,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teacherId != null">
+        #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null">
+        #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="imghead != null">
+        #{imghead,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="info.lzzy.models.Teacher">
+    update teachers
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null">
+        iphone = #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="imghead != null">
+        imgHead = #{imghead,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where teacher_id = #{teacherId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="info.lzzy.models.Teacher">
+    update teachers
+    set name = #{name,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      iphone = #{iphone,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      valid = #{valid,jdbcType=INTEGER},
+      imgHead = #{imghead,jdbcType=VARCHAR}
+    where teacher_id = #{teacherId,jdbcType=VARCHAR}
+  </update> -->
+</mapper>

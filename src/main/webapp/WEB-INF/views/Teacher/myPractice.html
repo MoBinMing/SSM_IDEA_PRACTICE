@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的练习模块</title>
+</head>
+<body>
+<div class="container-fluid">
+          <div class="row">
+            <h4 class="col page-title" >练习管理</h4>
+            <div class="col text-right">
+              <button type="button" class="btn btn-success" data-target="#addPracticesModal" data-toggle="modal">添加练习 </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card card-stats card-success">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5">
+                      <div class="icon-big text-center">
+                        <i class="la la-bar-chart"></i>
+                      </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center">
+                      <div class="numbers">
+                        <p class="card-category">我的练习</p>
+                        <h4 class="card-title">${myPracticeSize}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-stats card-danger">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-5">
+                      <div class="icon-big text-center">
+                        <i class="la la-upload"></i>
+                      </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center">
+                      <div class="numbers">
+                        <p class="card-category">待发布</p>
+                        <h4 class="card-title">${unopen}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-stats card-primary">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5">
+                      <div class="icon-big text-center">
+                        <i class="la la-check-circle"></i>
+                      </div>
+                    </div>
+                    <div class="col-7 d-flex align-items-center">
+                      <div class="numbers">
+                        <p class="card-category">已开放</p>
+                        <h4 class="card-title">${dispark}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-tasks">
+                <div class="card-header ">
+                    <div class="input-group col-md-4">
+                      <input type="text" placeholder="Search ..." class="form-control" id="searchPracticesVal">
+                      <div class="input-group-append" onclick="searchPractices()">
+                        <span class="input-group-text">
+                          <i class="la la-search search-icon"></i>
+                        </span>
+                      </div>
+                    </div>
+                </div>
+                <div class="card-body ">
+                  <div class="table-full-width">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input  select-all-checkbox" type="checkbox" data-select="checkbox" data-target=".task-select">
+                                <span class="form-check-sign"></span>
+                              </label>
+                            </div>
+                          </th>
+                          <th> 练习名称 </th>
+                          <th> 题目数 </th>
+                          <th> 上传时间 </th>
+                          <th> 是否开放 </th>
+                          <th> 操作 </th>
+                        </tr>
+                      </thead>
+                      <tbody id="tbody">
+                        <tr>
+                          <td>
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input task-select" type="checkbox">
+                                <span class="form-check-sign"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td><a href="/Practice/Teacher/managingCurrentExercises/25">锁定</a><div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Bootstrap Switch</h4>
+										<p class="card-category">Here is a subtitle for this table</p>
+									</div>
+									<div class="card-body">
+										<p class="demo">
+											<div class="toggle btn btn-default" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="default"><div class="toggle-group"><label class="btn btn-default toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-default off" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="primary"><div class="toggle-group"><label class="btn btn-primary toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-success" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="success"><div class="toggle-group"><label class="btn btn-success toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-info" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="info"><div class="toggle-group"><label class="btn btn-info toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-warning" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="warning"><div class="toggle-group"><label class="btn btn-warning toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-danger" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="danger"><div class="toggle-group"><label class="btn btn-danger toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+										</p>
+										<p class="demo">
+											<div class="toggle btn btn-round btn-default" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="default" data-style="btn-round"><div class="toggle-group"><label class="btn btn-default toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-primary btn-round" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="primary" data-style="btn-round"><div class="toggle-group"><label class="btn btn-primary toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-round btn-default off" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="success" data-style="btn-round"><div class="toggle-group"><label class="btn btn-success toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-info btn-round" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="info" data-style="btn-round"><div class="toggle-group"><label class="btn btn-info toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-warning btn-round" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="warning" data-style="btn-round"><div class="toggle-group"><label class="btn btn-warning toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+											<div class="toggle btn btn-danger btn-round" data-toggle="toggle" style="width: 70.8906px; height: 39px;"><input type="checkbox" checked="" data-toggle="toggle" data-onstyle="danger" data-style="btn-round"><div class="toggle-group"><label class="btn btn-danger toggle-on">On</label><label class="btn btn-default active toggle-off">Off</label><span class="toggle-handle btn btn-default"></span></div></div>
+										</p>
+									</div>
+								</div></td>
+                          <td><div class="switch" id="mySwitch">
+ <input type="checkbox" checked data-on-text="YES" data-off-text="NO"/>
+ </div>
+</td>
+                          <td>${dispark}</td>
+                          <td><input style="margin-right: 5px;" name="status" type="checkbox"  checked></td>
+                          <td class="td-actions text-right">
+                            <div class="form-button-action">
+                              <button type="button" data-toggle="tooltip" title="修改练习" class="btn btn-link <btn-simple-primary">
+                                <i class="la la-edit"></i>
+                              </button>
+                              <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">
+                                <i class="la la-times"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input task-select" type="checkbox">
+                                <span class="form-check-sign"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>Update Fonts</td>
+                          <td>Update Fonts</td>
+                          <td>Update Fonts</td>
+                          <td>
+                          
+                          </td>
+                          <td class="td-actions text-right">
+                            <div class="form-button-action">
+                              <button type="button" data-toggle="tooltip" title="Edit Task" class="btn btn-link <btn-simple-primary">
+                                <i class="la la-edit"></i>
+                              </button>
+                              <button type="button" data-toggle="tooltip" title="Remove" class="btn btn-link btn-simple-danger">
+                                <i class="la la-times"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <div class="stats">
+                    <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal" id="addPracticesModal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title bg-light">添加练习</h5> <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
+            </div>
+            <form id="addPractices" name="addPractices" method="post" action="/Practice/Teacher/addPractices" class="form-horizontal" role="添加练习" onsubmit="return addPracticesTest();">
+              <div class="modal-body" style="">
+                <div class="form-group">
+                  <label for="name">练习名称</label>
+                  <div id="myAlert2" class="alert alert-warning" style="visibility:hidden;display:none;">
+                    <a href="#" class="close" data-dismiss="alert">×</a>
+                    <strong>提示！</strong>练习名称输入不完整！。 </div> <input id="name" name="name" type="text" class="form-control" placeholder="请输入练习名称">
+                </div>
+                <div class="form-group">
+                  <label for="outlines">练习描述</label>
+                  <textarea id="outlines" name="outlines" class="form-control" placeholder="请输入练习描述" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">确认添加</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+</body>
+</html>

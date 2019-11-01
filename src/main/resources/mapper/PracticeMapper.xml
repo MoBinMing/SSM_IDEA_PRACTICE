@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="info.lzzy.dao.PracticeMapper">
+	<resultMap id="BasePractice" type="info.lzzy.models.Practice">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="question_count" jdbcType="INTEGER"
+				property="questionCount" />
+		<result column="up_time" jdbcType="TIMESTAMP" property="upTime" />
+		<result column="is_ready" jdbcType="INTEGER" property="isReady" />
+		<result column="course_id" jdbcType="INTEGER" property="courseId" />
+
+	</resultMap>
+	<resultMap extends="BasePractice" id="ResultBasePractice"
+			   type="info.lzzy.models.Practice">
+		<result column="outlines" jdbcType="LONGVARCHAR"
+				property="outlines" />
+	</resultMap>
+	<select id="getAll" resultMap="ResultBasePractice">
+		select *
+		from practices
+		order by up_time desc
+	</select>
+	<select id="getIdByMax" resultType="java.lang.Integer">
+		select max(id) from practices
+	</select>
+	<select id="getPracticeByCourseId" parameterType="java.lang.Integer"
+			resultMap="ResultBasePractice">
+		select *
+		from practices
+		where course_id = #{courseId}
+		order by up_time desc
+	</select>
+
+	<select id="getPracticeById" parameterType="java.lang.Integer"
+			resultMap="ResultBasePractice">
+		select *
+		from practices
+		where id = #{id}
+	</select>
+	<select id="inquirePracticeByNameByOutlinesByCourseId"
+			resultMap="ResultBasePractice">
+		select *
+		from practices
+		where course_id = #{courseId}
+		and name like concat('%',#{key},'%')
+		or outlines like concat('%',#{key},'%')
+		order by up_time asc
+	</select>
+	<select id="getByName" parameterType="String" resultMap="ResultBasePractice">
+	select *
+	from practices
+	where name =#{name}
+	</select>
+	<insert id="addPractice" parameterType="info.lzzy.models.Practice">
+		insert into practices (id, name, question_count,
+		up_time, is_ready,
+		outlines,course_id)
+		values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+		#{questionCount,jdbcType=INTEGER},
+		#{upTime,jdbcType=TIMESTAMP}, #{isReady,jdbcType=INTEGER},
+		#{outlines,jdbcType=LONGVARCHAR},#{courseId,jdbcType=INTEGER})
+	</insert>
+	<delete id="deletePracticeByKey"
+			parameterType="java.lang.Integer">
+		delete from practices
+		where id = #{id}
+	</delete>
+	<update id="updatePracticeSelective" parameterType="info.lzzy.models.Practice">
+		update practices
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="questionCount != null">
+				question_count = #{questionCount,jdbcType=INTEGER},
+			</if>
+			<if test="upTime != null">
+				up_time = #{upTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isReady != null">
+				is_ready = #{isReady,jdbcType=INTEGER},
+			</if>
+			<if test="outlines != null">
+				outlines = #{outlines,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="courseId != null">
+				course_id=#{courseId,jdbcType=INTEGER}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- <insert id="insertSelective" parameterType="info.lzzy.models.Practices">
+		insert into practices <trim prefix="(" suffix=")" suffixOverrides=","> <if
+		test="id != null"> id, </if> <if test="name != null"> name, </if> <if test="questionCount
+		!= null"> question_count, </if> <if test="upTime != null"> up_time, </if>
+		<if test="classUserName != null"> class_user_name, </if> <if test="isReady
+		!= null"> is_ready, </if> <if test="outlines != null"> outlines, </if> </trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=","> <if test="id != null">
+		#{id,jdbcType=INTEGER}, </if> <if test="name != null"> #{name,jdbcType=VARCHAR},
+		</if> <if test="questionCount != null"> #{questionCount,jdbcType=INTEGER},
+		</if> <if test="upTime != null"> #{upTime,jdbcType=TIMESTAMP}, </if> <if
+		test="classUserName != null"> #{classUserName,jdbcType=VARCHAR}, </if> <if
+		test="isReady != null"> #{isReady,jdbcType=INTEGER}, </if> <if test="outlines
+		!= null"> #{outlines,jdbcType=LONGVARCHAR}, </if> </trim> </insert> <update
+		id="updateByPrimaryKeyWithBLOBs" parameterType="info.lzzy.models.Practices">
+		update practices set name = #{name,jdbcType=VARCHAR}, question_count = #{questionCount,jdbcType=INTEGER},
+		up_time = #{upTime,jdbcType=TIMESTAMP}, class_user_name = #{classUserName,jdbcType=VARCHAR},
+		is_ready = #{isReady,jdbcType=INTEGER}, outlines = #{outlines,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER} </update> <update id="updateByPrimaryKey"
+		parameterType="info.lzzy.models.Practices"> update practices set name = #{name,jdbcType=VARCHAR},
+		question_count = #{questionCount,jdbcType=INTEGER}, up_time = #{upTime,jdbcType=TIMESTAMP}, 
+		class_user_name = #{classUserName,jdbcType=VARCHAR}, is_ready = #{isReady,jdbcType=INTEGER} 
+		where id = #{id,jdbcType=INTEGER} </update> -->
+</mapper>

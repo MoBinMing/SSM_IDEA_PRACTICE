@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="info.lzzy.dao.AdminMapper">
+  <resultMap id="BaseResultMap" type="info.lzzy.models.Admin">
+  <id column="admin_id" jdbcType="VARCHAR" property="adminId" />
+  <result column="name" jdbcType="VARCHAR" property="name" />
+  <result column="email" jdbcType="VARCHAR" property="email" />
+  <result column="password" jdbcType="VARCHAR" property="password" />
+  <result column="iphone" jdbcType="VARCHAR" property="iphone" />
+  <result column="gender" jdbcType="VARCHAR" property="gender" />
+  <result column="imgHead" jdbcType="VARCHAR" property="imghead" />
+</resultMap>
+  <sql id="Base_Column_List">
+    admin_id, name, email, password, iphone, gender, imgHead
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAmdinByIphoneAndPaw"
+		resultMap="BaseResultMap">
+		SELECT * FROM admin WHERE iphone=#{iphone} AND
+		password=#{password}
+	</select>
+	<select id="selectAdminByIphone" resultMap="BaseResultMap">
+		SELECT * FROM
+		admin WHERE iphone=#{iphone}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from admin
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="info.lzzy.models.Admin">
+    insert into admin (admin_id, name, email, 
+      password, iphone, gender, 
+      imgHead)
+    values (#{adminId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{iphone,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
+      #{imghead,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="info.lzzy.models.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="iphone != null">
+        iphone,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="imghead != null">
+        imgHead,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        #{adminId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null">
+        #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="imghead != null">
+        #{imghead,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="info.lzzy.models.Admin">
+    update admin
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null">
+        iphone = #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="imghead != null">
+        imgHead = #{imghead,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="info.lzzy.models.Admin">
+    update admin
+    set name = #{name,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      iphone = #{iphone,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      imgHead = #{imghead,jdbcType=VARCHAR}
+    where admin_id = #{adminId,jdbcType=VARCHAR}
+  </update>
+</mapper>

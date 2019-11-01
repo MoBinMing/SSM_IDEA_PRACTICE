@@ -20,13 +20,16 @@
         <property name="password" value="${password}"/>
     </bean>
 
+
     <!-- mybatis和spring完美整合，不需要mybatis的配置映射文件 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!-- 扫描model包 -->
-        <property name="typeAliasesPackage" value="com.xjt.model"/>
+        <property name="typeAliasesPackage" value="info.lzzy.models"/>
         <!-- 扫描sql配置文件:mapper需要的xml文件 -->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
     </bean>
 
     <!-- Mapper动态代理开发，扫描dao接口包-->
@@ -34,7 +37,7 @@
         <!-- 注入sqlSessionFactory -->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <!-- 给出需要扫描Dao接口包 -->
-        <property name="basePackage" value="com.xjt.dao"/>
+        <property name="basePackage" value="info.lzzy.dao"/>
     </bean>
 
     <!-- 事务管理 -->

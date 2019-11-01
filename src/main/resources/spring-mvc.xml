@@ -10,19 +10,54 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-    <!-- 扫描注解，这样com.xjt包下的文件都能被扫描 -->
-    <context:component-scan base-package="com.xjt"/>
+    <!-- 扫描注解，这样info.lzzy包下的文件都能被扫描 -->
+    <context:component-scan base-package="info.lzzy"/>
 
     <!-- 开启SpringMVC注解模式 -->
     <mvc:annotation-driven/>
 
-    <!-- 静态资源默认servlet配置 -->
+    <!-- 2.静态资源默认servlet配置
+        (1)加入对静态资源的处理：js,gif,png
+        (2)允许使用"/"做整体映射
+     -->
     <mvc:default-servlet-handler/>
+
+    <!-- 静态资源访问处理 ，有了这句话.html和.htm的文件才能执行 -->
+<!--    <mvc:default-servlet-handler />-->
+<!--    <mvc:resources mapping="/resources/**/" location="../resources/"/>-->
+<!--    <mvc:resources location="/,classpath:/META-INF/publicResources/" mapping="/resources/**"/>-->
+<!--    <mvc:resources location="classpath:/resources/" mapping="/resources/**"/>-->
+<!--    <mvc:resources mapping="/resources/**"-->
+<!--                   location="/public, classpath:/static/"-->
+<!--                   cache-period="31556926" />-->
+
+    <mvc:resources mapping="/userImg/**"
+                   location="/WEB-INF/resources/" cache-period="215566926"/>
+    <mvc:resources mapping="/images/**"
+                   location="/WEB-INF/resources/images/" cache-period="215566926"/>
+    <mvc:resources mapping="/css/**"
+                   location="/WEB-INF/resources/css/" cache-period="215566926"/>
+    <mvc:resources mapping="/scripts/**"
+                   location="/WEB-INF/resources/scripts/" cache-period="215566926"/>
+    <mvc:resources mapping="/xml/**"
+                   location="/WEB-INF/resources/xml/" cache-period="215566926"/>
+    <mvc:resources mapping="/shared/**"
+                   location="/WEB-INF/views/shared/" cache-period="215566926"/>
+    <mvc:resources mapping="/assets/js/*"
+                   location="/WEB-INF/resources/assets/js/" cache-period="215566926"/>
+    <mvc:resources mapping="/assets/js2/**"
+                   location="/WEB-INF/resources/assets/js2/" cache-period="215566926"/>
+    <mvc:resources mapping="/assets/css/**"
+                   location="/WEB-INF/resources/assets/css/" cache-period="215566926"/>
+    <mvc:resources mapping="/assets/fonts/**"
+                   location="/WEB-INF/resources/assets/fonts/" cache-period="215566926"/>
+
+
 
     <!-- 配置返回视图的路径，以及识别后缀是jsp文件 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
-        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 </beans>
