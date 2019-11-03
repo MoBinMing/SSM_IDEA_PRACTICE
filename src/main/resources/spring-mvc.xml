@@ -39,18 +39,12 @@
                    location="/WEB-INF/resources/css/" cache-period="215566926"/>
     <mvc:resources mapping="/scripts/**"
                    location="/WEB-INF/resources/scripts/" cache-period="215566926"/>
-    <mvc:resources mapping="/xml/**"
-                   location="/WEB-INF/resources/xml/" cache-period="215566926"/>
+    <!--<mvc:resources mapping="/xml/**"-->
+                   <!--location="/WEB-INF/resources/xml/" cache-period="215566926"/>-->
     <mvc:resources mapping="/shared/**"
                    location="/WEB-INF/views/shared/" cache-period="215566926"/>
-    <mvc:resources mapping="/assets/js/*"
-                   location="/WEB-INF/resources/assets/js/" cache-period="215566926"/>
-    <mvc:resources mapping="/assets/js2/**"
-                   location="/WEB-INF/resources/assets/js2/" cache-period="215566926"/>
-    <mvc:resources mapping="/assets/css/**"
-                   location="/WEB-INF/resources/assets/css/" cache-period="215566926"/>
-    <mvc:resources mapping="/assets/fonts/**"
-                   location="/WEB-INF/resources/assets/fonts/" cache-period="215566926"/>
+    <mvc:resources mapping="/assets/**"
+                   location="/WEB-INF/resources/assets/" cache-period="215566926"/>
 
 
 

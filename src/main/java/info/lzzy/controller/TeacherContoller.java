@@ -1,41 +1,28 @@
 package info.lzzy.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.jasper.tagplugins.jstl.core.Url;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.xml.MarshallingView;
 
 import info.lzzy.utils.BeanCopyUtil;
 
 import info.lzzy.models.Course;
-import info.lzzy.models.Enrollment;
 import info.lzzy.models.Option;
 import info.lzzy.models.Practice;
 import info.lzzy.models.Question;
 import info.lzzy.models.Student;
 import info.lzzy.models.Teacher;
 import info.lzzy.models.view.CourseDao;
-import info.lzzy.utils.NetworkUtil;
 import info.lzzy.utils.PracticesUtil;
 
 @Controller
@@ -124,8 +111,8 @@ public class TeacherContoller extends BaceController {
 //        return "img/"+filename;
 //    }
  
-	@GetMapping("/Index")
-	public String LoginIndex(ModelAndView mv) {
+	@GetMapping("/indexUrl")
+	public String indexUrl(ModelAndView mv) {
 		try {
 			String iphone = (String) request.getSession().getAttribute("Iphone");
 			String role = (String) request.getSession().getAttribute("role");
@@ -140,7 +127,7 @@ public class TeacherContoller extends BaceController {
 
 				} else if (role.equals("Teacher")) {
 					Teacher teacher = (Teacher) request.getSession().getAttribute("Teacher");
-					if (teacher.getTeacherId() != null) {
+					if (teacher != null) {
 						List<Course> courses = courseService.selectByTeacherId(teacher.getTeacherId());
 						List<Practice> pList = practiceService.getPracticeByCourseId(1);
 						request.getSession().setAttribute("PracticesSize", pList.size());
@@ -189,16 +176,19 @@ public class TeacherContoller extends BaceController {
 						//mv.addObject("HtmlContent", PracticesUtil.getCoursesHtml(practiceService, courses));
 						// 获取练习mv.addObject("HtmlContent",PracticesUtil.getPracticesHtml(request,pList));
 					}else {
-						return "redirect:/index";
+						return "redirect:/Login/LoginIndexUrl";
 					}
 				}
+			}else {
+				return "redirect:/Login/LoginIndexUrl";
 			}
 		} catch (Exception e) {
-			mv.addObject("Exception", e.getMessage());
-			mv.setViewName("404");
-		} finally {
-			return "/Teacher/Index";
+//			mv.addObject("Exception", e.getMessage());
+//			mv.setViewName("404");
+			request.getSession().setAttribute("errorInfo",e.getMessage());
+			return "/shared/error";
 		}
+		return "/Teacher/TeacherIndex";
 	}
 
 	@PostMapping("/addCourses")

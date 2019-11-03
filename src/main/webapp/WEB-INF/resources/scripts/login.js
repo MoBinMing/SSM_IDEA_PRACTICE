@@ -44,8 +44,9 @@ $(function() {
             localStorage.removeItem('keyPass');
         }
         var time = Date.parse(new Date());
+        let url = getRootPath()+"/Login/LoginUrl";
         $.ajax({
-            url: getRootPath()+"/Login/LoginUrl",
+            url: url,
             data: "iphone=" + iphone + "&password=" + password + "&time=" + time,
             type: 'post',
             dataType: 'json',
@@ -67,7 +68,8 @@ $(function() {
                     $("#btn-submit").val("登陆");
                     alert(msg.msg);
                 } else {
-                    window.location.href = getRootPath() + msg.msg;
+                    let urlLocation = getRootPath() + msg.msg;
+                    window.location.href = urlLocation;
                 }
             }
         });

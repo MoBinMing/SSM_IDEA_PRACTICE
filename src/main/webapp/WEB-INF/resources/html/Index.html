@@ -10,7 +10,7 @@
 		    if(confirm("是否改变工作的台账显示导出状态？")){
 		        $.ajax({
 		            type:'POST',
-		            url:'/Practice/Teacher/Index',
+		            url:'<%=basePoth%>Teacher/Index',
 		            data:{},
 		            dataType:"json",
 		            global:false,
@@ -26,7 +26,7 @@
 						var val=$("#searchPracticesVal").val();
 						$.ajax({
 				            type:'POST',
-				            url:'/Practice/Teacher/searchPractices',
+				            url:'<%=basePoth%>Teacher/searchPractices',
 				            data:'val='+val,
 				            dataType:"json",
 				            global:false,

@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.lzzy.models.view.CourseDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,13 +56,13 @@ public class LoginController extends BaceController {
 					request.getSession().setAttribute("role", "Teacher");
 					request.getSession().setAttribute("teacherId", teacher.getTeacherId());
 					request.getSession().setAttribute("Teacher", teacher);
-					map.put("msg", "/Teacher/Index");
+					map.put("msg", "/Teacher/indexUrl");
 				} else {
 					map.put("msg", "账号或密码错误！");
 				}
 			}
 		}else {
-			map.put("msg", "非法请求！");
+			map.put("msg", "请求超时！");
 		}
 		return map;
 	}

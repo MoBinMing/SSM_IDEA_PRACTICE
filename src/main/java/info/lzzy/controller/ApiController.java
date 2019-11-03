@@ -46,7 +46,7 @@ import info.lzzy.utils.WebKeyUtils;
 
 @Controller
 @RequestMapping("/api") // 映射路径，一个参数时等同于@RequestMapping(value = "/api")， 如果 value=""，将映射项目根路径
-public class ApiController<AppVersionDo> extends BaceController {
+public class ApiController extends BaceController {
 	public static String ENCODERULES_KEY = "abc123";
 
 	// region 注册 OK
@@ -2054,7 +2054,7 @@ public class ApiController<AppVersionDo> extends BaceController {
 	// region 上传图片
 		@PostMapping(value = "/postImg", consumes = "application/json", produces = "text/html;charset=UTF-8")
 		@ResponseBody // 返回给请求着仅仅body的内容
-		public String postImg(@RequestBody String body,AppVersionDo record ) {
+		public String postImg(@RequestBody String body ) {
 			JSONObject json = new JSONObject(body);
 			try {
 						String teacherIphone = json.getString("teacherIphone");

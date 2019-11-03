@@ -51,7 +51,7 @@ public class PracticesUtil {
 			   List<Practice> pList=practiceService.getPracticeByCourseId(course.getId());
 			   bodyHtml.append("<tr>");
 			   String Intro=course.getIntro().equals("")?"课程无介绍信息":course.getIntro();
-			   bodyHtml.append("<td><a href=\"/Practice/Teacher/getPracticeByCourseId/"+course.getId()+"\">"+course.getName()+"</a></td>");
+			   bodyHtml.append("<td><a href=\"<%=basePoth%>Teacher/getPracticeByCourseId/"+course.getId()+"\">"+course.getName()+"</a></td>");
 			   bodyHtml.append("<td>"+Intro+"</td>");
 			   bodyHtml.append("<td>"+pList.size()+"</td>");
 			   bodyHtml.append("<td class=\"td-actions text-left\">\r\n" + 
@@ -77,7 +77,7 @@ public class PracticesUtil {
 		   		"            <div class=\"modal-header\" >\r\n" + 
 		   		"              <h5 class=\"modal-title bg-light\">添加课程</h5> <button type=\"button\" class=\"close\" data-dismiss=\"modal\"> <span>×</span> </button>\r\n" + 
 		   		"            </div>\r\n" + 
-		   		"            <form id=\"addCourses\" name=\"addCourses\" method=\"post\" action=\"/Practice/Teacher/addCourses\" class=\"form-horizontal\" role=\"添加练习\" onsubmit=\"return addPracticesTest();\">\r\n" + 
+		   		"            <form id=\"addCourses\" name=\"addCourses\" method=\"post\" action=\"<%=basePoth%>Teacher/addCourses\" class=\"form-horizontal\" role=\"添加练习\" onsubmit=\"return addPracticesTest();\">\r\n" +
 		   		"              <div class=\"modal-body\" style=\"\">\r\n" + 
 		   		"                <div class=\"form-group\">\r\n" + 
 		   		"                  <label for=\"name\">课程名称</label>\r\n" + 
@@ -219,7 +219,7 @@ public class PracticesUtil {
 		   			Practice practice2=practice.get(i);
 		   			String isReady=practice2.getIsReady()==1?"checked=\"checked\"":"";
 					bodyHtml.append("        <tr>\r\n" + 
-		   		"                          <td><a href=\"/Practice/Teacher/managingCurrentExercises/"+practice2.getId()+"\" class=\"\">"+practice2.getName()+"</a><br>"+practice2.getOutlines()+"<br></td>\r\n" + 
+		   		"                          <td><a href=\"<%=basePoth%>Teacher/managingCurrentExercises/"+practice2.getId()+"\" class=\"\">"+practice2.getName()+"</a><br>"+practice2.getOutlines()+"<br></td>\r\n" +
 		   		"                          <td>"+questionService.getQuestionByPracticeId(practice2.getId()).size()+"</td>\r\n" + 
 		   		"                          <td>"+DateTimeUtils.DATE_TIME_FORMAT.format(practice2.getUpTime())+"</td>\r\n" + 
 		   		"                          <td>"
@@ -256,7 +256,7 @@ public class PracticesUtil {
 					   		"            <div class=\"modal-header\" >\r\n" + 
 					   		"              <h5 class=\"modal-title bg-light\">添加练习</h5> <button type=\"button\" class=\"close\" data-dismiss=\"modal\"> <span>×</span> </button>\r\n" + 
 					   		"            </div>\r\n" + 
-					   		"            <form id=\"addPractices\" name=\"addPractices\" method=\"post\" action=\"/Practice/Teacher/addPractices\" class=\"form-horizontal\" role=\"添加练习\" onsubmit=\"return addPracticesTest();\">\r\n" + 
+					   		"            <form id=\"addPractices\" name=\"addPractices\" method=\"post\" action=\"<%=basePoth%>Teacher/addPractices\" class=\"form-horizontal\" role=\"添加练习\" onsubmit=\"return addPracticesTest();\">\r\n" +
 					   		"              <div class=\"modal-body\" style=\"\">\r\n" + 
 					   		"                <div class=\"form-group\">\r\n" + 
 					   		"                  <label for=\"name\">练习名称</label>\r\n" + 
@@ -318,7 +318,7 @@ public class PracticesUtil {
    			Practice practice2=practices.get(i);
    			String isReady=practice2.getIsReady()==1?"checked=\"checked\"":"";
 			bodyHtml.append("        <tr>\r\n" + 
-   		"                          <td><a href=\"/Practice/Teacher/managingCurrentExercises/"+practice2.getId()+"\" class=\"\">"+practice2.getName()+"</a><br>"+practice2.getOutlines()+"<br></td>\r\n" + 
+   		"                          <td><a href=\"<%=basePoth%>Teacher/managingCurrentExercises/"+practice2.getId()+"\" class=\"\">"+practice2.getName()+"</a><br>"+practice2.getOutlines()+"<br></td>\r\n" +
    		"                          <td>"+questionService.getQuestionByPracticeId(practice2.getId()).size()+"</td>\r\n" + 
    		"                          <td>"+DateTimeUtils.DATE_TIME_FORMAT.format(practice2.getUpTime())+"</td>\r\n" + 
    		"                          <td>"
