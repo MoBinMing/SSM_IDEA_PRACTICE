@@ -41,12 +41,12 @@
     searchCourses();
   });
 
-  function searchCourses() {
-    var val = $("#ssearchCoursesVal").val();
+  function searchCourse() {
+    var val = $("#ssearchCourseVal").val();
     var coursesTbody = $("#coursesTbody");
     $.ajax({
       type: 'POST',
-      url: '<%=basePath%>Teacher/ssearchCourses',
+      url: '<%=basePath%>Teacher/ssearchCourse',
       data: 'val=' + val,
       dataType: "json",
       global: false,
@@ -287,7 +287,7 @@
             <div class="col card-header p-0 ">
               <form class="card-title navbar-left navbar-form nav-search mr-md-3" action="">
                 <div class="input-group">
-                  <input id="ssearchCoursesVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;searchCourses();}">
+                  <input id="ssearchCourseVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;searchCourse();}">
                   <div class="input-group-append">
                       <span class="input-group-text">
                         <i class="la la-search search-icon"></i>
