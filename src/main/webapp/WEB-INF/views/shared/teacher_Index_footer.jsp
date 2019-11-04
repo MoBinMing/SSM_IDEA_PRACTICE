@@ -13,7 +13,6 @@
   <%--<script type="text/javascript" src="<%=basePath%>assets/js2/ready.min.js"></script>--%>
   <%--<script type="text/javascript" src="<%=basePath%>assets/js2/demo11111111111.js"></script>--%>
 
-  <script type="text/javascript" src="<%=basePath%>assets/js/core/jquery.3.2.1.min.js"></script>
   <script type="text/javascript" src="<%=basePath%>assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
   <script type="text/javascript" src="<%=basePath%>assets/js/core/popper.min.js"></script>
   <script type="text/javascript" src="<%=basePath%>assets/js/core/bootstrap.min.js"></script>
@@ -26,5 +25,5 @@
   <script type="text/javascript" src="<%=basePath%>assets/js/plugin/chart-circle/circles.min.js"></script>
   <script type="text/javascript" src="<%=basePath%>assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
   <script type="text/javascript" src="<%=basePath%>assets/js/ready.min.js"></script>
-  <script type="text/javascript" src="<%=basePath%>assets/js/demo11111111111.js"></script>
+<%--  <script type="text/javascript" src="<%=basePath%>assets/js/demo11111111111.js"></script>--%>
 

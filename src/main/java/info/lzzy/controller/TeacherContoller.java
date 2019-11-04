@@ -319,9 +319,9 @@ public class TeacherContoller extends BaceController {
 
 	}
 	
-	@PostMapping("/ssearchCourses")
+	@PostMapping("/searchCourses")
 	@ResponseBody
-	public Map<String, Object> ssearchCourses(String val) {
+	public Map<String, Object> searchCourses(String val) {
 		Map<String, Object> map = new HashMap<>();
 		String teacherId = (String) request.getSession().getAttribute("teacherId");
 		if (!teacherId.isEmpty()) {
@@ -340,8 +340,15 @@ public class TeacherContoller extends BaceController {
 				cDao.setPracticeSize(coursePList.size());
 				cDaos.add(cDao);
 			}
-			request.getSession().setAttribute("courses", cDaos);
-			map.put("tbody", "ssearchOk");
+			List<Integer> ages=new ArrayList<>();
+			for (CourseDao course:cDaos){
+				if (!ages.contains(course.getAge())){
+					ages.add(course.getAge());
+				}
+			}
+			//request.getSession().setAttribute("courses", cDaos);
+			map.put("courses", cDaos);
+			map.put("ages", ages);
 		} else {
 			map.put("body", "登录超时，请重新登录！");
 		}

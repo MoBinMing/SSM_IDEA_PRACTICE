@@ -1,7 +1,6 @@
 package info.lzzy.models;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 public class Teacher {
     private String teacherId;

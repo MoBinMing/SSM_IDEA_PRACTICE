@@ -21,8 +21,9 @@ import info.lzzy.service.CourseService;
 import info.lzzy.service.EnrollmentService;
 import info.lzzy.service.StudentService;
 import info.lzzy.service.TeacherService;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 public class VerificationInfo {
 
@@ -71,7 +72,7 @@ public class VerificationInfo {
 									isMyTeacher = true;
 								}
 							}
-							jsonArray.put(teacher.toJSON(isMyTeacher));
+							jsonArray.add(teacher.toJSON(isMyTeacher));
 						}
 					}
 					object.put("key", WebKeyUtils.encryption(userLogin.toString()));
@@ -104,7 +105,7 @@ public class VerificationInfo {
 						List<Course> courses = courseService.selectByTeacherId(teacher.getTeacherId());
 						JSONArray jsonArray = new JSONArray();
 						for (Course course : courses) {
-							jsonArray.put(course.toString());
+							jsonArray.add(course.toString());
 						}
 						object.put("courses", jsonArray.toString());
 						object.put("key", WebKeyUtils.encryption(userLogin.toString()));
@@ -168,7 +169,7 @@ public class VerificationInfo {
 				jsonObject.put("ERRMSG", "请求超时");
 				rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
 			} else {
-				JSONObject userBody = new JSONObject(contentPair.getKey());
+				JSONObject userBody = JSONObject.fromObject(contentPair.getKey());
 				if (userBody.getString("role").equals("student")) {
 					// region 注册学生
 					Student student = gson.fromJson(userBody.toString(), Student.class);
@@ -376,7 +377,7 @@ public class VerificationInfo {
 		Long userRequest = contentPair.getValue();*/
 		Gson gson = new Gson();
 		// 解密key
-		JSONObject userObj = new JSONObject(body);
+		JSONObject userObj = JSONObject.fromObject(body);
 		Pair<String, Long> pair = WebKeyUtils.decode(userObj.getString("key"));
 		UserLogin userLogin = gson.fromJson(pair.getKey(), UserLogin.class);
 		Pair<Boolean, JSONObject> rPair;

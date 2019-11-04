@@ -10,9 +10,8 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import net.sf.json.*;
 import org.apache.ibatis.binding.BindingException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +42,8 @@ import info.lzzy.utils.SymmetricEncoder;
 import info.lzzy.utils.UploadImage;
 import info.lzzy.utils.VerificationInfo;
 import info.lzzy.utils.WebKeyUtils;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/api") // 映射路径，一个参数时等同于@RequestMapping(value = "/api")， 如果 value=""，将映射项目根路径
@@ -113,10 +114,10 @@ public class ApiController extends BaceController {
 									isMyTeacher = true;
 								}
 							}
-							jsonArray.put(teacher.toJSON(isMyTeacher));
+							jsonArray.add(teacher.toJSON(isMyTeacher));
 						}
 					}
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("teachers", jsonArray.toString());
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -127,13 +128,13 @@ public class ApiController extends BaceController {
 					for (Teacher teacher : teachers) {
 						if (teacher.getValid() == 1) {
 							if (teacher.getTeacherId().equals(teacherId)) {
-								jsonArray.put(teacher.toJSON(true));
+								jsonArray.add(teacher.toJSON(true));
 							} else {
-								jsonArray.put(teacher.toJSON(false));
+								jsonArray.add(teacher.toJSON(false));
 							}
 						}
 					}
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("teachers", jsonArray.toString());
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -141,9 +142,9 @@ public class ApiController extends BaceController {
 					List<Teacher> teachers = teacherService.selectAllTeacher();
 					JSONArray jsonArray = new JSONArray();
 					for (Teacher teacher : teachers) {
-						jsonArray.put(teacher.toTeacherJSON());
+						jsonArray.add(teacher.toTeacherJSON());
 					}
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("teachers", jsonArray.toString());
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -183,13 +184,13 @@ public class ApiController extends BaceController {
 					for (Course course : courses) {
 						Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(course.getId(), studentId);
 						if (enrollment != null) {
-							jsonArray.put(course.toJSON(enrollment.getTakeEffect()));
+							jsonArray.add(course.toJSON(enrollment.getTakeEffect()));
 						} else {
-							jsonArray.put(course.toJSON(-1));
+							jsonArray.add(course.toJSON(-1));
 						}
 
 					}
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("courses", jsonArray.toString());
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -198,9 +199,9 @@ public class ApiController extends BaceController {
 					List<Course> courses = courseService.selectByTeacherId(teacherId);
 					JSONArray jsonArray = new JSONArray();
 					for (Course course : courses) {
-						jsonArray.put(course.toJSON(true));
+						jsonArray.add(course.toJSON(true));
 					}
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("courses", jsonArray.toString());
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -209,9 +210,9 @@ public class ApiController extends BaceController {
 					List<Course> courses = courseService.selectByTeacherId(teacherId);
 					JSONArray jsonArray = new JSONArray();
 					for (Course course : courses) {
-						jsonArray.put(course.toJSON(true));
+						jsonArray.add(course.toJSON(true));
 					}
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("courses", jsonArray.toString());
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -269,12 +270,12 @@ public class ApiController extends BaceController {
 									jObject.put("isReady", practice.getIsReady());
 									jObject.put("outlines", practice.getOutlines());
 									jObject.put("courseId", practice.getCourseId());
-									jsonArray.put(jObject);
+									jsonArray.add(jObject);
 								}
 							}
-							json = new JSONObject(RETURN_S_String);
+							json = JSONObject.fromObject(RETURN_S_String);
 							json.put("practices", jsonArray.toString());
-							json.put("size", jsonArray.length());
+							json.put("size", jsonArray.size());
 							break;
 
 						case 2:
@@ -303,12 +304,12 @@ public class ApiController extends BaceController {
 									jObject.put("isReady", practice.getIsReady());
 									jObject.put("outlines", practice.getOutlines());
 									jObject.put("courseId", practice.getCourseId());
-									jsonArray.put(jObject);
+									jsonArray.add(jObject);
 								}
 							}
-							json = new JSONObject(RETURN_S_String);
+							json = JSONObject.fromObject(RETURN_S_String);
 							json.put("practices", jsonArray.toString());
-							json.put("size", jsonArray.length());
+							json.put("size", jsonArray.size());
 						} else {
 							json.put("RESULT", "F");
 							json.put("ERRMSG", "该课程的练习不是您的练习");
@@ -420,15 +421,15 @@ public class ApiController extends BaceController {
 							optionjObject.put("label", option.getLabel());
 							optionjObject.put("questionId", option.getQuestionId());
 							optionjObject.put("isAnswer", option.getIsAnswer());
-							optionArray.put(optionjObject);
+							optionArray.add(optionjObject);
 						}
 						questionjObject.put("options", optionArray.toString());
-						questionArray.put(questionjObject);
+						questionArray.add(questionjObject);
 					}
 				}
-				json = new JSONObject(RETURN_S_String);
+				json = JSONObject.fromObject(RETURN_S_String);
 				json.put("questions", questionArray.toString());
-				json.put("size", questionArray.length());
+				json.put("size", questionArray);
 			} else {
 				json.put("RESULT", "F");
 				json.put("ERRMSG", "练习: \"" + practiceId + "\"未开放");
@@ -452,7 +453,7 @@ public class ApiController extends BaceController {
 			if (pair.getKey()) {
 				// region 验证成功
 				JSONObject bodyObj = pair.getValue();
-				JSONObject userBody = new JSONObject(bodyObj.getString("userBody"));
+				JSONObject userBody = JSONObject.fromObject(bodyObj.getString("userBody"));
 				Gson gson = new Gson();
 				JSONArray jsonArray = userBody.getJSONArray("Results");
 				List<PracticeResult> practiceResults = new ArrayList<>();
@@ -499,7 +500,7 @@ public class ApiController extends BaceController {
 					}
 
 				}
-				if (practiceResults.size() == jsonArray.length()) {
+				if (practiceResults.size() == jsonArray.size()) {
 					int okSize = 0;
 					for (PracticeResult practiceResult : practiceResults) {
 						if (practiceResultService.insert(practiceResult) == 1) {
@@ -1376,7 +1377,7 @@ public class ApiController extends BaceController {
 						if (course != null) {
 							if (teacherId.equals(course.getTeacherId())) {
 
-								for (int i = 0; i < studentIds.length()-1; i++) {
+								for (int i = 0; i < studentIds.size(); i++) {
 									Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId,
 											studentIds.getString(i));
 									if (enrollment == null) {
@@ -1385,16 +1386,16 @@ public class ApiController extends BaceController {
 										enrollment.setStudentId(studentIds.getString(i));
 										enrollment.setTakeEffect(takeEffect);
 										if (enrollmentService.insertSelective(enrollment) == 1) {
-											ssArray.put(studentIds.getString(i));
+											ssArray.add(studentIds.getString(i));
 										} else {
-											eeArray.put(studentIds.getString(i));
+											eeArray.add(studentIds.getString(i));
 										}
 									} else {
 										if (takeEffect == -1) {
 											if (enrollmentService.deleteByPrimaryKey(enrollment.getId()) == 1) {
-												ssArray.put(studentIds.getString(i));
+												ssArray.add(studentIds.getString(i));
 											} else {
-												eeArray.put(studentIds.getString(i));
+												eeArray.add(studentIds.getString(i));
 											}
 										} else {
 											switch (enrollment.getTakeEffect()) {
@@ -1402,27 +1403,27 @@ public class ApiController extends BaceController {
 												enrollment.setTakeEffect(takeEffect);
 												if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 
-													ssArray.put(studentIds.getString(i));
+													ssArray.add(studentIds.getString(i));
 												} else {
-													eeArray.put(studentIds.getString(i));
+													eeArray.add(studentIds.getString(i));
 												}
 												break;
 											case 1:
 												enrollment.setTakeEffect(takeEffect);
 												if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 
-													ssArray.put(studentIds.getString(i));
+													ssArray.add(studentIds.getString(i));
 												} else {
-													eeArray.put(studentIds.getString(i));
+													eeArray.add(studentIds.getString(i));
 												}
 												break;
 											case 2:
 												enrollment.setTakeEffect(takeEffect);
 												if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 
-													ssArray.put(studentIds.getString(i));
+													ssArray.add(studentIds.getString(i));
 												} else {
-													eeArray.put(studentIds.getString(i));
+													eeArray.add(studentIds.getString(i));
 												}
 												break;
 											default:
@@ -1432,7 +1433,7 @@ public class ApiController extends BaceController {
 
 									}
 								}
-								if (ssArray.length() == studentIds.length()) {
+								if (ssArray.size() == studentIds.size()) {
 									json.put("RESULT", "S");
 									json.put("ERRMSG", "成功");
 									json.put("S", ssArray.toString());
@@ -1463,7 +1464,7 @@ public class ApiController extends BaceController {
 						JSONArray studentIds = userBody.getJSONArray("studentIds");
 						Course course = courseService.selectByPrimaryKey(courseId);
 						if (course != null) {
-							for (int i = 0; i < studentIds.length()-1; i++) {
+							for (int i = 0; i < studentIds.size()-1; i++) {
 								Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId,
 										studentIds.getString(i));
 								if (enrollment == null) {
@@ -1474,11 +1475,11 @@ public class ApiController extends BaceController {
 									if (enrollmentService.insertSelective(enrollment) == 1) {
 										JSONObject object = new JSONObject();
 										object.put(studentIds.getString(i), "成功");
-										ssArray.put(object);
+										ssArray.add(object);
 									} else {
 										JSONObject object = new JSONObject();
 										object.put(studentIds.getString(i), "报错");
-										eeArray.put(object);
+										eeArray.add(object);
 									}
 								} else {
 									JSONObject object = new JSONObject();
@@ -1487,30 +1488,30 @@ public class ApiController extends BaceController {
 										enrollment.setTakeEffect(takeEffect);
 										if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 											object.put(studentIds.getString(i), "成功");
-											ssArray.put(object);
+											ssArray.add(object);
 										} else {
 											object.put(studentIds.getString(i), "报错");
-											eeArray.put(object);
+											eeArray.add(object);
 										}
 										break;
 									case 1:
 										enrollment.setTakeEffect(takeEffect);
 										if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 											object.put(studentIds.getString(i), "成功");
-											ssArray.put(object);
+											ssArray.add(object);
 										} else {
 											object.put(studentIds.getString(i), "报错");
-											eeArray.put(object);
+											eeArray.add(object);
 										}
 										break;
 									case 2:
 										enrollment.setTakeEffect(takeEffect);
 										if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 											object.put(studentIds.getString(i), "成功");
-											ssArray.put(object);
+											ssArray.add(object);
 										} else {
 											object.put(studentIds.getString(i), "报错");
-											eeArray.put(object);
+											eeArray.add(object);
 										}
 										break;
 									default:
@@ -1518,7 +1519,7 @@ public class ApiController extends BaceController {
 									}
 								}
 							}
-							if (ssArray.length() == studentIds.length()) {
+							if (ssArray.size() == studentIds.size()) {
 								json.put("RESULT", "S");
 								json.put("ERRMSG", "添加成功");
 							} else {
@@ -1583,21 +1584,21 @@ public class ApiController extends BaceController {
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.put(student.toString());
+						jsonArray.add(student.toString());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("students", jsonArray.toString());
 				} else if (bodyObj.getString("user").equals("admin")) {
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.put(student.toString());
+						jsonArray.add(student.toString());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("students", jsonArray.toString());
 				} else {
 					json.put("RESULT", "F");
@@ -1625,7 +1626,7 @@ public class ApiController extends BaceController {
 					teacherService, adminService);
 			if (pair.getKey()) {
 				// region 验证成功
-				JSONObject bodyObj = new JSONObject(pair.getValue());
+				JSONObject bodyObj = JSONObject.fromObject(pair.getValue());
 				JSONObject userBody = bodyObj.getJSONObject("userBody");
 				if (bodyObj.getString("user").equals("student")) {
 					json.put("RESULT", "F");
@@ -1639,7 +1640,7 @@ public class ApiController extends BaceController {
 						if (enrollmentService.getByCourseIdAndStudentId(courseId, student.getStudentId()) != null) {
 							isMyStudent = true;
 						}
-						jsonArray.put(student.toTeacherJson(isMyStudent));
+						jsonArray.add(student.toTeacherJson(isMyStudent));
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1648,7 +1649,7 @@ public class ApiController extends BaceController {
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.put(student.toString());
+						jsonArray.add(student.toString());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1692,7 +1693,7 @@ public class ApiController extends BaceController {
 					for (Enrollment e : enrollments) {
 						for (Student s : students) {
 							if (e.getStudentId().equals(s.getStudentId())) {
-								jsonArray.put(s.toStudentJson(e.getTakeEffect()));
+								jsonArray.add(s.toStudentJson(e.getTakeEffect()));
 							}
 						}
 
@@ -1700,13 +1701,13 @@ public class ApiController extends BaceController {
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
 					json.put("students", jsonArray.toString());
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 				} else if (bodyObj.getString("user").equals("admin")) {
 					int courseId = userBody.getInt("courseId");
 					List<Student> students = studentService.selectStudentByCourseId(courseId);
 					JSONArray jsonArray = new JSONArray();
 					for (Student s : students) {
-						jsonArray.put(s.toString());
+						jsonArray.add(s.toString());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1748,22 +1749,22 @@ public class ApiController extends BaceController {
 					List<Student> students = studentService.inquireStudentByKey(key);
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.put(student.toString());
+						jsonArray.add(student.toString());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("students", jsonArray.toString());
 				} else if (bodyObj.getString("user").equals("admin")) {
 					String key = userBody.getString("searchKey");
 					List<Student> students = studentService.inquireStudentByKey(key);
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.put(student.toString());
+						jsonArray.add(student.toString());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
-					json.put("size", jsonArray.length());
+					json.put("size", jsonArray.size());
 					json.put("students", jsonArray.toString());
 				} else {
 					json.put("RESULT", "F");
@@ -1904,7 +1905,7 @@ public class ApiController extends BaceController {
 						int s = 0;
 						int f = 0;
 						int e = 0;
-						for (int i = 0; i < teacherIds.length()-1; i++) {
+						for (int i = 0; i < teacherIds.size(); i++) {
 							Teacher teacher = teacherService.selectTeacherById(teacherIds.getString(i));
 							if (teacher != null) {
 								teacher.setValid(valid);
@@ -1917,7 +1918,7 @@ public class ApiController extends BaceController {
 								f++;
 							}
 						}
-						if (s == teacherIds.length()) {
+						if (s == teacherIds.size()) {
 							json.put("RESULT", "S");
 							json.put("ERRMSG", "成功：" + s + "  出错：" + e + "  失败：" + f);
 						} else {
@@ -2055,7 +2056,7 @@ public class ApiController extends BaceController {
 		@PostMapping(value = "/postImg", consumes = "application/json", produces = "text/html;charset=UTF-8")
 		@ResponseBody // 返回给请求着仅仅body的内容
 		public String postImg(@RequestBody String body ) {
-			JSONObject json = new JSONObject(body);
+			JSONObject json = JSONObject.fromObject(body);
 			try {
 						String teacherIphone = json.getString("teacherIphone");
 						//Teacher teacher = teacherService.selectTeacherById(teacherId);

@@ -6,8 +6,8 @@ import info.lzzy.models.Student;
 import info.lzzy.models.Teacher;
 import info.lzzy.service.StudentService;
 import info.lzzy.service.TeacherService;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 public class WebKeyUtils {
 	private static final String ROLE_USER = "ROLE_USER";
@@ -59,7 +59,7 @@ public class WebKeyUtils {
 		String content = sb.toString();
 		Long time = Long.parseLong(loginTimeSB.toString());
 		return new Pair<String, Long>(content, time);*/
-		JSONObject object= new JSONObject(bodyRequest);
+		JSONObject object= JSONObject.fromObject(bodyRequest);
 		//return new Pair<String, Long>(bodyRequest, object.getLong("loginTime"));
 		return new Pair<String, Long>(bodyRequest, System.currentTimeMillis());
 	}
@@ -223,6 +223,6 @@ public class WebKeyUtils {
 	}
 
 	public static String getKey(String body) throws JSONException {
-		return new JSONObject(body).getJSONObject(CONTENT).getString(key);
+		return JSONObject.fromObject(body).getJSONObject(CONTENT).getString(key);
 	}
 }

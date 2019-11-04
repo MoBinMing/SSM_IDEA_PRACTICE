@@ -21,121 +21,8 @@
 
 </style>
 <script type="text/javascript">
-  function addPracticesTest() {
-    var name = $("#name").val();
-    if (name == "") {
-      $("#myAlert2").css("visibility", "visible");
-      $("#myAlert2").css("display", "inline");
-      return false;
-    }
-    return true;
-  }
-  //添加练习信息不全提示框
-  $(function() {
-    $('#addCourseModal').on('hidden.bs.modal', function() {
-      $("#myAlert2").css("visibility", "hidden");
-      $("#myAlert2").css("display", "none");
-    });
-  });
-  $("inputCourse").keyup(function() {
-    searchCourses();
-  });
-
-  function searchCourse() {
-    var val = $("#ssearchCourseVal").val();
-    var coursesTbody = $("#coursesTbody");
-    $.ajax({
-      type: 'POST',
-      url: '<%=basePath%>Teacher/ssearchCourse',
-      data: 'val=' + val,
-      dataType: "json",
-      global: false,
-      success: function(data) {
-        //alert(data.tbody);
-        //coursesTbody.append(data.tbody);
-      }
-    });
-  };
-
-  function searchPractices777() {
-    var val = $("#searchPracticesVal").val();
-    var text = $.ajax({
-      url: "<%=basePath%>Teacher/searchPractices?val=" + val,
-      async: false
-    });
-    alert(text);
-  };
-  $("input").keyup(function() {
-    searchPractices();
-  });
-
-  function searchPractices() {
-    var val = $("#searchPracticesVal").val();
-    var practiceTbody = $("#practiceTbody");
-    $.ajax({
-      type: 'POST',
-      url: '<%=basePath%>Teacher/searchPractices',
-      data: 'val=' + val,
-      dataType: "json",
-      global: false,
-      success: function(data) {
-        alert(data.tbody);
-        practiceTbody.append(data.tbody);
-      }
-    });
-  };
-
-  function deleteCourse(id) {
-    var an = confirm("确定删除？");
-    if (an == true) {
-      location.href = "deleteCourse/" + id;
-    } else {
-      return false;
-    }
-  }
-
-  function deletePractice(id) {
-    var an = confirm("确定删除？");
-    if (an == true) {
-      location.href = "<%=basePath%>Teacher/deletePractice/" + id;
-    } else {
-      return false;
-    }
-  }
-
-  function deleteQuestion(id) {
-    var an = confirm("确定删除？");
-    if (an == true) {
-      location.href = "<%=basePath%>Teacher/deleteQuestion/" + id;
-    } else {
-      return false;
-    }
-  }
-
-  function updateReady(id) {
-    $.get("updateReady/" + id, function(data, status) {
-      if (data.thisBody == "<%=basePath%>Login/LoginIndexUrl") {
-        location.href = data.thisBody;
-      } else {
-        $("#tbody").html(data.thisBody);
-      }
-    });
-  }
-
-  function getStudentManagementHtml() {
-    $.get("getStudentManagementHtml", function(data, status) {
-      if (data.ok != "ok") {
-        $("#contentView").html(data.thisBody);
-      } else {
-        $("#contentView").html(data.thisBody);
-      }
-    });
-  }
-  /* bootstrap开关控件，初始化 */
-  function onLi() {
-    $('#mySwitch input').bootstrapSwitch();
-  }
 </script>
+<script type="text/javascript" src="<%=basePath%>scripts/teacherIndex.js"></script>
 </head>
 
 <body onload="onLi()">
@@ -283,13 +170,13 @@
     <div class="content" id="contentView" style="">
       <div class="card card-tasks p-2">
         <div class="card-body ">
-          <div class="row">
-            <div class="col card-header p-0 ">
+          <div class="row m-0">
+            <div class=" card-header p-0 ">
               <form class="card-title navbar-left navbar-form nav-search mr-md-3" action="">
                 <div class="input-group">
-                  <input id="ssearchCourseVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;searchCourse();}">
-                  <div class="input-group-append">
-                      <span class="input-group-text">
+                  <input id="searchCoursesVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;searchCourses();}">
+                  <div class="input-group-append" >
+                      <span class="input-group-text" onclick="searchCourses()">
                         <i class="la la-search search-icon"></i>
                       </span>
                   </div>
@@ -297,14 +184,14 @@
               </form>
             </div>
             <div class="col text-right p-0">
-              <button type="button" class="btn btn-success" data-target="#addCourseModal" data-toggle="modal"><i class="la la-plus-square">添加课程</i>  </button>
-               </div>
+              <button type="button" class="btn btn-outline-success" data-target="#addCourseModal" data-toggle="modal">添加课程 </button>
+            </div>
           </div>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
               <tr>
-                <th > 课程: <div class="btn-group">
+                <th > 课程: <div class="btn-group" id="courseAges">
                   <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 2019 </button>
                   <div class="dropdown-menu">
                     <a class="dropdown-item" href="#">2018</a>
@@ -318,7 +205,7 @@
                 <th> 操作 </th>
               </tr>
               </thead>
-              <tbody id="“coursesTbody”">
+              <tbody id="coursesTbody">
               <c:forEach var="item" items="${courses}">
                 <tr>
                   <td><a href="<%=basePath%>Teacher/getPracticeByCourseId/" >${item.name}</a></td>

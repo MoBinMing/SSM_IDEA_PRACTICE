@@ -1,8 +1,8 @@
 package info.lzzy.models.view;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 public class UserLogin {
     private String password;

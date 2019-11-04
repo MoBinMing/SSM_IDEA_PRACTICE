@@ -2,8 +2,8 @@ package info.lzzy.models;
 
 import java.util.Date;
 import info.lzzy.utils.DateTimeUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 public class Course {
     private Integer id;
