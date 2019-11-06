@@ -29,34 +29,42 @@ $(function() {
     });
 });
 
-//监听input框，实时渲染
-$('#searchCoursesVal').on('input', function() {
-    searchCourses();
+$(function() {
+    $("#searchCoursesForm").submit(function() {
+        searchCourses();
+    });
 });
+//监听input框，实时渲染
+// $('#searchCoursesVal').on('input', function() {
+//     searchCourses();
+// });
 
 function searchCourses() {
     let val = $("#searchCoursesVal").val();
     //var coursesTbody = $("#coursesTbody");
-    if (val != null && val != ""){
-        let url = getRootPath() + "Teacher/searchCourses";
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: 'val=' + val,
-            dataType: "json",
-            global: false,
-            success: function(data) {
-                let ages = data.ages;
-                let courses = data.courses;
-                renderHtml(ages,courses);
-                //coursesTbody.append(data.tbody);
-            }
-        });
+    alert(val);
+    alert(getRootPath() + "/Teacher/searchCourses");
+    if (val == null && val == ""){
+        return false;
     }
+    let url = getRootPath() + "Teacher/searchCourses";
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: 'val=' + val,
+        dataType: "json",
+        global: false,
+        success: function(data) {
+            let ages = data.ages;
+            let courses = data.courses;
+            initHtml(ages,courses);
+            //coursesTbody.append(data.tbody);
+        }
+    });
 
 }
 
-function renderHtml(ages,courses) {
+function initHtml(ages,courses) {
     var agesHtml = "<button class=\"btn btn-outline-dark dropdown-toggle p-1\" data-toggle=\"dropdown\">"+ ages[0] +"</button>";
     var tableBodyHtml = "";
     if (ages.length > 1){

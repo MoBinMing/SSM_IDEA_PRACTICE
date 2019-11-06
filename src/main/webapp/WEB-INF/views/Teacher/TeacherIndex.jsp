@@ -172,14 +172,12 @@
         <div class="card-body ">
           <div class="row m-0">
             <div class=" card-header p-0 ">
-              <form class="card-title navbar-left navbar-form nav-search mr-md-3" action="">
+              <form class="bs-example bs-example-form mr-md-3" action="">
                 <div class="input-group">
-                  <input id="searchCoursesVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;searchCourses();}">
-                  <div class="input-group-append" >
-                      <span class="input-group-text" onclick="searchCourses()">
-                        <i class="la la-search search-icon"></i>
-                      </span>
-                  </div>
+                  <input id="searchCoursesVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode===13){event.keyCode=0;event.returnValue=false;searchCourses();}">
+                  <span class="input-group-btn">
+                          <button class="btn btn-default" type="button"> <i class="la la-search search-icon" ></i> 搜索 </button>
+                    </span>
                 </div>
               </form>
             </div>
