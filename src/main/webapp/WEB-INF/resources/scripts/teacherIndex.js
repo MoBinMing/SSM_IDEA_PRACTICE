@@ -12,6 +12,20 @@ function getRootPath() {
     return rootPath;
 }
 
+function count(o){
+    var t = typeof o;
+    if(t == 'string'){
+        return o.length;
+    }else if(t == 'object'){
+        var n = 0;
+        for(var i in o){
+            n++;
+        }
+        return n;
+    }
+    return false;
+}
+
 function addPracticesTest() {
     var name = $("#name").val();
     if (name == "") {
@@ -29,8 +43,14 @@ $(function() {
     });
 });
 
-$(function() {
-    $("#searchCoursesForm").submit(function() {
+// $(function() {
+//     $("#searchCoursesForm").submit(function() {
+//         searchCourses();
+//     });
+// });
+
+$(document).ready(function() {
+    $("#searchCoursesVal").keyup(function() {
         searchCourses();
     });
 });
@@ -42,12 +62,12 @@ $(function() {
 function searchCourses() {
     let val = $("#searchCoursesVal").val();
     //var coursesTbody = $("#coursesTbody");
-    alert(val);
-    alert(getRootPath() + "/Teacher/searchCourses");
+    let url = getRootPath() + "/Teacher/searchCourses";
+    //alert(url);
     if (val == null && val == ""){
         return false;
     }
-    let url = getRootPath() + "Teacher/searchCourses";
+
     $.ajax({
         type: 'POST',
         url: url,
@@ -65,9 +85,8 @@ function searchCourses() {
 }
 
 function initHtml(ages,courses) {
-    var agesHtml = "<button class=\"btn btn-outline-dark dropdown-toggle p-1\" data-toggle=\"dropdown\">"+ ages[0] +"</button>";
-    var tableBodyHtml = "";
-    if (ages.length > 1){
+    if (count(ages) !== 0){
+        var agesHtml = "<button class=\"btn btn-outline-dark dropdown-toggle p-1\" data-toggle=\"dropdown\">"+ ages[0] +"</button>";
         agesHtml = agesHtml + "<div class=\"dropdown-menu\">";
         for (var i=1;i<ages.length;i++){
             agesHtml = agesHtml + "<a class=\"dropdown-item\" href=\"#\">" + ages[i] + "</a>";
@@ -76,28 +95,36 @@ function initHtml(ages,courses) {
             }
         }
         agesHtml = agesHtml + "</div>";
+        $("#courseAges").html(agesHtml);
+    }
+    if (count(courses) !== 0){
+        var tableBodyHtml = "";
+        for (var j=0;j<courses.length;j++){
+            tableBodyHtml = tableBodyHtml + '<tr>';
+            // 遍历单条信息
+            tableBodyHtml = tableBodyHtml + '<td><a href='+ getRootPath()+'/Teacher/getPracticeByCourseId/ >' + courses[j].name + '</a></td>';
+            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].intro + '</a></td>';
+            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].practiceSize + '</a></td>';
+            tableBodyHtml = tableBodyHtml + '<td class="td-actions text-left">' +
+                '<div class="form-button-action">' +
+                '<button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">' +
+                '<i class="la la-times" onclick="deleteCourse(' +courses[j].id + ')">删除</i>' +
+                '</button>' +
+                '</div>' +
+                '</td>';
+            tableBodyHtml = tableBodyHtml + '</tr>';
+        }
+        $("#coursesTbody").html(tableBodyHtml);
+    }else {
+        $("#coursesTbody").html("<div class=\"alert alert-success alert-dismissable\">\n" +
+            "\t<button type=\"button\" class=\"close\" data-dismiss=\"alert\"\n" +
+            "\t\t\taria-hidden=\"true\">\n" +
+            "\t\t&times;\n" +
+            "\t</button>\n" +
+            "\t当前搜索关键词无数据！!\n" +
+            "</div>");
     }
 
-    $("#courseAges").html(agesHtml);
-    var ll=courses.length;
-    for (var i = 0 ; i < courses.length() ; i+=1){
-        tableBodyHtml = tableBodyHtml + '<tr>';
-        // 遍历单条信息
-        tableBodyHtml = tableBodyHtml + '<td><a href='+ getRootPath()+'Teacher/getPracticeByCourseId/ >' + courses[i].name + '</a></td>';
-        tableBodyHtml = tableBodyHtml + '<td>' + course.intro + '</a></td>';
-        tableBodyHtml = tableBodyHtml + '<td>' + course.practiceSize + '</a></td>';
-        tableBodyHtml = tableBodyHtml + '<td class="td-actions text-left">' +
-            '<div class="form-button-action">' +
-            '<button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">' +
-            '<i class="la la-times" onclick="deleteCourse(' +cache.id + ')">删除</i>' +
-            '</button>' +
-            '</div>' +
-            '</td>';
-        tableBodyHtml = tableBodyHtml + '</tr>';
-    }
-
-
-    $("#coursesTbody").html(tableBodyHtml);
 }
 
 function searchPractices() {
@@ -114,17 +141,27 @@ function searchPractices() {
             practiceTbody.append(data.tbody);
         }
     });
-};
+}
 
 function deleteCourse(id) {
     var an = confirm("确定删除？");
-    if (an == true) {
+    if (an) {
         location.href = "deleteCourse/" + id;
-    } else {
-        return false;
     }
-}
+    return false;
 
+}
+// $(function(){
+//     $('.table tr button').click(function(event){
+//         event.stopPropagation();
+//         var an = confirm("确定删除？");
+//         if (an == true) {
+//             location.href = "deleteCourse/" + id;
+//         } else {
+//             return false;
+//         }
+//     })
+// });
 function deletePractice(id) {
     var an = confirm("确定删除？");
     if (an == true) {

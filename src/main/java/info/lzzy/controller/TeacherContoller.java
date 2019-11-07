@@ -190,7 +190,41 @@ public class TeacherContoller extends BaceController {
 		}
 		return "/Teacher/TeacherIndex";
 	}
-
+	@PostMapping("/searchCourses")
+	@ResponseBody
+	public Map<String, Object> searchCourses(String val) {
+		Map<String, Object> map = new HashMap<>();
+		String teacherId = (String) request.getSession().getAttribute("teacherId");
+		if (!teacherId.isEmpty()) {
+			List<Course> cList = new ArrayList<>();
+			List<CourseDao> cDaos = new ArrayList<CourseDao>();
+			if (!val.isEmpty()) {
+				cList = courseService.searchThisTeacherCoursesByKey(teacherId, val);
+			} else {
+				cList = courseService.selectByTeacherId(teacherId);
+			}
+			for (int j = 0; j < cList.size(); j++) {
+				Course course = cList.get(j);
+				CourseDao cDao= new CourseDao();
+				BeanCopyUtil.beanCopy(course, cDao);
+				List<Practice> coursePList = practiceService.getPracticeByCourseId(course.getId());
+				cDao.setPracticeSize(coursePList.size());
+				cDaos.add(cDao);
+			}
+			List<Integer> ages=new ArrayList<>();
+			for (CourseDao course:cDaos){
+				if (!ages.contains(course.getAge())){
+					ages.add(course.getAge());
+				}
+			}
+			//request.getSession().setAttribute("courses", cDaos);
+			map.put("courses", cDaos);
+			map.put("ages", ages);
+		} else {
+			map.put("body", "登录超时，请重新登录！");
+		}
+		return map;
+	}
 	@PostMapping("/addCourses")
 	public String addCourses(Course course) {
 		course.setAddTime(new Date());
@@ -292,41 +326,7 @@ public class TeacherContoller extends BaceController {
 
 	}
 	
-	@PostMapping("/searchCourses")
-	@ResponseBody
-	public Map<String, Object> searchCourses(String val) {
-		Map<String, Object> map = new HashMap<>();
-		String teacherId = (String) request.getSession().getAttribute("teacherId");
-		if (!teacherId.isEmpty()) {
-			List<Course> cList = new ArrayList<>();
-			List<CourseDao> cDaos = new ArrayList<CourseDao>();
-			if (!val.isEmpty()) {
-				cList = courseService.searchThisTeacherCoursesByKey(teacherId, val);
-			} else {
-				cList = courseService.selectByTeacherId(teacherId);
-			}
-			for (int j = 0; j < cList.size(); j++) {
-				Course course = cList.get(j);
-				CourseDao cDao= new CourseDao();
-				BeanCopyUtil.beanCopy(course, cDao);
-				List<Practice> coursePList = practiceService.getPracticeByCourseId(course.getId());
-				cDao.setPracticeSize(coursePList.size());
-				cDaos.add(cDao);
-			}
-			List<Integer> ages=new ArrayList<>();
-			for (CourseDao course:cDaos){
-				if (!ages.contains(course.getAge())){
-					ages.add(course.getAge());
-				}
-			}
-			//request.getSession().setAttribute("courses", cDaos);
-			map.put("courses", cDaos);
-			map.put("ages", ages);
-		} else {
-			map.put("body", "登录超时，请重新登录！");
-		}
-		return map;
-	}
+
 	@GetMapping("/searchPractices")
 	@ResponseBody
 	public Map<String, Object> searchPractices(String searchPracticesVal) {

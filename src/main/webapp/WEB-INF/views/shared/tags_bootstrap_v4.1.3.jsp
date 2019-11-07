@@ -17,5 +17,5 @@
 <script src="<%=basePath%>scripts/animate-in.js"></script>
 <!-- c标签 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<base href="<c:url value='/' />">
+<%--<base href="<c:url value='/' />">--%>
 

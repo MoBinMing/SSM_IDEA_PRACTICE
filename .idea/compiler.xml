@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="PracticeService" />
         <module name="SSM_IDEA_PRACTICE" />
+        <module name="mvcDemo" />
       </profile>
     </annotationProcessing>
   </component>

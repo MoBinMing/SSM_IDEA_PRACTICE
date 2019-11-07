@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@ include file="../shared/teacher_Index_tags.jsp"%>
@@ -24,7 +25,6 @@
 </script>
 <script type="text/javascript" src="<%=basePath%>scripts/teacherIndex.js"></script>
 </head>
-
 <body onload="onLi()">
 <div class="wrapper">
   <div class="main-header text-white" >
@@ -140,7 +140,7 @@
           <a href="<%=basePath%>Teacher/indexUrl">
             <i class="la la-dashboard"></i>
             <p>课程管理</p>
-            <span class="badge badge-count">3</span>
+            <span class="badge badge-count">${fn:length(courses)}   </span>
           </a>
         </li>
         <li class="nav-item">
@@ -170,16 +170,27 @@
     <div class="content" id="contentView" style="">
       <div class="card card-tasks p-2">
         <div class="card-body ">
-          <div class="row m-0">
+          <div class="row m-0 pb-2">
             <div class=" card-header p-0 ">
-              <form class="bs-example bs-example-form mr-md-3" action="">
                 <div class="input-group">
-                  <input id="searchCoursesVal" type="text" placeholder="输入关键字搜索 ..." class="form-control" onkeydown="if(event.keyCode===13){event.keyCode=0;event.returnValue=false;searchCourses();}">
-                  <span class="input-group-btn">
-                          <button class="btn btn-default" type="button"> <i class="la la-search search-icon" ></i> 搜索 </button>
+                    <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" >
+                    <span class="input-group-addon btn btn-default" onclick="searchCourses();">
+                        <i class="la la-search search-icon"></i>&nbsp 搜索
                     </span>
                 </div>
-              </form>
+<%--                <form action="" method="post" id="searchCoursesForm" onsubmit="return false;">--%>
+<%--                    <div class="navbar-form navbar-left">--%>
+<%--                        <div class="form-group">--%>
+<%--                            <input type="text" id="searchCoursesVal" name="searchCoursesVal"--%>
+<%--                                   class="form-control" placeholder="输入关键字搜索 ..." autocomplete="off"--%>
+<%--                                   onkeydown="if(event.keyCode===13){event.keyCode=0;event.returnValue=false;searchCourses();}"/> <input--%>
+<%--                                type="hidden" value="selectstock" name="method">--%>
+<%--                            <div id="search-result" class="form-control"></div>--%>
+<%--                            <br>--%>
+<%--                        </div>--%>
+<%--                        <button type="submit" class="btn btn-default"><i class="la la-search search-icon" ></i> 搜索</button>--%>
+<%--                    </div>--%>
+<%--                </form>--%>
             </div>
             <div class="col text-right p-0">
               <button type="button" class="btn btn-outline-success" data-target="#addCourseModal" data-toggle="modal">添加课程 </button>
@@ -205,14 +216,15 @@
               </thead>
               <tbody id="coursesTbody">
               <c:forEach var="item" items="${courses}">
-                <tr>
-                  <td><a href="<%=basePath%>Teacher/getPracticeByCourseId/" >${item.name}</a></td>
+                <tr onclick="location.href='<%=basePath%>Teacher/getPracticeByCourseId/${item.id}';">
+                  <td><a href="<%=basePath%>Teacher/getPracticeByCourseId/${item.id}" >${item.name}</a></td>
                   <td>${item.intro}</td>
                   <td>${item.practiceSize}</td>
                   <td class="td-actions text-left">
                     <div class="form-button-action">
-                      <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">
-                        <i class="la la-times" onclick="deleteCourse('${item.id}')">删除</i>
+                      <button id="deleteCourse${item.id}" type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger"
+                              onclick="deleteCourse('${item.id}');event.stopPropagation();">
+                        <i class="la la-times" >删除</i>
                       </button>
                     </div>
                   </td>
