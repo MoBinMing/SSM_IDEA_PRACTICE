@@ -1,5 +1,7 @@
 package info.lzzy.controller;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -137,22 +139,25 @@ public class TeacherContoller extends BaceController {
 						// mv.addObject("userName", teacher.getName());
 						// mv.addObject("userEmail", teacher.getEmail());
 						// mv.addObject("myCoursesSize", courses.size());
-						String portraitPath = "";
-						/* NetworkUtil net=new NetworkUtil(); */
-						if (teacher.getGender().equals("男")) {
-							portraitPath = "nan.png";
-							/*
-							 * portraitPath=request.getSession().getServletContext()
-							 * .getRealPath("WEB-INF/resources/images/teacher.png");
-							 */
-						} else {
-							portraitPath = "nv.png";
-							/*
-							 * portraitPath=request.getSession().getServletContext()
-							 * .getRealPath("WEB-INF/resources/images/femaleTeacher.png");
-							 */
-						}
-						request.getSession().setAttribute("portrait", portraitPath);
+//						String portraitPath = "";
+//						/* NetworkUtil net=new NetworkUtil(); */
+//
+//						try{
+//							//URL urlStr = new URL(request.getSession().getServletContext().getRealPath("/")+"userImg/"+teacher.getImghead());
+//
+//							URL urlStr = new URL(request.getSession().getServletContext().getRealPath("/")+"userImg/"+teacher.getImghead());
+//
+//							HttpURLConnection connection = (HttpURLConnection) urlStr.openConnection();
+//							int state = connection.getResponseCode();
+//							if (state == 200) {
+//								portraitPath = urlStr.getPath();
+//							} else {
+//								portraitPath= request.getSession().getServletContext().getRealPath("/")+"images/"+teacher.getGender()+".png";
+//							}
+//						}catch (Exception e) {
+//							// TODO: handle exception
+//						}
+//						request.getSession().setAttribute("portraitPath",portraitPath);
 						// mv.addObject("portrait", portraitPath);
 						int size = 0;
 						for (Practice practice : pList) {
@@ -188,7 +193,7 @@ public class TeacherContoller extends BaceController {
 			request.getSession().setAttribute("errorInfo",e.getMessage());
 			return "/shared/error";
 		}
-		return "/Teacher/TeacherIndex";
+		return "Teacher/TeacherCourseIndex";
 	}
 	@PostMapping("/searchCourses")
 	@ResponseBody
@@ -225,17 +230,21 @@ public class TeacherContoller extends BaceController {
 		}
 		return map;
 	}
+
 	@PostMapping("/addCourses")
 	public String addCourses(Course course) {
+		Map<String, Object> map = new HashMap<>();
 		course.setAddTime(new Date());
 		course.setTeacherId((String) request.getSession().getAttribute("teacherId"));
 		course.setId(courseService.getIdByMax() + 1);
-		if (courseService.insert(course) == 1) {
-
+		try {
+			map.put("result",courseService.insert(course));
+		}catch (Exception e){
+			map.put("result",0);
+			map.put("msg",e.getMessage());
 		}
-		return "redirect:/Teacher/Index";
+		return "redirect:/Teacher/indexUrl";
 	}
-	
 
 	@PostMapping("/addPractices")
 	public String addPractices(Practice practice) {
@@ -252,10 +261,34 @@ public class TeacherContoller extends BaceController {
 		return "redirect:/Teacher/getPracticeByCourseId/" + practice.getCourseId();
 	}
 
-	@GetMapping("deleteCourse/{id}")
-	public String deleteCourse(@PathVariable int id) {
-		courseService.deleteByPrimaryKey(id);
-		return "redirect:/Teacher/Index";
+	@GetMapping("/deleteCourse/{id}")
+	@ResponseBody
+	public Map<String, Object> deleteCourse(@PathVariable int id) {
+		Map<String, Object> map = new HashMap<>();
+		String teacherId = (String) request.getSession().getAttribute("teacherId");
+		if (!teacherId.isEmpty()) {
+			Course course = courseService.selectByPrimaryKey(id);
+			if (course!=null){
+				if (course.getTeacherId().equals(teacherId)){
+					try {
+						map.put("result",courseService.deleteByPrimaryKey(id));
+					}catch (Exception e){
+						map.put("result",-1);
+						map.put("e",e.getMessage());
+					}
+				}else {
+					map.put("result",2);
+					map.put("msg","无权限删除该课程");
+				}
+			}else {
+				map.put("result",3);
+				map.put("msg","课程不存在");
+			}
+		}else {
+			map.put("result",4);
+			map.put("msg","登录超时");
+		}
+		return map;
 
 	}
 

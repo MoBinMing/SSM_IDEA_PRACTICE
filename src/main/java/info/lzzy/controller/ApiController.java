@@ -2064,7 +2064,7 @@ public class ApiController extends BaceController {
 
 						String basePath = request.getSession().getServletContext().getRealPath("/");
 						System.out.println(basePath);
-						String strpath=basePath+"WEB-INF\\resources\\userImg\\"+ teacherIphone+".jpg";
+						String strpath=basePath+"WEB-INF/resources/userImg/"+ teacherIphone+".jpg";
 						System.out.println(strpath);
 						//如果该文件存在，则删除。
 						try {
@@ -2074,7 +2074,7 @@ public class ApiController extends BaceController {
 							System.out.println("删除原图片失败");
 						}
 
-						UploadImage.convertStringtoImage(json.getString("image"), basePath+"WEB-INF\\resources\\userImg\\"+ teacherIphone+".jpg");
+						UploadImage.convertStringtoImage(json.getString("image"), strpath);
 						json=new JSONObject();
 							json.put("RESULT", "S");
 							json.put("ERRMSG", "上传成功");

@@ -26,39 +26,26 @@ function count(o){
     return false;
 }
 
-function addPracticesTest() {
-    var name = $("#name").val();
-    if (name == "") {
-        $("#myAlert2").css("visibility", "visible");
-        $("#myAlert2").css("display", "inline");
-        return false;
-    }
-    return true;
-}
-//添加练习信息不全提示框
+//region 1、课程js
+
+//region 1.1、添加课程信息不全提示框
 $(function() {
     $('#addCourseModal').on('hidden.bs.modal', function() {
         $("#myAlert2").css("visibility", "hidden");
         $("#myAlert2").css("display", "none");
     });
 });
+//endregion
 
-// $(function() {
-//     $("#searchCoursesForm").submit(function() {
-//         searchCourses();
-//     });
-// });
-
+//region 1.2、监听课程搜索框，实时搜索
 $(document).ready(function() {
     $("#searchCoursesVal").keyup(function() {
         searchCourses();
     });
 });
-//监听input框，实时渲染
-// $('#searchCoursesVal').on('input', function() {
-//     searchCourses();
-// });
+//endregion
 
+//region 1.3、搜索课程
 function searchCourses() {
     let val = $("#searchCoursesVal").val();
     //var coursesTbody = $("#coursesTbody");
@@ -67,7 +54,6 @@ function searchCourses() {
     if (val == null && val == ""){
         return false;
     }
-
     $.ajax({
         type: 'POST',
         url: url,
@@ -81,7 +67,6 @@ function searchCourses() {
             //coursesTbody.append(data.tbody);
         }
     });
-
 }
 
 function initHtml(ages,courses) {
@@ -102,9 +87,10 @@ function initHtml(ages,courses) {
         for (var j=0;j<courses.length;j++){
             tableBodyHtml = tableBodyHtml + '<tr>';
             // 遍历单条信息
+            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].age + '</td>';
             tableBodyHtml = tableBodyHtml + '<td><a href='+ getRootPath()+'/Teacher/getPracticeByCourseId/ >' + courses[j].name + '</a></td>';
-            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].intro + '</a></td>';
-            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].practiceSize + '</a></td>';
+            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].intro + '</td>';
+            tableBodyHtml = tableBodyHtml + '<td>' + courses[j].practiceSize + '</td>';
             tableBodyHtml = tableBodyHtml + '<td class="td-actions text-left">' +
                 '<div class="form-button-action">' +
                 '<button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">' +
@@ -126,6 +112,29 @@ function initHtml(ages,courses) {
     }
 
 }
+//endregion
+
+
+//endregion
+
+//region 2、练习js
+function toPractice(id){
+    var url = getRootPath() + "/Teacher/getPracticeByCourseId/" + id;
+    $.get(url,function(data,status){
+        alert("数据: " + data + "\n状态: " + status);
+    });
+}
+//endregion
+
+function addPracticesTest() {
+    var name = $("#name").val();
+    if (name == "") {
+        $("#myAlert2").css("visibility", "visible");
+        $("#myAlert2").css("display", "inline");
+        return false;
+    }
+    return true;
+}
 
 function searchPractices() {
     var val = $("#searchPracticesVal").val();
@@ -144,24 +153,71 @@ function searchPractices() {
 }
 
 function deleteCourse(id) {
-    var an = confirm("确定删除？");
-    if (an) {
-        location.href = "deleteCourse/" + id;
+    if (id != null && id !== ""){
+        var an = confirm("确定删除？");
+        if (an) {
+            $.get(getRootPath() + "/Teacher/deleteCourse/" + id, function(data){
+                switch (data.result) {
+                    case -1:
+                        //删除报错
+                        alert("删除失败:\n"+data.e);
+                        break;
+                    case 0:
+                        //删除失败
+                        alert("删除失败:\n");
+                        break;
+                    case 1:
+                        //删除成功
+                        window.location.href = getRootPath() + "/Teacher/indexUrl";
+                        break;
+                    case 2:
+                        //无权限删除该课程
+                        alert(data.msg);
+                        break;
+                    case 3:
+                        //课程不存在
+                        alert(data.msg);
+                        break;
+                    case 4:
+                        //登录超时
+                        window.location.href = getRootPath();
+                        break;
+                    default:
+                        break;
+                }
+                //$("div").html(result);
+            });
+            // $.ajax({
+            //     type: 'GET',
+            //     url: getRootPath()+'/Teacher/deleteCourse/'+id,
+            //     //data: 'val=' + val,
+            //     dataType: "json",
+            //     global: false,
+            //     success: function(data) {
+            //        switch (data.result) {
+            //                         case 1:
+            //                             alert("ok");
+            //                             window.location.href = getRootPath() + "/Teacher/indexUrl";
+            //                             break;
+            //                         case 2:
+            //                             alert("删除失败:\n"+data.e);
+            //                             break;
+            //                         case 3:
+            //                             alert(data.msg);
+            //                             break;
+            //                         case 4:
+            //                             window.location.href = getRootPath();
+            //                             break;
+            //                         default:
+            //                             break;
+            //                     }
+            //     }
+            // });
+        }
     }
     return false;
-
 }
-// $(function(){
-//     $('.table tr button').click(function(event){
-//         event.stopPropagation();
-//         var an = confirm("确定删除？");
-//         if (an == true) {
-//             location.href = "deleteCourse/" + id;
-//         } else {
-//             return false;
-//         }
-//     })
-// });
+
 function deletePractice(id) {
     var an = confirm("确定删除？");
     if (an == true) {

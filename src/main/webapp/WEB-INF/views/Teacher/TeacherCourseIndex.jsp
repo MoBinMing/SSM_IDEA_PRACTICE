@@ -67,7 +67,7 @@
                   </a>
                   <a href="#">
                     <div class="notif-img">
-                      <img src="<%=basePath%>images/nan.png" alt="Img Profile">
+                      <img src="<%=basePath%>images/${Teacher.gender}.png" alt="Img Profile">
                     </div>
                     <div class="notif-content">
                       <span class="block"> Reza send messages to you </span>
@@ -89,14 +89,22 @@
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="<%=basePath%>images/nan.png" alt="user-img" width="36" class="img-circle"><span>葛祥友</span> </a>
+            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+
+              <img src="<%=basePath%>userImg/${Teacher.iphone}.jpg" alt="user-img" width="36" class="img-circle"
+                   οnerrοr="this.src='<%=basePath%>images/${Teacher.gender}.png'">
+              <span>葛祥友</span>
+            </a>
             <ul class="dropdown-menu dropdown-user">
               <li>
                 <div class="user-box">
-                  <div class="u-img"><img src="<%=basePath%>images/nan.png" alt="user"></div>
+                  <div class="u-img">
+                    <img src="<%=basePath%>userImg/${Teacher.iphone}.jpg" alt="user"
+                         οnerrοr="this.src='<%=basePath%>images/${Teacher.gender}.png'">
+                  </div>
                   <div class="u-text">
-                    <h4>葛祥友</h4>
-                    <p class="text-muted">hello ：t@qq.com</p>
+                    <h4>${Teacher.name}</h4>
+                    <p class="text-muted">hello ${Teacher.email}</p>
                   </div>
                 </div>
               </li>
@@ -115,11 +123,12 @@
     <div class="scrollbar-inner sidebar-wrapper" style="">
       <div class="user">
         <div class="photo">
-          <img src="<%=basePath%>images/nan.png">
+          <img src="<%=basePath%>userImg/${Teacher.iphone}.jpg"
+               οnerrοr="this.src='<%=basePath%>images/${Teacher.gender}.png'">
         </div>
         <div class="info">
           <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
-              <span> 葛祥友 <span class="user-level">t@qq.com</span>
+              <span>${Teacher.name}<span class="user-level">${Teacher.email}</span>
                 <span class="caret"></span>
               </span>
           </a>
@@ -170,6 +179,11 @@
     <div class="content" id="contentView" style="">
       <div class="card card-tasks p-2">
         <div class="card-body ">
+          <ul class="breadcrumb" id="bodyNav">
+
+            <li class="breadcrumb-item active">Link</li>
+            <li class="breadcrumb-item active">Link</li>
+          </ul>
           <div class="row m-0 pb-2">
             <div class=" card-header p-0 ">
                 <div class="input-group">
@@ -197,17 +211,21 @@
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
+            <table class="table table-hover table-bordered ">
+              <thead >
               <tr>
-                <th > 课程: <div class="btn-group" id="courseAges">
-                  <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 2019 </button>
-                  <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">2018</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">2017</a>
+                <th>
+                  <div class="btn-group" id="courseAges">
+                    <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 2019 </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">2018</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">2017</a>
+                    </div>
                   </div>
-                </div>
+                </th>
+                <th>
+                  课程名称
                 </th>
                 <th>课程介绍</th>
                 <th> 练习数</th>
@@ -217,7 +235,10 @@
               <tbody id="coursesTbody">
               <c:forEach var="item" items="${courses}">
                 <tr onclick="location.href='<%=basePath%>Teacher/getPracticeByCourseId/${item.id}';">
-                  <td><a href="<%=basePath%>Teacher/getPracticeByCourseId/${item.id}" >${item.name}</a></td>
+                  <td>${item.age}</td>
+                  <td>
+                    <button type="button" class="btn btn-link" onclick="toPractice('${item.id}');">${item.name}</button>
+                  </td>
                   <td>${item.intro}</td>
                   <td>${item.practiceSize}</td>
                   <td class="td-actions text-left">
@@ -242,8 +263,12 @@
               <h5 class="modal-title bg-light">添加课程</h5>
               <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
             </div>
-            <form id="addCourses" name="addCourses" method="post" action="/Practice/Teacher/addCourses" class="form-horizontal" role="添加练习" onsubmit="return addPracticesTest();">
+            <form id="addCourses" name="addCourses" method="post" action="<%=basePath%>Teacher/addCourses" class="form-horizontal" role="添加练习" onsubmit="return addPracticesTest();">
               <div class="modal-body" style="">
+                <div class="form-group">
+                  <label for="age">年级：</label>
+                  <input id="age" name="age" type="number" maxlength="4"  value="2020">
+                </div>
                 <div class="form-group">
                   <label for="name">课程名称</label>
                   <div id="myAlert2" class="alert alert-warning" style="visibility: hidden; display: none;">

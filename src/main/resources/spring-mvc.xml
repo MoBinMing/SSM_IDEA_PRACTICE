@@ -32,7 +32,7 @@
 <!--                   cache-period="31556926" />-->
 
     <mvc:resources mapping="/userImg/**"
-                   location="/WEB-INF/resources/" cache-period="215566926"/>
+                   location="/WEB-INF/resources/userImg/" cache-period="215566926"/>
     <mvc:resources mapping="/images/**"
                    location="/WEB-INF/resources/images/" cache-period="215566926"/>
     <mvc:resources mapping="/css/**"
