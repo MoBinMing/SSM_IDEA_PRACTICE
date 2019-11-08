@@ -120,17 +120,22 @@ function initHtml(ages,courses) {
 //region 2、练习js
 function toPractice(id){
     var url = getRootPath() + "/Teacher/getPracticeByCourseId/" + id;
-    $.get(url,function(data,status){
-        alert("数据: " + data + "\n状态: " + status);
-    });
+    //$("#contentView").html(''); //加载页面的div先清空
+    window.location.href = url;
 }
 //endregion
 
 function addPracticesTest() {
+    var age = $("#age").val();
     var name = $("#name").val();
     if (name == "") {
         $("#myAlert2").css("visibility", "visible");
         $("#myAlert2").css("display", "inline");
+        return false;
+    }
+    if (age == "" || age.length<4) {
+        $("#ageAlert").css("visibility", "visible");
+        $("#ageAlert").css("display", "inline");
         return false;
     }
     return true;

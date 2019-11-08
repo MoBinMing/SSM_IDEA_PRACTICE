@@ -37,12 +37,6 @@
     </div>
     <nav class="navbar navbar-header navbar-expand-lg ">
       <div class="container-fluid text-center">
-        <nav id="navigations" class="breadcrumb m-1">
-          <a class="breadcrumb-item" href="#">Home</a>
-          <a class="breadcrumb-item" href="#">Library</a>
-          <a class="breadcrumb-item" href="#">Data</a>
-          <span class="breadcrumb-item active">Bootstrap</span>
-        </nav>
         <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
           <li class="nav-item dropdown hidden-caret">
             <ul class="dropdown-menu notif-box" aria-labelledby="navbarDropdown">
@@ -179,44 +173,23 @@
     <div class="content" id="contentView" style="">
       <div class="card card-tasks p-2">
         <div class="card-body ">
-          <ul class="breadcrumb" id="bodyNav">
-
-            <li class="breadcrumb-item active">Link</li>
-            <li class="breadcrumb-item active">Link</li>
-          </ul>
-          <div class="row m-0 pb-2">
-            <div class=" card-header p-0 ">
-                <div class="input-group">
-                    <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" >
-                    <span class="input-group-addon btn btn-default" onclick="searchCourses();">
-                        <i class="la la-search search-icon"></i>&nbsp 搜索
-                    </span>
-                </div>
-<%--                <form action="" method="post" id="searchCoursesForm" onsubmit="return false;">--%>
-<%--                    <div class="navbar-form navbar-left">--%>
-<%--                        <div class="form-group">--%>
-<%--                            <input type="text" id="searchCoursesVal" name="searchCoursesVal"--%>
-<%--                                   class="form-control" placeholder="输入关键字搜索 ..." autocomplete="off"--%>
-<%--                                   onkeydown="if(event.keyCode===13){event.keyCode=0;event.returnValue=false;searchCourses();}"/> <input--%>
-<%--                                type="hidden" value="selectstock" name="method">--%>
-<%--                            <div id="search-result" class="form-control"></div>--%>
-<%--                            <br>--%>
-<%--                        </div>--%>
-<%--                        <button type="submit" class="btn btn-default"><i class="la la-search search-icon" ></i> 搜索</button>--%>
-<%--                    </div>--%>
-<%--                </form>--%>
-            </div>
-            <div class="col text-right p-0">
-              <button type="button" class="btn btn-outline-success" data-target="#addCourseModal" data-toggle="modal">添加课程 </button>
+          <div class="row m-0 pb-1">
+            <button type="button" class="btn btn-outline-success p-1 mr-2" data-target="#addCourseModal" data-toggle="modal">添加课程</button>
+            <div class="col card-header p-0 col-sm-6 col-md-6	col-lg-6">
+              <div class="input-group">
+                <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" >
+                <span class="input-group-addon btn btn-default" onclick="searchCourses();">
+                    <i class="la la-search search-icon"></i>&nbsp; 搜索 </span>
+              </div>
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table table-hover table-bordered ">
+            <table class="table table-hover table-bordered table-condensed">
               <thead >
               <tr>
                 <th>
                   <div class="btn-group" id="courseAges">
-                    <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 2019 </button>
+                    <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 全部 </button>
                     <div class="dropdown-menu">
                       <a class="dropdown-item" href="#">2018</a>
                       <div class="dropdown-divider"></div>
@@ -263,17 +236,24 @@
               <h5 class="modal-title bg-light">添加课程</h5>
               <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
             </div>
-            <form id="addCourses" name="addCourses" method="post" action="<%=basePath%>Teacher/addCourses" class="form-horizontal" role="添加练习" onsubmit="return addPracticesTest();">
+            <form id="addCourses" name="addCourses" method="post" action="<%=basePath%>Teacher/addCourses" class="form-horizontal" role="添加课程" onsubmit="return addPracticesTest();">
               <div class="modal-body" style="">
                 <div class="form-group">
                   <label for="age">年级：</label>
-                  <input id="age" name="age" type="number" maxlength="4"  value="2020">
+                  <input id="age" name="age" type="number" maxlength="4" value="2020"
+                         oninput="value=value.replace(/[^\d]/g,'');
+                         if(value.length>4)value=value.slice(0,4);">
+                  <div id="ageAlert" class="alert alert-warning p-0 m-0" style="visibility: hidden; display: none;">
+                    <a href="#" class="close p-0 m-0" data-dismiss="alert">×</a>
+                    <strong class="p-0 m-0">提示！</strong>年级输入非法
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="name">课程名称</label>
                   <div id="myAlert2" class="alert alert-warning" style="visibility: hidden; display: none;">
                     <a href="#" class="close" data-dismiss="alert">×</a>
-                    <strong>提示！</strong>课程名称输入不完整！。 </div>
+                    <strong>提示！</strong>课程名称输入不完整！。
+                  </div>
                   <input id="name" name="name" type="text" class="form-control" placeholder="请输入课程名称">
                 </div>
                 <div class="form-group">

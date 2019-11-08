@@ -112,7 +112,7 @@ public class TeacherContoller extends BaceController {
 //        }
 //        return "img/"+filename;
 //    }
- 
+
 	@GetMapping("/indexUrl")
 	public String indexUrl(ModelAndView mv) {
 		try {
@@ -390,52 +390,59 @@ public class TeacherContoller extends BaceController {
 
 	// 获取所有练习
 	@GetMapping("/getPracticeByCourseId/{id}")
-	public ModelAndView getPracticeByCourseId(ModelAndView mv, @PathVariable int id) {
-		mv.setViewName("TeacherIndex");
-		request.getSession().setAttribute("thisCourseId", id);
-		List<Practice> practices = practiceService.getPracticeByCourseId(id);
-		mv.addObject("HtmlContent", PracticesUtil.getPracticeByCourseIdHtml(request, questionsService, practices, id));
-		mv.addObject("javascriptHtml", "//测试开始\r\n" + "        function SwitchClick(dom) {\r\n"
-				+ "            	var checked = dom.checked;\r\n" + "				var id=dom.id;\r\n"
-				+ "            	if(checked) {\r\n"
-				+ "					$.get(\"/Practice/Teacher/updatePracticeReadyToOn?pid=\"+id,function(data,status){\r\n"
-				+ "						if(data.updateOk){ \r\n" + "							alert(\"开放成功\"); \r\n"
-				+ "							location.reload();" + "						}else{\r\n"
-				+ "							alert(\"开放失败！\"); \r\n" + "						} \r\n"
-				+ "    				});\r\n" + "            	} else {\r\n"
-				+ "					$.get(\"/Practice/Teacher/updatePracticeReadyToOff?pid=\"+id,function(data,status){\r\n"
-				+ "						if(data.updateOk){ \r\n" + "							alert(\"停止开放成功\"); \r\n"
-				+ "							location.reload();" + "						}else{\r\n"
-				+ "							alert(\"停止开放失败！\"); \r\n" + "						} \r\n"
-				+ "    				});\r\n" + "            	}\r\n" + "        }");
-		mv.addObject("csstHtml", ".SwitchIcon {\r\n" +
-		// " margin: 200px auto;\r\n" +
-				"        }\r\n" + "\r\n" + "        .toggle-button {\r\n" + "            display: none;\r\n"
-				+ "        }\r\n" + "\r\n" + "        .button-label {\r\n" + "            position: relative;\r\n"
-				+ "            display: inline-block;\r\n" + "            width: 80px;\r\n"
-				+ "            height: 30px;\r\n" + "            background-color: #ccc;\r\n"
-				+ "            box-shadow: #ccc 0px 0px 0px 2px;\r\n" + "            border-radius: 30px;\r\n"
-				+ "            overflow: hidden;\r\n" + "        }\r\n" + "\r\n" + "        .circle {\r\n"
-				+ "            position: absolute;\r\n" + "            top: 0;\r\n" + "            left: 0;\r\n"
-				+ "            width: 30px;\r\n" + "            height: 30px;\r\n"
-				+ "            border-radius: 50%;\r\n" + "            background-color: #fff;\r\n" + "        }\r\n"
-				+ "\r\n" + "        .button-label .text {\r\n" + "            line-height: 30px;\r\n"
-				+ "            font-size: 18px;\r\n" + "            text-shadow: 0 0 2px #ddd;\r\n" + "        }\r\n"
-				+ "\r\n" + "        .on {\r\n" + "            color: #fff;\r\n" + "            display: none;\r\n"
-				+ "            text-indent: -45px;\r\n" + "        }\r\n" + "\r\n" + "        .off {\r\n"
-				+ "            color: #fff;\r\n" + "            display: inline-block;\r\n"
-				+ "            text-indent: 34px;\r\n" + "        }\r\n" + "\r\n"
-				+ "        .button-label .circle {\r\n" + "            left: 0;\r\n"
-				+ "            transition: all 0.3s;\r\n" + "        }\r\n" + "\r\n"
-				+ "        .toggle-button:checked + label.button-label .circle {\r\n" + "            left: 50px;\r\n"
-				+ "        }\r\n" + "\r\n" + "        .toggle-button:checked + label.button-label .on {\r\n"
-				+ "            display: inline-block;\r\n" + "        }\r\n" + "\r\n"
-				+ "        .toggle-button:checked + label.button-label .off {\r\n" + "            display: none;\r\n"
-				+ "        }\r\n" + "\r\n" + "        .toggle-button:checked + label.button-label {\r\n"
-				+ "            background-color: #19e236;\r\n" + "        }\r\n" + "\r\n" + "        .div {\r\n"
-				+ "            height: 20px;\r\n" + "            width: 30px;\r\n"
-				+ "            background: #51ccee;\r\n" + "        }");
-		return mv;
+	public String getPracticeByCourseId(@PathVariable int id) {
+		Course course=courseService.selectByPrimaryKey(id);
+		if (course!=null){
+			request.getSession().setAttribute("course", course);
+			List<Practice> practices = practiceService.getPracticeByCourseId(id);
+			//mv.addObject("HtmlContent", PracticesUtil.getPracticeByCourseIdHtml(request, questionsService, practices, id));
+			String javascriptHtml= "//测试开始\r\n" +
+					"function SwitchClick(dom) {\r\n"
+					+ "            	var checked = dom.checked;\r\n" + "				var id=dom.id;\r\n"
+					+ "            	if(checked) {\r\n"
+					+ "					$.get(\"/Practice/Teacher/updatePracticeReadyToOn?pid=\"+id,function(data,status){\r\n"
+					+ "						if(data.updateOk){ \r\n" + "							alert(\"开放成功\"); \r\n"
+					+ "							location.reload();" + "						}else{\r\n"
+					+ "							alert(\"开放失败！\"); \r\n" + "						} \r\n"
+					+ "    				});\r\n" + "            	} else {\r\n"
+					+ "					$.get(\"/Practice/Teacher/updatePracticeReadyToOff?pid=\"+id,function(data,status){\r\n"
+					+ "						if(data.updateOk){ \r\n" + "							alert(\"停止开放成功\"); \r\n"
+					+ "							location.reload();" + "						}else{\r\n"
+					+ "							alert(\"停止开放失败！\"); \r\n" + "						} \r\n"
+					+ "    				});\r\n" + "            	}\r\n" + "        }";
+			String cssHtml=".SwitchIcon {\r\n" +
+					// " margin: 200px auto;\r\n" +
+					"        }\r\n" + "\r\n" + "        .toggle-button {\r\n" + "            display: none;\r\n"
+					+ "        }\r\n" + "\r\n" + "        .button-label {\r\n" + "            position: relative;\r\n"
+					+ "            display: inline-block;\r\n" + "            width: 80px;\r\n"
+					+ "            height: 30px;\r\n" + "            background-color: #ccc;\r\n"
+					+ "            box-shadow: #ccc 0px 0px 0px 2px;\r\n" + "            border-radius: 30px;\r\n"
+					+ "            overflow: hidden;\r\n" + "        }\r\n" + "\r\n" + "        .circle {\r\n"
+					+ "            position: absolute;\r\n" + "            top: 0;\r\n" + "            left: 0;\r\n"
+					+ "            width: 30px;\r\n" + "            height: 30px;\r\n"
+					+ "            border-radius: 50%;\r\n" + "            background-color: #fff;\r\n" + "        }\r\n"
+					+ "\r\n" + "        .button-label .text {\r\n" + "            line-height: 30px;\r\n"
+					+ "            font-size: 18px;\r\n" + "            text-shadow: 0 0 2px #ddd;\r\n" + "        }\r\n"
+					+ "\r\n" + "        .on {\r\n" + "            color: #fff;\r\n" + "            display: none;\r\n"
+					+ "            text-indent: -45px;\r\n" + "        }\r\n" + "\r\n" + "        .off {\r\n"
+					+ "            color: #fff;\r\n" + "            display: inline-block;\r\n"
+					+ "            text-indent: 34px;\r\n" + "        }\r\n" + "\r\n"
+					+ "        .button-label .circle {\r\n" + "            left: 0;\r\n"
+					+ "            transition: all 0.3s;\r\n" + "        }\r\n" + "\r\n"
+					+ "        .toggle-button:checked + label.button-label .circle {\r\n" + "            left: 50px;\r\n"
+					+ "        }\r\n" + "\r\n" + "        .toggle-button:checked + label.button-label .on {\r\n"
+					+ "            display: inline-block;\r\n" + "        }\r\n" + "\r\n"
+					+ "        .toggle-button:checked + label.button-label .off {\r\n" + "            display: none;\r\n"
+					+ "        }\r\n" + "\r\n" + "        .toggle-button:checked + label.button-label {\r\n"
+					+ "            background-color: #19e236;\r\n" + "        }\r\n" + "\r\n" + "        .div {\r\n"
+					+ "            height: 20px;\r\n" + "            width: 30px;\r\n"
+					+ "            background: #51ccee;\r\n" + "        }";
+			request.getSession().setAttribute("cssHtml",cssHtml);
+			request.getSession().setAttribute("javascriptHtml",javascriptHtml);
+			return "Teacher/TeacherPracticeIndex";
+		}else {
+			return "redirect:/Teacher/indexUrl";
+		}
 	}
 	// region 当前练习管理
 
