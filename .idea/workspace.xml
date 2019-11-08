@@ -7,13 +7,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="基本完成课程页">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherContoller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherContoller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherIndex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherPracticeIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherPracticeIndex.jsp" afterDir="false" />
-    </list>
+    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="基本完成课程页" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -342,7 +336,7 @@
       <workItem from="1573029246926" duration="2670000" />
       <workItem from="1573104175417" duration="18881000" />
       <workItem from="1573127648354" duration="2083000" />
-      <workItem from="1573170358398" duration="11250000" />
+      <workItem from="1573170358398" duration="11288000" />
     </task>
     <task id="LOCAL-00001" summary="idea ssm 示例">
       <created>1572527977577</created>
@@ -379,7 +373,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573129822336</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="基本完成课程页">
+      <created>1573185619728</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1573185619728</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

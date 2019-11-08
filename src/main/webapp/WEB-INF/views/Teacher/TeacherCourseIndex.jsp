@@ -174,7 +174,8 @@
       <div class="card card-tasks p-2">
         <div class="card-body ">
           <div class="row m-0 pb-1">
-            <button type="button" class="btn btn-outline-success p-1 mr-2" data-target="#addCourseModal" data-toggle="modal">添加课程</button>
+            <button type="button" class="btn btn-outline-success p-1 mr-2" data-target="#addCourseModal"
+                    data-toggle="modal">添加课程</button>
             <div class="col card-header p-0 col-sm-6 col-md-6	col-lg-6">
               <div class="input-group">
                 <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" >
