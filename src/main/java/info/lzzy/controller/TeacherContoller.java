@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.lzzy.models.view.PracticeDao;
+import info.lzzy.utils.DateTimeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -255,10 +257,15 @@ public class TeacherContoller extends BaceController {
 				practice.setIsReady(0);
 				practice.setQuestionCount(0);
 				practice.setId(practiceService.getIdByMax() + 1);
-				practiceService.addPractice(practice);
+				Course course= (Course) request.getSession().getAttribute("course");
+				if (course!=null){
+                    practice.setCourseId(course.getId());
+                    practiceService.addPractice(practice);
+                    return "redirect:/Teacher/getPracticeByCourseId/" + practice.getCourseId();
+                }
 			}
 		}
-		return "redirect:/Teacher/getPracticeByCourseId/" + practice.getCourseId();
+        return "redirect:/Teacher/indexUrl";
 	}
 
 	@GetMapping("/deleteCourse/{id}")
@@ -303,10 +310,13 @@ public class TeacherContoller extends BaceController {
 	 */
 	@GetMapping("deletePractice/{id}")
 	public String deletePractice(@PathVariable int id) {
-		int courseId = (int) request.getSession().getAttribute("thisCourseId");
-		practiceService.deletePracticeByKey(id);
-		return "redirect:/Teacher/getPracticeByCourseId/" + courseId;
-
+	    String teacherId= (String) request.getSession().getAttribute("teacherId");
+		Course course = (Course) request.getSession().getAttribute("course");
+		if (course.getTeacherId().equals(teacherId)){
+            practiceService.deletePracticeByKey(id);
+            return "redirect:/Teacher/getPracticeByCourseId/" + course.getId();
+        }
+        return "redirect:/Login/Exit";
 	}
 
 	@GetMapping("/updatePracticeReadyToOn")
@@ -316,8 +326,7 @@ public class TeacherContoller extends BaceController {
 		Map<String, Object> map = new HashMap<>();
 		String teacherId = (String) request.getSession().getAttribute("teacherId");
 		Practice practices = practiceService.getPracticeById(id);
-		int courseId = (int) request.getSession().getAttribute("thisCourseId");
-		Course course = courseService.selectByPrimaryKey(courseId);
+		Course course = (Course) request.getSession().getAttribute("course");
 		boolean updateOk = false;
 		if (practices.getIsReady() != 1) {
 			if (course.getTeacherId().equals(teacherId)) {
@@ -341,8 +350,7 @@ public class TeacherContoller extends BaceController {
 		Map<String, Object> map = new HashMap<>();
 		String teacherId = (String) request.getSession().getAttribute("teacherId");
 		Practice practices = practiceService.getPracticeById(id);
-		int courseId = (int) request.getSession().getAttribute("thisCourseId");
-		Course course = courseService.selectByPrimaryKey(courseId);
+		Course course = (Course) request.getSession().getAttribute("course");
 		boolean updateOk = false;
 		if (practices.getIsReady() != 0) {
 			if (course.getTeacherId().equals(teacherId)) {
@@ -358,7 +366,23 @@ public class TeacherContoller extends BaceController {
 		return map;
 
 	}
-	
+
+
+    @PostMapping("/updatePractice")
+    public String updatePractice(Practice practice) {
+        Course course = (Course) request.getSession().getAttribute("course");
+        if (course!=null){
+            try {
+                practiceService.updatePracticeSelective(practice);
+                return "redirect:/Teacher/getPracticeByCourseId/" + course.getId();
+            }catch (Exception e){
+                request.getSession().setAttribute("errorInfo",e.getMessage());
+                return "shared/error";
+            }
+
+        }
+        return "redirect:/Login/Exit";
+    }
 
 	@GetMapping("/searchPractices")
 	@ResponseBody
@@ -395,6 +419,15 @@ public class TeacherContoller extends BaceController {
 		if (course!=null){
 			request.getSession().setAttribute("course", course);
 			List<Practice> practices = practiceService.getPracticeByCourseId(id);
+            List<PracticeDao> pDaos = new ArrayList<>();
+            for (int j = 0; j < practices.size(); j++) {
+                Practice practice = practices.get(j);
+                PracticeDao practiceDao= new PracticeDao();
+                BeanCopyUtil.beanCopy(practice, practiceDao);
+                practiceDao.setStrDate(DateTimeUtils.DATE_TIME_FORMAT.format(practice.getUpTime()));
+                pDaos.add(practiceDao);
+            }
+			request.getSession().setAttribute("practices",pDaos);
 			//mv.addObject("HtmlContent", PracticesUtil.getPracticeByCourseIdHtml(request, questionsService, practices, id));
 			String javascriptHtml= "//测试开始\r\n" +
 					"function SwitchClick(dom) {\r\n"
@@ -446,21 +479,9 @@ public class TeacherContoller extends BaceController {
 	}
 	// region 当前练习管理
 
-	/*
-	 * 
-	 * @PostMapping("/managingCurrentExercises")
-	 * 
-	 * @ResponseBody public Map<String, Object> managingCurrentExercises(String id)
-	 * { Map<String, Object> map=new HashMap<>(); if (!id.isEmpty()) {
-	 * List<Questions> qList=questionsService.getQuestionsByPracticeId(id);
-	 * List<Options> options=new ArrayList<>(); for (Questions questions : qList) {
-	 * options.addAll(optionsService.getOptionsByQuestionsKey(questions.getId())); }
-	 * Practices practices=practicesService.getPracticesById(id);
-	 * map.put("thisBody", PracticesUtil.getManagingCurrentExercises(practices,
-	 * qList, options)); }else { map.put("thisBody","id空"); } return map; }
-	 */
-	@GetMapping("/managingCurrentExercises/{id}")
-	public ModelAndView managingCurrentExercises(ModelAndView mv, @PathVariable int id) {
+
+	@GetMapping("/toQuestionForPractice/{id}")
+	public ModelAndView toQuestionForPractice(ModelAndView mv, @PathVariable int id) {
 		mv.setViewName("TeacherIndex");
 		request.getSession().setAttribute("thisPracticeId", id);
 		List<Question> qList = questionsService.getQuestionByPracticeId(id);

@@ -125,38 +125,6 @@ function toPractice(id){
 }
 //endregion
 
-function addPracticesTest() {
-    var age = $("#age").val();
-    var name = $("#name").val();
-    if (name == "") {
-        $("#myAlert2").css("visibility", "visible");
-        $("#myAlert2").css("display", "inline");
-        return false;
-    }
-    if (age == "" || age.length<4) {
-        $("#ageAlert").css("visibility", "visible");
-        $("#ageAlert").css("display", "inline");
-        return false;
-    }
-    return true;
-}
-
-function searchPractices() {
-    var val = $("#searchPracticesVal").val();
-    var practiceTbody = $("#practiceTbody");
-    $.ajax({
-        type: 'POST',
-        url: '/Practice/Teacher/searchPractices',
-        data: 'val=' + val,
-        dataType: "json",
-        global: false,
-        success: function(data) {
-            alert(data.tbody);
-            practiceTbody.append(data.tbody);
-        }
-    });
-}
-
 function deleteCourse(id) {
     if (id != null && id !== ""){
         var an = confirm("确定删除？");
@@ -190,77 +158,8 @@ function deleteCourse(id) {
                     default:
                         break;
                 }
-                //$("div").html(result);
             });
-            // $.ajax({
-            //     type: 'GET',
-            //     url: getRootPath()+'/Teacher/deleteCourse/'+id,
-            //     //data: 'val=' + val,
-            //     dataType: "json",
-            //     global: false,
-            //     success: function(data) {
-            //        switch (data.result) {
-            //                         case 1:
-            //                             alert("ok");
-            //                             window.location.href = getRootPath() + "/Teacher/indexUrl";
-            //                             break;
-            //                         case 2:
-            //                             alert("删除失败:\n"+data.e);
-            //                             break;
-            //                         case 3:
-            //                             alert(data.msg);
-            //                             break;
-            //                         case 4:
-            //                             window.location.href = getRootPath();
-            //                             break;
-            //                         default:
-            //                             break;
-            //                     }
-            //     }
-            // });
         }
     }
     return false;
-}
-
-function deletePractice(id) {
-    var an = confirm("确定删除？");
-    if (an == true) {
-        location.href = "/Practice/Teacher/deletePractice/" + id;
-    } else {
-        return false;
-    }
-}
-
-function deleteQuestion(id) {
-    var an = confirm("确定删除？");
-    if (an == true) {
-        location.href = "/Practice/Teacher/deleteQuestion/" + id;
-    } else {
-        return false;
-    }
-}
-
-function updateReady(id) {
-    $.get("updateReady/" + id, function(data, status) {
-        if (data.thisBody == (getRootPath() + "Login/LoginIndexUrl")) {
-            location.href = data.thisBody;
-        } else {
-            $("#tbody").html(data.thisBody);
-        }
-    });
-}
-
-function getStudentManagementHtml() {
-    $.get("getStudentManagementHtml", function(data, status) {
-        if (data.ok != "ok") {
-            $("#contentView").html(data.thisBody);
-        } else {
-            $("#contentView").html(data.thisBody);
-        }
-    });
-}
-/* bootstrap开关控件，初始化 */
-function onLi() {
-    $('#mySwitch input').bootstrapSwitch();
 }

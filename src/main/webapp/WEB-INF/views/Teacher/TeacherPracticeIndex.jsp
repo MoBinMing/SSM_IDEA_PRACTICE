@@ -14,12 +14,16 @@
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
   <link rel="stylesheet" type="text/css" href="<%=basePath%>assets/css/ready.css">
   <link rel="stylesheet" type="text/css" href="<%=basePath%>assets/css/demo.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css" >
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
 </head>
 <style type="text/css">
+  body {
+    text-align: center
+  }
 
   .SwitchIcon {
+    margin: 200px auto;
   }
 
   .toggle-button {
@@ -91,35 +95,12 @@
     width: 30px;
     background: #51ccee;
   }
-
 </style>
 <script type="text/javascript">
-  function SwitchClick(dom) {
-    var checked = dom.checked;
-    var id=dom.id;
-    if(checked) {
-      $.get(getRootPath()+"Teacher/updatePracticeReadyToOn?pid="+id,
-              function(data,status){
-                  if(data.updateOk){
-                    alert("开放成功");
-                    location.reload();
-                  }else{
-                    alert("开放失败！");
-                  }
-              });
-    } else {
-      $.get(getRootPath()+"Teacher/updatePracticeReadyToOff?pid="+id,function(data,status){
-        if(data.updateOk){
-          alert("停止开放成功");
-          location.reload();
-        }else{
-          alert("停止开放失败！");
-        }
-      });
-    }
-  }
+  /* bootstrap开关控件，初始化 */
+
 </script>
-<script type="text/javascript" src="<%=basePath%>scripts/teacherIndex.js"></script>
+<script type="text/javascript" src="<%=basePath%>scripts/teacherPracticeIndex.js"></script>
 </head>
 <body id="body" onload="onLi()">
 <div class="wrapper">
@@ -267,63 +248,80 @@
   </div>
   <div class="main-panel">
     <div class="content" id="contentView" style="" >
-      <div class="card card-tasks p-2">
-        <div class="card-body ">
-          <ul class="breadcrumb p-1 m-0">
+      <div class="card card-tasks p-1">
+        <div class="card-body p-0">
+          <ul class="breadcrumb ">
             <li class="breadcrumb-item"> <a href="<%=basePath%>Teacher/indexUrl">全部课程</a> </li>
-            <li class="breadcrumb-item active"><a href="<%=basePath%>Teacher/getPracticeByCourseId/${course.id}">${course.name}</a></li>
+            <li class="breadcrumb-item active">${course.age}级&nbsp;${course.name}</li>
           </ul>
-          <div class="row m-0 pb-2">
-            <div class=" card-header p-0 ">
+          <div class="row m-0 pb-1">
+            <div class="card-header p-0 m-0 col-sm-9 col-md-6 col-lg-6">
               <div class="input-group">
-                <input id="searchCoursesVal" placeholder="请输入关键字" type="text" class="form-control input-lg ">
-                <span class="input-group-addon btn btn-default " onclick="searchCourses();">
-                    <i class="la la-search search-icon"></i></span>
+                <input id="searchPracticesVal" placeholder="输入关键字搜索练习 ..." type="text" class="form-control input-lg"
+                       onkeyup="searchPractices();">
+                <span class="input-group-addon btn btn-default" onclick="searchPractices();">
+                    <i class="la la-search search-icon"></i>&nbsp; 搜索 </span>
               </div>
             </div>
-            <div class="col text-right p-0">
-              <button type="button" class="btn btn-outline-success" data-target="#addCourseModal" data-toggle="modal">添加课程 </button>
+            <div class="text-right p-0 m-0 col-sm-3 col-md-6 col-lg-6">
+              <button type="button" class="btn btn-outline-success p-2 ml-1" data-target="#addPracticesModal" data-toggle="modal" >添加练习</button>
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table table-hover table-bordered ">
+            <table class="table table-hover table-bordered text-center ">
               <thead>
               <tr>
                 <th> 练习名称 </th>
                 <th> 题目数 </th>
-                <th> 上传时间 </th>
+                <th> 创建时间 </th>
                 <th> 是否开放 </th>
-                <th class="text-center"> 操作 </th>
+                <th> 编辑练习 </th>
+                <th> 删除练习 </th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <td><a href="<%=basePath%>Teacher/managingCurrentExercises/25" class="">锁定</a><br>1213131313468<br></td>
-                <td>Planning new project structure</td>
-                <td>Planning new project structure</td>
-                <td>
-                  <div class="SwitchIcon m-0">
-                    <div class="toggle-button-wrapper">
-                      <input type="checkbox" id="toggle-button" name="switch" οnclick="SwitchClick()" checked="" style="">
-                      <label for="toggle-button" class="button-label">
-                        <span class="circle"></span>
-                        <span class="text on">ON</span>
-                        <span class="text off" style="">OFF</span>
-                      </label>
+              <c:forEach var="item" items="${practices}">
+<%--                onclick="location.href='<%=basePath%>Teacher/toQuestionForPractice/${item.id}';"--%>
+                <tr>
+                  <td><a href="<%=basePath%>Teacher/toQuestionForPractice/${item.id}" class="">${item.name}</a><br>${item.outlines}<br></td>
+                  <td>${item.questionCount}</td>
+                  <td>${item.strDate}</td>
+                  <td>
+                    <div class="SwitchIcon p-0 m-0" >
+                      <div class="toggle-button-wrapper">
+                        <input type="checkbox" id="practice${item.id}" class="toggle-button" name="switch"
+
+                        <c:if test="${item.isReady==1}">
+                               checked="checked"
+                        </c:if>
+                               onclick="event.stopPropagation();SwitchClick(this);">
+                        <label for="practice${item.id}" class="button-label" >
+                          <span class="circle"></span>
+                          <span class="text on">ON</span>
+                          <span class="text off">OFF</span>
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td class="td-actions text-right">
-                  <div class="form-button-action">
-                    <button type="button" data-toggle="tooltip" title="修改练习" class="btn btn-link <btn-simple-primary">
-                      <i class="la la-edit">编辑</i></button>
-                    <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">
-                      <i class="la la-times">删除</i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr></tr>
+                  </td>
+                  <td class="text-center">
+                    <div class="form-button-action">
+                      <button type="button" data-toggle="tooltip" title="修改练习" class="btn btn-link <btn-simple-primary"
+                              onclick="showUpdatePracticeModal('${item.id}','${item.name}','${item.outlines}');
+                                      event.stopPropagation();">
+                        <i class="la la-edit">编辑</i>
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger"
+                              onclick="deletePractice('${item.id}');event.stopPropagation();">
+                        <i class="la la-times" >删除</i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </c:forEach>
               </tbody>
             </table>
           </div>
@@ -331,7 +329,7 @@
       </div>
       <div class="modal" id="addPracticesModal">
         <div class="modal-dialog" role="document">
-          <div class="modal-content">
+          <div class="modal-content text-left">
             <div class="modal-header">
               <h5 class="modal-title bg-light">添加练习</h5> <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
             </div>
@@ -357,6 +355,38 @@
         </div>
       </div>
     </div>
+    <div class="modal" id="updatePracticeModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content text-left">
+          <div class="modal-header">
+            <h5 class="modal-title bg-light">编辑练习</h5> <button type="button" class="close" data-dismiss="modal"> <span>×</span> </button>
+          </div>
+          <form id="updatePractice" name="updatePractice" method="post" action="<%=basePath%>Teacher/updatePractice" class="form-horizontal" role="编辑练习" onsubmit="return updatePractice();">
+            <div class="modal-body" style="">
+              <div class="form-group" style="display: none;">
+                <label for="practiceId">练习id</label>
+                <input id="practiceId" name="id" type="text" class="form-control" placeholder="">
+              </div>
+              <div class="form-group">
+                <label for="practiceName">练习名称</label>
+                <div id="updatePracticeAlert" class="alert alert-warning" style="visibility: hidden; display: none;">
+                  <a href="#" class="close" data-dismiss="alert">×</a>
+                  <strong>提示！</strong>练习名称输入不完整！。 </div> <input id="practiceName" name="name" type="text" class="form-control" placeholder="请输入练习名称">
+              </div>
+              <div class="form-group">
+                <label for="practiceOutlines">练习描述</label>
+                <textarea id="practiceOutlines" name="outlines" class="form-control" placeholder="请输入练习描述" rows="3"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" >确认更新</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
     <footer class="footer">
       <div class="container-fluid">
         <nav class="navbar navbar-default navbar-fixed-bottom"></nav>

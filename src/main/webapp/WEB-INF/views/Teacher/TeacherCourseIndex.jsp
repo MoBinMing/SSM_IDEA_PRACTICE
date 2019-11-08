@@ -23,7 +23,7 @@
 </style>
 <script type="text/javascript">
 </script>
-<script type="text/javascript" src="<%=basePath%>scripts/teacherIndex.js"></script>
+<script type="text/javascript" src="<%=basePath%>scripts/teacherCourseIndex.js"></script>
 </head>
 <body onload="onLi()">
 <div class="wrapper">
@@ -171,32 +171,41 @@
   </div>
   <div class="main-panel">
     <div class="content" id="contentView" style="">
-      <div class="card card-tasks p-2">
-        <div class="card-body ">
+      <div class="card card-tasks p-1">
+        <div class="card-body p-0">
+          <ul class="breadcrumb ">
+            <li class="breadcrumb-item active">全部课程</li>
+            <li class="breadcrumb-item active"></li>
+          </ul>
           <div class="row m-0 pb-1">
-            <button type="button" class="btn btn-outline-success p-1 mr-2" data-target="#addCourseModal"
-                    data-toggle="modal">添加课程</button>
-            <div class="col card-header p-0 col-sm-6 col-md-6	col-lg-6">
+            <div class="col card-header p-0 col-sm-6 col-md-6col-lg-6">
               <div class="input-group">
-                <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" >
+                <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg"
+                        onkeyup="searchCourses();">
                 <span class="input-group-addon btn btn-default" onclick="searchCourses();">
                     <i class="la la-search search-icon"></i>&nbsp; 搜索 </span>
               </div>
+            </div>
+          </div>
+          <div class="row m-0 p-1">
+            <div class="btn-group" id="courseAges">
+              <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 全部 </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">2018</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">2017</a>
+              </div>
+            </div>
+            <div class="col text-right p-0 m-0">
+              <button type="button" class="btn btn-outline-success p-2 m-0"
+                      data-target="#addCourseModal" data-toggle="modal" >添加课程</button>
             </div>
           </div>
           <div class="table-responsive">
             <table class="table table-hover table-bordered table-condensed">
               <thead >
               <tr>
-                <th>
-                  <div class="btn-group" id="courseAges">
-                    <button class="btn btn-outline-dark dropdown-toggle p-1" data-toggle="dropdown"> 全部 </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">2018</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">2017</a>
-                    </div>
-                  </div>
+                <th>年级
                 </th>
                 <th>
                   课程名称

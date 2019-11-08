@@ -219,7 +219,7 @@ public class PracticesUtil {
 		   			Practice practice2=practice.get(i);
 		   			String isReady=practice2.getIsReady()==1?"checked=\"checked\"":"";
 					bodyHtml.append("        <tr>\r\n" + 
-		   		"                          <td><a href=\"<%=basePoth%>Teacher/managingCurrentExercises/"+practice2.getId()+"\" class=\"\">"+practice2.getName()+"</a><br>"+practice2.getOutlines()+"<br></td>\r\n" +
+		   		"                          <td><a href=\"<%=basePath%>Teacher/managingCurrentExercises/"+practice2.getId()+"\" class=\"\">"+practice2.getName()+"</a><br>"+practice2.getOutlines()+"<br></td>\r\n" +
 		   		"                          <td>"+questionService.getQuestionByPracticeId(practice2.getId()).size()+"</td>\r\n" + 
 		   		"                          <td>"+DateTimeUtils.DATE_TIME_FORMAT.format(practice2.getUpTime())+"</td>\r\n" + 
 		   		"                          <td>"
@@ -286,7 +286,6 @@ public class PracticesUtil {
 		   		"            </div>\r\n" + 
 		   		"          </div>\r\n" + 
 		   		"        </div>");
-		  
 		return bodyHtml.toString();
 	}
 	// region 首页练习html
