@@ -85,10 +85,11 @@ function initHtml(ages,courses) {
     if (count(courses) !== 0){
         var tableBodyHtml = "";
         for (var j=0;j<courses.length;j++){
-            tableBodyHtml = tableBodyHtml + '<tr>';
+            tableBodyHtml = tableBodyHtml + "<tr onclick=\"location.href='"+ getRootPath() +
+                "/Teacher/getPracticeByCourseId/"+ courses[j].id + "';\">";
             // 遍历单条信息
             tableBodyHtml = tableBodyHtml + '<td>' + courses[j].age + '</td>';
-            tableBodyHtml = tableBodyHtml + '<td><a href='+ getRootPath()+'/Teacher/getPracticeByCourseId/ >' + courses[j].name + '</a></td>';
+            tableBodyHtml = tableBodyHtml + '<td><a href='+ getRootPath()+'/Teacher/getPracticeByCourseId/'+ courses[j].id + '>' + courses[j].name + '</a></td>';
             tableBodyHtml = tableBodyHtml + '<td>' + courses[j].intro + '</td>';
             tableBodyHtml = tableBodyHtml + '<td>' + courses[j].practiceSize + '</td>';
             tableBodyHtml = tableBodyHtml + '<td class="td-actions text-left">' +

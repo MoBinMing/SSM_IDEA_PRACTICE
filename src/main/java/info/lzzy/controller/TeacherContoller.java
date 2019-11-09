@@ -384,23 +384,34 @@ public class TeacherContoller extends BaceController {
         return "redirect:/Login/Exit";
     }
 
-	@GetMapping("/searchPractices")
+	@PostMapping("/searchPractices")
 	@ResponseBody
-	public Map<String, Object> searchPractices(String searchPracticesVal) {
+	public Map<String, Object> searchPractices(String val) {
 		Map<String, Object> map = new HashMap<>();
-		int thisCourseId = (int) request.getSession().getAttribute("thisCourseId");
-		String teacherId = (String) request.getSession().getAttribute("teacherId");
-		if (!teacherId.isEmpty()) {
-			List<Practice> pList = new ArrayList<>();
-			if (!searchPracticesVal.isEmpty()) {
-				pList = practiceService.inquirePracticeByNameByOutlinesByCourseId(thisCourseId, searchPracticesVal);
-				map.put("tbody", PracticesUtil.searchPracticesTbodyHtml(questionsService, pList));
+		Course course = (Course) request.getSession().getAttribute("course");
+		if (course!=null) {
+			String teacherId = (String) request.getSession().getAttribute("teacherId");
+			if (!teacherId.isEmpty()) {
+				List<Practice> pList;
+				if (!val.isEmpty()) {
+					pList = practiceService.inquirePracticeByNameByOutlinesByCourseId(course.getId(), val);
+				} else {
+					pList = practiceService.getPracticeByCourseId(course.getId());
+				}
+				List<PracticeDao> pDaos = new ArrayList<>();
+				for (int j = 0; j < pList.size(); j++) {
+					Practice practice = pList.get(j);
+					PracticeDao practiceDao= new PracticeDao();
+					BeanCopyUtil.beanCopy(practice, practiceDao);
+					practiceDao.setStrDate(DateTimeUtils.DATE_TIME_FORMAT.format(practice.getUpTime()));
+					pDaos.add(practiceDao);
+				}
+				map.put("practices", pDaos);
 			} else {
-				pList = practiceService.getPracticeByCourseId(thisCourseId);
-				map.put("tbody", PracticesUtil.searchPracticesTbodyHtml(questionsService, pList));
+				map.put("practices", "登录超时");
 			}
-		} else {
-			map.put("body", "登录超时，请重新登录！");
+		}else {
+			map.put("practices", "登录超时");
 		}
 		return map;
 	}

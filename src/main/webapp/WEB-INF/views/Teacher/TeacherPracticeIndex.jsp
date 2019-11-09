@@ -6,7 +6,6 @@
 <!DOCTYPE html>
 <html >
 <head>
-  <!-- Bootstrap 核心CSS 文件 -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>教师主页</title>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport">
@@ -279,7 +278,7 @@
                 <th> 删除练习 </th>
               </tr>
               </thead>
-              <tbody>
+              <tbody id="practicesTbody">
               <c:forEach var="item" items="${practices}">
 <%--                onclick="location.href='<%=basePath%>Teacher/toQuestionForPractice/${item.id}';"--%>
                 <tr>

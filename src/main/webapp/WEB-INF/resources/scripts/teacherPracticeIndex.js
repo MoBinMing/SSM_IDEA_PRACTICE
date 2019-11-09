@@ -43,21 +43,86 @@ function addPracticesTest() {
 }
 
 function searchPractices() {
-    var val = $("#searchPracticesVal").val();
-    var practiceTbody = $("#practiceTbody");
+    var kw = $("#searchPracticesVal").val().toString();
+    var url = getRootPath() + "/Teacher/searchPractices";
+    var practicesTbody = $("#practicesTbody");
     $.ajax({
         type: 'POST',
-        url: '/Practice/Teacher/searchPractices',
-        data: 'val=' + val,
+        url: url,
+        data: 'val=' + kw,
         dataType: "json",
         global: false,
         success: function(data) {
-            alert(data.tbody);
-            practiceTbody.append(data.tbody);
+            //alert(data.practices);
+            if (data.practices!="登录超时"){
+                createPracticeCellHtml(data.practices);
+            }else {
+                window.location.href = getRootPath();
+            }
         }
     });
 }
+function createPracticeCellHtml(practices) {
+    if (count(practices) !== 0){
+        var tableBodyHtml = "";
+        for (var j=0;j<practices.length;j++){
+            tableBodyHtml = tableBodyHtml + '<tr>';
+            // 遍历单条信息
 
+            tableBodyHtml = tableBodyHtml +"<td>" +
+                "<a href=\""+ getRootPath() +"/Teacher/toQuestionForPractice/"+ practices[j].id
+                +"\" class=\"\">"+ practices[j].name +"</a><br>" + practices[j].outlines + "<br>"
+                +"</td>";
+            tableBodyHtml = tableBodyHtml + '<td>' + practices[j].questionCount + '</td>';
+            tableBodyHtml = tableBodyHtml + '<td>' + practices[j].strDate + '</td>';
+            tableBodyHtml = tableBodyHtml +
+                '<td>' +
+                    '<div class="SwitchIcon p-0 m-0" >' +
+                        '<div class="toggle-button-wrapper">' +
+                            '<input type="checkbox" id="practice'+ practices[j].id +'" class="toggle-button" name="switch"';
+            if (practices[j].isReady===1){
+                tableBodyHtml = tableBodyHtml + "checked=\"checked\"";
+            }
+            tableBodyHtml = tableBodyHtml +  'onclick="event.stopPropagation();SwitchClick(this);">'+
+                            '<label for="practice' + practices[j].id + '" class="button-label" >'+
+                                '<span class="circle"></span>'+
+                                '<span class="text on">ON</span>'+
+                                '<span class="text off">OFF</span>'+
+                            '</label>'+
+                        '</div>'+
+                    '</div>' +
+                '</td>';
+            tableBodyHtml = tableBodyHtml +
+                '<td class="text-center">\n' +
+                '     <div class="form-button-action">\n' +
+                '         <button type="button" data-toggle="tooltip" title="修改练习" class="btn btn-link <btn-simple-primary"\n' +
+                "                 onclick=\"showUpdatePracticeModal('" + practices[j].id + "','"+ practices[j].name + "','" +
+                                    practices[j].outlines +"');event.stopPropagation();\">" +
+                '             <i class="la la-edit">编辑</i>\n' +
+                '         </button>\n' +
+                '     </div>\n' +
+                '</td>';
+            tableBodyHtml = tableBodyHtml + '<td>\n' +
+                '                    <div class="form-button-action">\n' +
+                '                      <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger"\n' +
+                '                              onclick="deletePractice(\'' + practices[j].id+ '\');event.stopPropagation();">\n' +
+                '                        <i class="la la-times" >删除</i>\n' +
+                '                      </button>\n' +
+                '                    </div>\n' +
+                '                  </td>';
+            tableBodyHtml = tableBodyHtml + '</tr>';
+        }
+        $("#practicesTbody").html(tableBodyHtml);
+    }else {
+        $("#practicesTbody").html("<div class=\"alert alert-success alert-dismissable\">\n" +
+            "\t<button type=\"button\" class=\"close\" data-dismiss=\"alert\"\n" +
+            "\t\t\taria-hidden=\"true\">\n" +
+            "\t\t&times;\n" +
+            "\t</button>\n" +
+            "\t当前搜索关键词无数据！!\n" +
+            "</div>");
+    }
+}
 
 function deletePractice(id) {
     var an = confirm("确定删除？");
