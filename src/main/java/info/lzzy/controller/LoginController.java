@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.lzzy.models.view.CourseDao;
+import info.lzzy.models.Admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,9 +17,15 @@ import info.lzzy.utils.Encipher;
 @RequestMapping("/Login")
 public class LoginController extends BaceController {
 
-	@GetMapping("/LoginIndexUrl")
-	public String LoginIndexUrl(Map<String, String> map) {
-		request.getSession().setAttribute("read_file_role", true);
+    private static final String SESSION_ROLE_KEY = "role";
+    private static final String SESSION_ROLE_VALUE_ADMIN = "Admin";
+    private static final String SESSION_ROLE_VALUE_TEACHER = "Teacher";
+    private static final String SESSION_ROLE_VALUE_STUDENT = "Student";
+    private static final String SESSION_USER_KEY = "user";
+
+    @GetMapping("/LoginIndexUrl")
+	public String LoginIndexUrl() {
+		//request.getSession().setAttribute("read_file_role", true);
 		//String filePath = request.getSession().getServletContext().getRealPath("WEB-INF/resources/html/Index.html");
 		//GetHtml html = new GetHtml();
 		// filePath= System.getProperty("user.dir");
@@ -32,37 +38,55 @@ public class LoginController extends BaceController {
 	public Map<String, Object> LoginUrl(String iphone, String password, Long time) {
 		Long loginTime = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<>();
-		if (((loginTime - time) / 1000) < 8) {
+		if (((loginTime - time) / 1000) < 5) {
 			Student thisStudent=studentService.selectStudentByIphone(iphone);
-			String studentUserPaw="";
 			if (thisStudent!=null) {
-				studentUserPaw=Encipher.DecodePasswd(thisStudent.getPassword());
-			}
-			if (studentUserPaw.equals(password)) {
-				request.getSession().setAttribute("Iphone", iphone);
-				request.getSession().setAttribute("Email", thisStudent.getEmail());
-				request.getSession().setAttribute("role", "Student");
-				request.getSession().setAttribute("Student", thisStudent);
-				map.put("msg", "/Student/StudentIndex");
-			} else {
-				Teacher teacher = teacherService.selectTeacherByIphone(iphone);
-				String teacherUserPaw="";
-				if (teacher!=null) {
-					teacherUserPaw=Encipher.DecodePasswd(teacher.getPassword());
-				}
-				if (teacherUserPaw.equals(password)) {
-					request.getSession().setAttribute("Iphone", iphone);
-					request.getSession().setAttribute("Email", teacher.getEmail());
-					request.getSession().setAttribute("role", "Teacher");
-					request.getSession().setAttribute("teacherId", teacher.getTeacherId());
-					request.getSession().setAttribute("Teacher", teacher);
-					map.put("msg", "/Teacher/indexUrl");
-				} else {
-					map.put("msg", "账号或密码错误！");
-				}
-			}
+                String studentUserPaw=Encipher.DecodePasswd(thisStudent.getPassword());
+                if (studentUserPaw.equals(password)) {
+                    emptySession();
+                    request.getSession().setAttribute(SESSION_ROLE_KEY, SESSION_ROLE_VALUE_STUDENT);
+                    request.getSession().setAttribute(SESSION_USER_KEY, thisStudent);
+                    map.put("msg", "ok");
+                    map.put("link", "/Student/StudentIndex");
+                }
+			}else {
+                Teacher teacher = teacherService.selectTeacherByIphone(iphone);
+                if (teacher!=null) {
+                    String teacherUserPaw=Encipher.DecodePasswd(teacher.getPassword());
+                    if (teacherUserPaw.equals(password)) {
+                        emptySession();
+                        request.getSession().setAttribute(SESSION_ROLE_KEY, SESSION_ROLE_VALUE_TEACHER);
+                        request.getSession().setAttribute(SESSION_USER_KEY, teacher);
+                        map.put("msg", "ok");
+                        map.put("link", "/Teacher/indexUrl");
+                    } else {
+                        map.put("msg", "error");
+                        map.put("info", "账号或密码错误！");
+                    }
+                }else {
+                    Admin admin=adminService.selectAdminByIphone(iphone);
+                    if (admin!=null){
+                        String adminUserPaw=Encipher.DecodePasswd(admin.getPassword());
+                        if (adminUserPaw.equals(password)){
+                            emptySession();
+                            request.getSession().setAttribute(SESSION_ROLE_KEY, SESSION_ROLE_VALUE_ADMIN);
+                            request.getSession().setAttribute(SESSION_USER_KEY, admin);
+                        }else {
+                            map.put("msg", "error");
+                            map.put("info", "账号或密码错误！");
+                        }
+                    }else {
+                        map.put("msg", "error");
+                        map.put("info", "账号或密码错误！");
+                    }
+                }
+            }
+
 		}else {
-			map.put("msg", "请求超时！");
+            map.put("msg", "error");
+			map.put("info", "请求超时！\n请求时间："+time+"\n收到请求时间："+loginTime+"\n" +
+                    "(（ 收到请求时间 - 请求时间 ）/ 1000 ) = "+((loginTime - time) / 1000)
+                    +"\n连接时间超时（5秒） ");
 		}
 		return map;
 	}
@@ -73,11 +97,14 @@ public class LoginController extends BaceController {
 		 * SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 * String date=sFormat.format(new Date());
 		 */
-		Enumeration em = request.getSession().getAttributeNames();
-		while (em.hasMoreElements()) {
-			request.getSession().removeAttribute(em.nextElement().toString());
-		}
-
-		return "redirect:/Login/LoginIndexUrl";
+        emptySession();
+        return "redirect:/Login/LoginIndexUrl";
 	}
+
+    public void emptySession() {
+        Enumeration em = request.getSession().getAttributeNames();
+        while (em.hasMoreElements()) {
+            request.getSession().removeAttribute(em.nextElement().toString());
+        }
+    }
 }

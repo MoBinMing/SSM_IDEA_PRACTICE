@@ -21,7 +21,7 @@ import info.lzzy.utils.PracticesUtil;
 
 @Controller
 @RequestMapping("/Student")
-public class StudentContoller extends BaceController{
+public class StudentController extends BaceController{
 	
 	@RequestMapping({"/StudentIndex"})
 	   public String studentIndex(Map<String, String> map) {

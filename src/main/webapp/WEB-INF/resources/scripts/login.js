@@ -65,25 +65,13 @@ $(function() {
                 $("#btn-submit").val("正在登陆...");
             },
             success: function(msg) {
-                if (msg.msg === "请求超时！") {
-                    $("#btn-submit").attr("disabled", false);
-                    $("#btn-submit").val("登陆");
-                    alert(msg.msg);
-                } else if (msg.msg === "无权限登录，请联系管理员！") {
-                    $("#btn-submit").attr("disabled", false);
-                    $("#btn-submit").val("登陆");
-                    alert(msg.msg);
-                } else if (msg.msg === "账号或密码错误！") {
-                    $("#btn-submit").attr("disabled", false);
-                    $("#btn-submit").val("登陆");
-                    alert(msg.msg);
-                } else if (msg.msg === "非法请求！") {
-                    $("#btn-submit").attr("disabled", false);
-                    $("#btn-submit").val("登陆");
-                    alert(msg.msg);
-                } else {
-                    let urlLocation = getRootPath() + msg.msg;
+                if (msg.msg == "ok") {
+                    let urlLocation = getRootPath() + msg.link;
                     window.location.href = urlLocation;
+                } else {
+                    $("#btn-submit").attr("disabled", false);
+                    $("#btn-submit").val("登陆");
+                    alert(msg.info);
                 }
             }
         });

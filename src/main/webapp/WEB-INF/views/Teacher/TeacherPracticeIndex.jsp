@@ -86,7 +86,7 @@
   }
 
   .toggle-button:checked + label.button-label {
-    background-color: #19e236;
+    background-color: #708997;
   }
 
   .div {
@@ -137,7 +137,7 @@
                   </a>
                   <a href="#">
                     <div class="notif-img">
-                      <img src="<%=basePath%>images/${Teacher.gender}.png" alt="Img Profile">
+                      <img src="<%=basePath%>images/${user.gender}.png" alt="Img Profile">
                     </div>
                     <div class="notif-content">
                       <span class="block"> Reza send messages to you </span>
@@ -161,20 +161,20 @@
           <li class="nav-item dropdown">
             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
 
-              <img src="<%=basePath%>userImg/${Teacher.iphone}.jpg" alt="user-img" width="36" class="img-circle"
-                   οnerrοr="this.src='<%=basePath%>images/${Teacher.gender}.png'">
+              <img src="<%=basePath%>userImg/${user.iphone}.jpg" alt="user-img" width="36" class="img-circle"
+                   onerror=src='<%=basePath%>images/${user.gender}.png'>
               <span>葛祥友</span>
             </a>
             <ul class="dropdown-menu dropdown-user">
               <li>
                 <div class="user-box">
                   <div class="u-img">
-                    <img src="<%=basePath%>userImg/${Teacher.iphone}.jpg" alt="user"
-                         οnerrοr="this.src='<%=basePath%>images/${Teacher.gender}.png'">
+                    <img src="<%=basePath%>userImg/${user.iphone}.jpg" alt="user"
+                         onerror=src='<%=basePath%>images/${user.gender}.png'>
                   </div>
                   <div class="u-text">
-                    <h4>${Teacher.name}</h4>
-                    <p class="text-muted">hello ${Teacher.email}</p>
+                    <h4>${user.name}</h4>
+                    <p class="text-muted">hello ${user.email}</p>
                   </div>
                 </div>
               </li>
@@ -193,12 +193,12 @@
     <div class="scrollbar-inner sidebar-wrapper" style="">
       <div class="user">
         <div class="photo">
-          <img src="<%=basePath%>userImg/${Teacher.iphone}.jpg"
-               οnerrοr="this.src='<%=basePath%>images/${Teacher.gender}.png'">
+          <img src="<%=basePath%>userImg/${user.iphone}.jpg"
+               onerror=src='<%=basePath%>images/${user.gender}.png'>
         </div>
         <div class="info">
           <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
-              <span>${Teacher.name}<span class="user-level">${Teacher.email}</span>
+              <span>${user.name}<span class="user-level">${user.email}</span>
                 <span class="caret"></span>
               </span>
           </a>
