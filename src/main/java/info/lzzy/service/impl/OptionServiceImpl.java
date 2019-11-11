@@ -5,6 +5,7 @@ import java.util.List;
 import info.lzzy.dao.OptionMapper;
 import info.lzzy.models.Option;
 import info.lzzy.service.OptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -13,11 +14,8 @@ import javax.annotation.Resource;
 @Service
 public class OptionServiceImpl implements OptionService {
 
-	public static OptionServiceImpl getOptionServiceImpl() {
-		return new OptionServiceImpl();
-		// TODO Auto-generated constructor stub
-	}
-	  @Resource
+
+	@Autowired
 	  private OptionMapper optionMapper;
 
 	@Override

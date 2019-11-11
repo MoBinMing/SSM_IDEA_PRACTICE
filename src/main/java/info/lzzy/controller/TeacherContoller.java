@@ -1,7 +1,5 @@
 package info.lzzy.controller;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import info.lzzy.models.view.PracticeDao;
+import info.lzzy.models.view.QuestionDao;
 import info.lzzy.utils.DateTimeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,6 @@ import info.lzzy.models.Question;
 import info.lzzy.models.Student;
 import info.lzzy.models.Teacher;
 import info.lzzy.models.view.CourseDao;
-import info.lzzy.utils.PracticesUtil;
 
 @Controller
 @RequestMapping("/Teacher")
@@ -491,18 +489,17 @@ public class TeacherContoller extends BaceController {
 	// region 当前练习管理
 
 
-	@GetMapping("/toQuestionForPractice/{id}")
-	public ModelAndView toQuestionForPractice(ModelAndView mv, @PathVariable int id) {
-		mv.setViewName("TeacherIndex");
-		request.getSession().setAttribute("thisPracticeId", id);
+	@GetMapping("/QuestionForPractice/{id}")
+	public String questionForPractice(@PathVariable int id) {
+		//mv.setViewName("TeacherIndex");
+		request.getSession().setAttribute("practice", practiceService.getPracticeById(id));
 		List<Question> qList = questionsService.getQuestionByPracticeId(id);
-		List<Option> options = new ArrayList<>();
-		for (Question questions : qList) {
-			options.addAll(optionService.getOptionByQuestionKey(questions.getId()));
+		List<QuestionDao> questionDaoList =new ArrayList<>();
+		for (Question q : qList) {
+			questionDaoList.add(new QuestionDao(q,optionService.getOptionByQuestionKey(q.getId())));
 		}
-		Practice practices = practiceService.getPracticeById(id);
-		mv.addObject("HtmlContent", PracticesUtil.getManagingCurrentExercises(practices, qList, options));
-		return mv;
+		request.getSession().setAttribute("questions", questionDaoList);
+		return "Teacher/TeacherQuestionIndex";
 	}
 
 	@GetMapping("deleteQuestion/{id}")

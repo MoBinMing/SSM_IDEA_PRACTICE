@@ -19,9 +19,9 @@
             <form class="col-10 col-sm-10 col-md-8 col-lg-3 col-xl-4 m-auto p-4 " style="background: rgba(255, 255, 255, 0.1); min-width: fit-content;" onsubmit="return false;" role="form" action="" id="form1" method="POST" >
                 <h4 class="mb-1.5 text-center">登录</h4>
                 <div class="form-group"> <label for="iphone">Iphone </label>
-                    <input class="form-control" placeholder="请输入手机号" id="iphone" name="iphone" type="text"> </div>
+                    <input class="form-control" placeholder="请输入手机号" id="iphone" name="iphone" type="text" value="13877209240"> </div>
                 <div class="form-group"> <label for="password">Password</label>
-                    <input class="form-control" placeholder="请输入密码" id="password" name="password" type="password">
+                    <input class="form-control" placeholder="请输入密码" id="password" name="password" type="password" value="1">
                 </div>
                 <div class="row">
                     <label class="col-md-6 mb-3">

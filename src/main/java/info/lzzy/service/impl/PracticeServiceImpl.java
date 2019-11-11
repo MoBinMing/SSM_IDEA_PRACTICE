@@ -5,6 +5,7 @@ import java.util.List;
 import info.lzzy.dao.PracticeMapper;
 import info.lzzy.models.Practice;
 import info.lzzy.service.PracticeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -13,7 +14,7 @@ import javax.annotation.Resource;
 @Service
 public class PracticeServiceImpl implements PracticeService{
 
-	  @Resource
+	@Autowired
 	  private PracticeMapper practiceMapper;
 
 

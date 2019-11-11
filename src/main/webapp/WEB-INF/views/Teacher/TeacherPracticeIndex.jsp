@@ -280,9 +280,9 @@
               </thead>
               <tbody id="practicesTbody">
               <c:forEach var="item" items="${practices}">
-<%--                onclick="location.href='<%=basePath%>Teacher/toQuestionForPractice/${item.id}';"--%>
+<%--                onclick="location.href='<%=basePath%>Teacher/QuestionForPractice/${item.id}';"--%>
                 <tr>
-                  <td><a href="<%=basePath%>Teacher/toQuestionForPractice/${item.id}" class="">${item.name}</a><br>${item.outlines}<br></td>
+                  <td><a href="<%=basePath%>Teacher/QuestionForPractice/${item.id}" class="">${item.name}</a><br>${item.outlines}<br></td>
                   <td>${item.questionCount}</td>
                   <td>${item.strDate}</td>
                   <td>

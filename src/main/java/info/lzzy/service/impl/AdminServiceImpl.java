@@ -3,6 +3,7 @@ package info.lzzy.service.impl;
 import info.lzzy.dao.AdminMapper;
 import info.lzzy.models.Admin;
 import info.lzzy.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -10,7 +11,7 @@ import javax.annotation.Resource;
 @Service("AdminService")
 public class AdminServiceImpl implements AdminService
 {
-	@Resource
+	@Autowired
 	private AdminMapper adminMapper;
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import info.lzzy.dao.StudentMapper;
 import info.lzzy.models.Student;
 import info.lzzy.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,7 +13,7 @@ import javax.annotation.Resource;
 @Service
 public class StudentServiceImpl implements StudentService
 {
-	@Resource
+	@Autowired
 	private StudentMapper studentMapper;
 	@Override
 	public Student selectStudentByIphoneAndPaw(String iphone, String password) {

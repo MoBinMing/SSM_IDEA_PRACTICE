@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Practice">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="Practice.war">
+      <element id="artifact" artifact-name="SSM_IDEA_PRACTICE:war exploded" />
+    </root>
+  </artifact>
+</component>

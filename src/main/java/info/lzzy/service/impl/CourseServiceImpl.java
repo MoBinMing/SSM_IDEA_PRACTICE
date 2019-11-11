@@ -5,6 +5,7 @@ import java.util.List;
 import info.lzzy.dao.CourseMapper;
 import info.lzzy.models.Course;
 import info.lzzy.service.CourseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,7 +13,7 @@ import javax.annotation.Resource;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-	  @Resource
+	@Autowired
 	  private CourseMapper courseMapper;
 
 	@Override

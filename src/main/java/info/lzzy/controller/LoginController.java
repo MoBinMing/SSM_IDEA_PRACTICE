@@ -32,7 +32,7 @@ public class LoginController extends BaceController {
 	public Map<String, Object> LoginUrl(String iphone, String password, Long time) {
 		Long loginTime = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<>();
-		if (((loginTime - time) / 1000) < 5) {
+		if (((loginTime - time) / 1000) < 8) {
 			Student thisStudent=studentService.selectStudentByIphone(iphone);
 			String studentUserPaw="";
 			if (thisStudent!=null) {

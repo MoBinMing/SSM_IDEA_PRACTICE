@@ -5,6 +5,7 @@ import java.util.List;
 import info.lzzy.dao.QuestionMapper;
 import info.lzzy.models.Question;
 import info.lzzy.service.QuestionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -13,7 +14,7 @@ import javax.annotation.Resource;
 @Service
 public class QuestionsServiceImpl implements QuestionService{
 
-	  @Resource
+	@Autowired
 	  private QuestionMapper questionMapper;
 	  @Override
 	public List<Question> getQuestionByPracticeId(Integer practiceId) {

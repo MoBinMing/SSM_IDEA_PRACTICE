@@ -43,7 +43,7 @@ function addPracticesTest() {
 }
 
 function searchPractices() {
-    var kw = $("#searchPracticesVal").val().toString();
+    var kw = $("#searchPracticesVal").val()+"";
     var url = getRootPath() + "/Teacher/searchPractices";
     var practicesTbody = $("#practicesTbody");
     $.ajax({
