@@ -53,7 +53,7 @@ $(function() {
         } else {
             localStorage.removeItem('keyPass');
         }
-        var time = Date.parse(new Date());
+        var time = new Date().getTime();
         let url = getRootPath()+"/Login/LoginUrl";
         $.ajax({
             url: url,

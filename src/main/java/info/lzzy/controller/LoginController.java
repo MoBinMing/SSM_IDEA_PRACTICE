@@ -1,10 +1,12 @@
 package info.lzzy.controller;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
 import info.lzzy.models.Admin;
+import info.lzzy.utils.DateTimeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,8 +39,10 @@ public class LoginController extends BaceController {
 	@ResponseBody
 	public Map<String, Object> LoginUrl(String iphone, String password, Long time) {
 		Long loginTime = System.currentTimeMillis();
+		long tome=((loginTime - time) / 1000);
+		System.out.println("请求时间差"+tome + "当前时间："+ DateTimeUtils.DATE_TIME_FORMAT.format(new Date()));
 		Map<String, Object> map = new HashMap<>();
-		if (((loginTime - time) / 1000) < 5) {
+		if (tome < 5) {
 			Student thisStudent=studentService.selectStudentByIphone(iphone);
 			if (thisStudent!=null) {
                 String studentUserPaw=Encipher.DecodePasswd(thisStudent.getPassword());
@@ -84,7 +88,7 @@ public class LoginController extends BaceController {
 
 		}else {
             map.put("msg", "error");
-			map.put("info", "请求超时！\n请求时间："+time+"\n收到请求时间："+loginTime+"\n" +
+			map.put("info", "请求超时！\n请求时间："+time+" -> var time = new Date().getTime();\n收到请求时间："+loginTime+"-> Long loginTime = System.currentTimeMillis();\n" +
                     "(（ 收到请求时间 - 请求时间 ）/ 1000 ) = "+((loginTime - time) / 1000)
                     +"\n连接时间超时（5秒） ");
 		}

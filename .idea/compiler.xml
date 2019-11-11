@@ -6,9 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="PracticeService" />
         <module name="SSM_IDEA_PRACTICE" />
         <module name="Practice" />
+        <module name="PracticeService" />
       </profile>
     </annotationProcessing>
   </component>

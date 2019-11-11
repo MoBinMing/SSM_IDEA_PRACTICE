@@ -13,93 +13,8 @@
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>assets/css/ready.css">
 	<link rel="stylesheet" type="text/css" href="<%=basePath%>assets/css/demo.css">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
 </head>
-<style type="text/css">
-	body {
-		text-align: center
-	}
 
-	.SwitchIcon {
-		margin: 200px auto;
-	}
-
-	.toggle-button {
-		display: none;
-	}
-
-	.button-label {
-		position: relative;
-		display: inline-block;
-		width: 80px;
-		height: 30px;
-		background-color: #ccc;
-		box-shadow: #ccc 0px 0px 0px 2px;
-		border-radius: 30px;
-		overflow: hidden;
-	}
-
-	.circle {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		background-color: #fff;
-	}
-
-	.button-label .text {
-		line-height: 30px;
-		font-size: 18px;
-		text-shadow: 0 0 2px #ddd;
-	}
-
-	.on {
-		color: #fff;
-		display: none;
-		text-indent: -45px;
-	}
-
-	.off {
-		color: #fff;
-		display: inline-block;
-		text-indent: 34px;
-	}
-
-	.button-label .circle {
-		left: 0;
-		transition: all 0.3s;
-	}
-
-	.toggle-button:checked + label.button-label .circle {
-		left: 50px;
-	}
-
-	.toggle-button:checked + label.button-label .on {
-		display: inline-block;
-	}
-
-	.toggle-button:checked + label.button-label .off {
-		display: none;
-	}
-
-	.toggle-button:checked + label.button-label {
-		background-color: #19e236;
-	}
-
-	.div {
-		height: 20px;
-		width: 30px;
-		background: #51ccee;
-	}
-</style>
-<script type="text/javascript">
-	/* bootstrap开关控件，初始化 */
-
-</script>
-<script type="text/javascript" src="<%=basePath%>scripts/teacherPracticeIndex.js"></script>
 </head>
 <body id="body" onload="onLi()">
 <div class="wrapper">
@@ -320,10 +235,70 @@
 													</blockquote>
 												</div>
 												<div class="tab-pane fade " id="editQuestion${item.id}" role="tabpanel">
-													<p class="">Who formed us in his own image, and the breath of that universal love which bears and sustains us. And then, my friend.</p>
+													<form role="form">
+														<div class="form-group p-1">
+															<label class="control-label p-0 m-0 form-control-static"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题号：${item.number} </label>
+														</div>
+														<div class="form-group p-1">
+															<div class="row m-0">
+																<label for="editQuestionContent" class="p-0 m-0 control-label form-control-static"> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;题目： </label>
+																<textarea id="editQuestionContent" class="col w-100 p-0" placeholder="请输入题目"> ${item.content}</textarea>
+															</div>
+														</div>
+														<div class="form-group p-1">
+															<div class="row m-0">
+																<label for="editQuestionType" class="p-0 m-0 control-label form-control-static"> 题目类型： </label>
+																<select id="editQuestionType" class="col form-control input-sm w-100">
+																	<c:if test="${item.questionType==0}">
+																		<option value="0">单项选择</option>
+																		<option value="1">多项选择</option>
+																		<option value="2">不定项选择</option>
+																		<option value="3">判断题</option>
+																	</c:if>
+																	<c:if test="${item.questionType==1}">
+																		<option value="1">多项选择</option>
+																		<option value="2">不定项选择</option>
+																		<option value="3">判断题</option>
+																		<option value="0">单项选择</option>
+																	</c:if>
+																	<c:if test="${item.questionType==2}">
+																		<option value="2">不定项选择</option>
+																		<option value="0">单项选择</option>
+																		<option value="1">多项选择</option>
+																		<option value="3">判断题</option>
+																	</c:if>
+																	<c:if test="${item.questionType==3}">
+																		<option value="3">判断题</option>
+																		<option value="0">单项选择</option>
+																		<option value="1">多项选择</option>
+																		<option value="2">不定项选择</option>
+																	</c:if>
+																</select>
+															</div>
+														</div>
+														<div class="form-group p-1">
+															<div class="row m-0 p-0">
+																<label class="p-0 m-0 control-label form-control-static"> 设置选项： </label>
+																<span class="col w-100 p-0 m-0  text-right"><i class="la la-plus-square m-2">添加选项</i></span>
+
+																<div class="col-md-12">
+
+																	<ol class="" type="A">
+																		<li><input class="p-0" placeholder="请输入选项名称">
+																			<div class="radio">
+																				<label><input type="radio" name="optradio">Option 1</label>
+																			</div>
+																			<i class="m-1 la la-trash-alt">
+																			</i>
+																		</li>
+																	</ol>
+																</div>
+															</div>
+														</div>
+													</form>
 												</div>
 												<div class="tab-pane fade" id="tabthree" role="tabpanel">
-													<p class="">In my soul and absorb its power, like the form of a beloved mistress, then I often think with longing.</p>
+
 												</div>
 											</div>
 										</div>
