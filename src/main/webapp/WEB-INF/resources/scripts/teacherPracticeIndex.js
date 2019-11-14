@@ -70,7 +70,7 @@ function createPracticeCellHtml(practices) {
             // 遍历单条信息
 
             tableBodyHtml = tableBodyHtml +"<td>" +
-                "<a href=\""+ getRootPath() +"/Teacher/toQuestionForPractice/"+ practices[j].id
+                "<a href=\""+ getRootPath() +"/Teacher/QuestionForPractice/"+ practices[j].id
                 +"\" class=\"\">"+ practices[j].name +"</a><br>" + practices[j].outlines + "<br>"
                 +"</td>";
             tableBodyHtml = tableBodyHtml + '<td>' + practices[j].questionCount + '</td>';
@@ -98,7 +98,7 @@ function createPracticeCellHtml(practices) {
                 '         <button type="button" data-toggle="tooltip" title="修改练习" class="btn btn-link <btn-simple-primary"\n' +
                 "                 onclick=\"showUpdatePracticeModal('" + practices[j].id + "','"+ practices[j].name + "','" +
                                     practices[j].outlines +"');event.stopPropagation();\">" +
-                '             <i class="la la-edit">编辑</i>\n' +
+                '             <i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;编辑</i>\n' +
                 '         </button>\n' +
                 '     </div>\n' +
                 '</td>';
@@ -106,7 +106,7 @@ function createPracticeCellHtml(practices) {
                 '                    <div class="form-button-action">\n' +
                 '                      <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger"\n' +
                 '                              onclick="deletePractice(\'' + practices[j].id+ '\');event.stopPropagation();">\n' +
-                '                        <i class="la la-times" >删除</i>\n' +
+                '                        <i class="fa fa-trash-o" aria-hidden="true">&nbsp;删除</i>\n' +
                 '                      </button>\n' +
                 '                    </div>\n' +
                 '                  </td>';
@@ -219,5 +219,5 @@ function getStudentManagementHtml() {
 }
 /* bootstrap开关控件，初始化 */
 function onLi() {
-    $('.mySwitch input').bootstrapSwitch();
+     $('.switch input').bootstrapSwitch();
 }

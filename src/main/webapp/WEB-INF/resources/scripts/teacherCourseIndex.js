@@ -95,7 +95,8 @@ function initHtml(ages,courses) {
             tableBodyHtml = tableBodyHtml + '<td class="td-actions text-left">' +
                 '<div class="form-button-action">' +
                 '<button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger">' +
-                '<i class="la la-times" onclick="deleteCourse(' +courses[j].id + ')">删除</i>' +
+                '<i class="fa fa-trash-o" aria-hidden="true" onclick="deleteCourse(' +courses[j].id + ');' +
+                '       event.stopPropagation();">&nbsp;删除</i>' +
                 '</button>' +
                 '</div>' +
                 '</td>';

@@ -211,6 +211,7 @@ public class TeacherController extends BaceController {
 				course.setAddTime(new Date());
 				course.setTeacherId(teacher.getTeacherId());
 				course.setId(courseService.getIdByMax() + 1);
+				courseService.insert(course);
 				return toCourseIndexUrl();
 			}else {
 				return toExit();

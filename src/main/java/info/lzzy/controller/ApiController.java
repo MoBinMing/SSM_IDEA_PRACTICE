@@ -263,7 +263,7 @@ public class ApiController extends BaceController {
 							if (pList.size() > 0) {
 								for (Practice practice : pList) {
 									JSONObject jObject = new JSONObject();
-									jObject.put("id", practice.getId());
+									jObject.put("pId", practice.getId());
 									jObject.put("name", practice.getName());
 									jObject.put("questionCount", practice.getQuestionCount());
 									jObject.put("upTime", format.format(practice.getUpTime()));
@@ -406,12 +406,12 @@ public class ApiController extends BaceController {
 				if (qList.size() > 0) {
 					for (Question question : qList) {
 						JSONObject questionjObject = new JSONObject();
-						questionjObject.put("id", question.getId());
+						questionjObject.put("qId", question.getId());
 						questionjObject.put("content", question.getContent());
 						questionjObject.put("questionType", question.getQuestionType());
 						questionjObject.put("number", question.getNumber());
 						questionjObject.put("analysis", question.getAnalysis());
-						questionjObject.put("practiceId", practiceId);
+						//questionjObject.put("practiceId", practiceId);
 						List<Option> options = optionService.getOptionByQuestionKey(question.getId());
 						JSONArray optionArray = new JSONArray();
 						for (Option option : options) {

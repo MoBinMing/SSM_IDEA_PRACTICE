@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="../shared/tags_bootstrap_v4.1.3.jsp"%>
+<%@ include file="../shared/tags_bootstrap_v4.3.1.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -292,7 +292,7 @@
           <div class="tab-content">
             <div class="tab-content mt-2">
               <div class="tab-pane fade show active" id="tabtwo" role="tabpanel">
-                <div style="margin: 20;">
+                <div style="margin:20;">
                   <div class="container">
                     <div class="row">
                       <div class="text-center col-md-7 mx-auto">
