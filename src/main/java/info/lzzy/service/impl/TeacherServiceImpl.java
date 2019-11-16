@@ -31,6 +31,12 @@ public class TeacherServiceImpl implements TeacherService
 		// TODO Auto-generated method stub
 		return teacherMapper.insert(teacher);
 	}
+
+	@Override
+	public int deleteTeacherByKey(String id) {
+		return teacherMapper.deleteTeacherByKey(id);
+	}
+
 	@Override
 	public Teacher selectTeacherById(String id) {
 		// TODO Auto-generated method stub
@@ -50,5 +56,10 @@ public class TeacherServiceImpl implements TeacherService
 	public int updateByPrimaryKeySelective(Teacher teacher) {
 		// TODO Auto-generated method stub
 		return teacherMapper.updateByPrimaryKeySelective(teacher);
+	}
+
+	@Override
+	public List<Teacher> selectByKw(String kw) {
+		return teacherMapper.selectByKw(kw);
 	}
 }

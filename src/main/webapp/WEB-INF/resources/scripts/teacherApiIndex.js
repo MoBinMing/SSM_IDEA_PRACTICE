@@ -28,13 +28,17 @@ function searchApis(apiRole) {
        kw = $("#searchTeacherApisVal").val()+"";
     }else if (apiRole=="student"){
         kw = $("#searchStudentApisVal").val()+"";
+    }else if (apiRole=="admin"){
+        kw = $("#searchAdminApisVal").val()+"";
     }
-    let requestUrl = getRootPath() + "/apiIndex/searchApis";
+    let requestUrl = getRootPath() + "/ApiIndex/searchApis";
     var apiContainer;
     if (apiRole=="teacher"){
         apiContainer= $("#teacherApiContainer");
     }else if (apiRole=="student"){
         apiContainer= $("#studentApiContainer");
+    }else if (apiRole=="admin"){
+        apiContainer= $("#adminApiContainer");
     }
     $.ajax({
         type: 'POST',

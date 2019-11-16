@@ -11,7 +11,7 @@
 </head>
 
 <body class="mb-0" style=" background: #00000024;background-size: cover;">
-<%@ include file="../shared/navbar.jsp"%>
+<%@ include file="navbar.jsp"%>
 <div class="container pt-3 login-center" style="background: #00000024;">
 	<ul class="breadcrumb ">
 		<li class="breadcrumb-item"> <a href="<%=basePath%>Teacher/indexUrl">全部课程</a> </li>

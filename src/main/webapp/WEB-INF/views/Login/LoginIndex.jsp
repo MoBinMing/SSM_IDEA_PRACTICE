@@ -14,7 +14,7 @@
     }
 </style>
 <body class="mb-0 " style=" background: #00000024;background-size: cover;" >
-<%@ include file="../shared/navbar.jsp"%>
+<%@ include file="navbar.jsp"%>
 <div class="container pt-3 login-center">
     <div class="row align-items-center login-center">
         <div class="p-5 col-md-8 ">

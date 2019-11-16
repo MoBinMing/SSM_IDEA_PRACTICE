@@ -9,9 +9,9 @@ import info.lzzy.models.Teacher;
 
 public interface TeacherMapper {
 	int insert(Teacher teacher);
-    /*int deleteByPrimaryKey(String teacherId);
-     * 
-    int insertSelective(Teacher record);
+    int deleteTeacherByKey(String id);
+
+    /*int insertSelective(Teacher record);
 
     Teacher selectByPrimaryKey(String teacherId);
 
@@ -24,5 +24,7 @@ public interface TeacherMapper {
 	Teacher selectTeacherById(String id);
 	Teacher selectTeacherByIphone(String iphone);
 	List<Teacher> selectAllTeacher();
+
+	List<Teacher> selectByKw(@Param("kw") String kw);
 	int updateByPrimaryKeySelective(Teacher teacher);
 }

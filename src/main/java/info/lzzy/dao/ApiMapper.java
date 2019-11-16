@@ -75,11 +75,6 @@ public interface ApiMapper {
 
     @Select({"select * from api WHERE (role = #{role}) and\n" +
             "    (name like concat('%',#{kw},'%') or info like concat('%',#{kw},'%'))"
-//            "select",
-//            "id, role, name, info, url, type, state, succeed_html, defeated_html, add_time, ",
-//            "request_data",
-//            "from api",
-//            "WHERE role = #(role) and (name like concat('%',#{kw},'%') or info like concat('%',#{kw},'%'))"
     })
     @ResultMap("info.lzzy.dao.ApiMapper.BaseResultMap")
     List<Api> selectByRoleAndKw(@Param("role") String role,@Param("kw") String kw);

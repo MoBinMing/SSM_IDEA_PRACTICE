@@ -6,30 +6,33 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="最后改版前">
-      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiIndexController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/ApiMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Api.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/ApiService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/ApiServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/generatorConfig.xml" afterDir="false" />
+    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="完成教师管理">
+      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/ApiMapper.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/images/body1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherApiIndex.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherQuestionIndex.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Api/TeacherApiIndex.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/bootstrap-switch_3.3.4.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/navbar.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/adminAddTeacherIndex.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/adminTeacherIndex.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin/AdminAddTeacherIndex.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin/AdminStudentIndex.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin/AdminTeacherIndex.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login/navbar.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student/StudentApiIndex.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student/navbar.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherApiIndex.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/navbar.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/Practice_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Practice_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/BaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/BaceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/models/view/QuestionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/view/QuestionType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/spring-mvc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/spring-mvc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiIndexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiIndexController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/ApiMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/ApiMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/TeacherMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/TeacherMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/TeacherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/TeacherService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/TeacherServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/TeacherServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/test/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/TeacherMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/TeacherMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/assets/css/bootstrap.min.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/assets/css/demo.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/assets/css/ready.css" beforeDir="false" />
@@ -172,31 +175,28 @@
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/popper.min-v1.12.5.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/popper.min-v1.14.3.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/smooth-scroll.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherCourseIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherCourseIndex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherPracticeIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherPracticeIndex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherApiIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherApiIndex.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/time.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Api/TeacherApiIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin/AdminApiIndex.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login/LoginIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login/LoginIndex.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student/StudentIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student/StudentIndex.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student/StudentIndex.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherPracticeIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherPracticeIndex.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherQuestionIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherQuestionIndex.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/UtilsHtml/getManagingCurrentExercises.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/registerIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/registerIndex.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/404.ftl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/TeacherIndex.ftl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/error.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/error.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/navbar.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin/navbar.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/register_tags_bootstrap_v4.1.3.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v3.3.7.1.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v3.3.7.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.0.0.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.1.0.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.1.3.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.3.1.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.3.1.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.3.1.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/teacher_Index_footer.jsp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/teacher_Index_tags.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/welcome2.ftl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/generator.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/user.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -229,8 +229,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Jsp File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -248,10 +248,10 @@
     <setting file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherPracticeIndex.js" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/navbar.jsp" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/navbar.jsp" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JspContextManager">
-    <jsp-to-context jsp-file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/navbar.jsp" context-file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login/LoginIndex.jsp" />
+    <jsp-to-context jsp-file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/navbar.jsp" context-file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login/LoginIndex.jsp" />
   </component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
@@ -295,7 +295,7 @@
     <property name="extract.method.default.visibility" value="private" />
     <property name="findjar.last.used.dir" value="$USER_HOME$/git/Practice/Practice/WebContent/WEB-INF/lib" />
     <property name="full.screen.before.presentation.mode" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/target/Practice-1.0/WEB-INF/resources/images" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/info/lzzy/test/phoneLogin" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -312,25 +312,25 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student" />
       <recent name="$PROJECT_DIR$/src/main/resources/mapper" />
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Api" />
       <recent name="D:\idea\SSM_IDEA_PRACTICE\src\main\webapp\WEB-INF\lib" />
-      <recent name="D:\idea\SSM_IDEA_PRACTICE\src\main\webapp\WEB-INF\resources\assets" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/lib" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="info.lzzy.controller" />
       <recent name="info.lzzy.service.impl" />
       <recent name="info.lzzy.service" />
       <recent name="info.lzzy.dao" />
-      <recent name="info.lzzy.controller" />
       <recent name="com.xjt.controller" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/target/Practice-1.0/WEB-INF/resources/images" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/images" />
+      <recent name="$PROJECT_DIR$/src/main/java/info/lzzy/test/phoneLogin" />
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts" />
-      <recent name="$PROJECT_DIR$/src/main/resources/mapper" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -346,19 +346,33 @@
     </option>
   </component>
   <component name="RunManager" selected="Tomcat Server.tomcat-9.0.27">
+    <configuration name="AainTest" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="info.lzzy.test.AainTest" />
+      <module name="Practice" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="info.lzzy.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="main" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="info.lzzy.test.main" />
-      <module name="SSM_IDEA_PRACTICE" />
+    <configuration name="phoneLogin" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="info.lzzy.test.phoneLogin.phoneLogin" />
+      <module name="Practice" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="info.lzzy.test.*" />
+          <option name="PATTERN" value="info.lzzy.test.phoneLogin.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -486,14 +500,16 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.main" />
+      <item itemvalue="Application.AainTest" />
+      <item itemvalue="Application.phoneLogin" />
       <item itemvalue="Maven.generator" />
       <item itemvalue="Tomcat Server.tomcat-9.0.27" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.main" />
-        <item itemvalue="Application.main" />
+        <item itemvalue="Application.phoneLogin" />
+        <item itemvalue="Application.AainTest" />
+        <item itemvalue="Application.AainTest" />
       </list>
     </recent_temporary>
   </component>
@@ -580,6 +596,13 @@
       <workItem from="1573620455595" duration="12141000" />
       <workItem from="1573645243014" duration="6516000" />
       <workItem from="1573689660139" duration="46184000" />
+      <workItem from="1573775804589" duration="37594000" />
+      <workItem from="1573831064391" duration="33000" />
+      <workItem from="1573878291931" duration="7398000" />
+      <workItem from="1573887401184" duration="15202000" />
+      <workItem from="1573908068357" duration="17096000" />
+      <workItem from="1573926755377" duration="226000" />
+      <workItem from="1573927000287" duration="243000" />
     </task>
     <task id="LOCAL-00001" summary="idea ssm 示例">
       <created>1572527977577</created>
@@ -671,22 +694,16 @@
     <MESSAGE value="基本完成课程页" />
     <MESSAGE value="全新优化" />
     <MESSAGE value="最后改版前" />
-    <option name="LAST_COMMIT_MESSAGE" value="最后改版前" />
+    <MESSAGE value="完成教师管理" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成教师管理" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherApiIndex.js</url>
-          <line>31</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="JavascriptDebugType">
         <watch expression="url" language="JavaScript" />
+      </configuration>
+      <configuration name="http://localhost:8080/Practice/Admin/AdminTeacherIndexUrl">
+        <watch expression="data" language="JavaScript" />
       </configuration>
     </watches-manager>
   </component>

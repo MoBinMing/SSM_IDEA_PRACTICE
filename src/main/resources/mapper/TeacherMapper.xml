@@ -36,6 +36,21 @@
 		SELECT * FROM
 		teachers
 	</select>
+	<select id="selectByKw" resultMap="BaseResultMap">
+		SELECT
+			*
+		FROM
+			teachers
+		WHERE
+			teacher_id LIKE concat( '%', #{kw}, '%' )
+			OR (
+				iphone LIKE concat( '%', #{kw}, '%' )
+				OR (
+					name LIKE concat( '%', #{kw}, '%' )
+					OR email LIKE concat( '%', #{kw}, '%' )
+				)
+			)
+	</select>
 	<insert id="insert" parameterType="info.lzzy.models.Teacher">
 		insert into teachers (teacher_id, name, email, 
       password, iphone, gender, 
@@ -44,6 +59,10 @@
       #{password,jdbcType=VARCHAR}, #{iphone,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
       #{valid,jdbcType=INTEGER}, #{imghead,jdbcType=VARCHAR})
 	</insert>
+	<delete id="deleteTeacherByKey" parameterType="java.lang.String">
+		delete from teachers
+		where teacher_id = #{id}
+	</delete>
 	<update id="updateByPrimaryKeySelective" parameterType="info.lzzy.models.Teacher">
     update teachers
     <set>
