@@ -417,7 +417,7 @@ public class ApiController extends BaceController {
 						for (Option option : options) {
 							JSONObject optionjObject = new JSONObject();
 							optionjObject.put("id", option.getId());
-							optionjObject.put("content", option.getId());
+							optionjObject.put("content", option.getContent());
 							optionjObject.put("label", option.getLabel());
 							optionjObject.put("questionId", option.getQuestionId());
 							optionjObject.put("isAnswer", option.getIsAnswer());
@@ -2058,7 +2058,7 @@ public class ApiController extends BaceController {
 		public String postImg(@RequestBody String body ) {
 			JSONObject json = JSONObject.fromObject(body);
 			try {
-						String teacherIphone = json.getString("teacherIphone");
+						String teacherIphone = json.getString("phone");
 						//Teacher teacher = teacherService.selectTeacherById(teacherId);
 						//if (teacher != null) {
 

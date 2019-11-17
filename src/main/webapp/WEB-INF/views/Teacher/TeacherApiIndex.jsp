@@ -237,6 +237,9 @@
   </div>
 
 </div>
+<div class="fixed-bottom" id="hint">
+
+</div>
 <script type="text/javascript" src="<%=basePath%>scripts/teacherApiIndex.js"></script>
 </body>
 </html>

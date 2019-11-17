@@ -1,9 +1,14 @@
 package info.lzzy.controller;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import info.lzzy.models.Admin;
+import info.lzzy.test.phoneLogin.*;
 import info.lzzy.utils.DateTimeUtils;
+import okhttp3.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -88,56 +93,55 @@ public class LoginController extends BaceController {
 //    }
 
 
-//    public static String postRequestNoSecurity(String url, Map<String, String> headers, Object data) throws Exception {
-//        String securityReq = JSON.toJSONString(data);
-//        OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS).build();
-//        RequestBody body = RequestBody.create(MediaType.parse("application/json"), securityReq);
-//        Request.Builder builder = new Request.Builder();
-//        if (!BaseUtils.isEmpty(headers)) {
-//            for (Map.Entry<String, String> entry : headers.entrySet()) {
-//                builder.addHeader(entry.getKey(), entry.getValue());
-//            }
-//        }
-//        final Request request = builder.addHeader("Content-Length", String.valueOf(securityReq.length()))
-//                .url(url)
-//                .post(body)
-//                .build();
-//        Call call = okHttpClient.newCall(request);
-//        Response response = call.execute();
-//
-//        String securityRes = response.body().string();
-//        return securityRes;
-//    }
+    public static String postRequestNoSecurity(String url, Map<String, String> headers, Object data) throws Exception {
+        String securityReq = JSON.toJSONString(data);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS).build();
+        RequestBody body = RequestBody.create(securityReq,MediaType.parse("application/json"));
+        Request.Builder builder = new Request.Builder();
+        if (!BaseUtils.isEmpty(headers)) {
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                builder.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        final Request request = builder.addHeader("Content-Length", String.valueOf(securityReq.length()))
+                .url(url)
+                .post(body)
+                .build();
+        Call call = okHttpClient.newCall(request);
+        Response response = call.execute();
+
+        String securityRes = response.body().string();
+        return securityRes;
+    }
     @GetMapping("/LoginIndexUrl")
 	public String LoginIndexUrl() {
         emptySession();
-//        Map<String,Object> map=new HashMap<>();
-//        map.put("id","17777581901");
-//        token= JavaWebToken.createJavaWebToken(map);
-//        String authHost = "http://identify.verify.mob.com/";
-//        String url = authHost + "auth/auth/sdkClientFreeLogin";
-//        HashMap<String, Object> request = new HashMap<>();
-//        request.put("appkey", appkey);
-//        request.put("token", token);
-//        request.put("opToken", opToken);
-//        request.put("operator", operator);
-//        request.put("timestamp", System.currentTimeMillis());
-//        request.put("sign", SignUtil.getSign(request, appSecret));
-//        String response = null;
-//        try {
-//            response = postRequestNoSecurity(url, null, request);
-//            JSONObject jsonObject = JSONObject.parseObject(response);
-//            if (200 == jsonObject.getInteger("status")) {
-//                String res = jsonObject.getString("res");
-//                byte[] decode = DES.decode(Base64Utils.decode(res.getBytes()), appSecret.getBytes());
-//                jsonObject.put("res", JSONObject.parseObject(new String(decode)));
-//            }
-//            System.out.println(jsonObject);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
-
+//                Map<String,Object> map=new HashMap<>();
+//                map.put("id","17777581901");
+//                token= JavaWebToken.createJavaWebToken(map);
+//                String authHost = "http://identify.verify.mob.com/";
+//                String url = authHost + "auth/auth/sdkClientFreeLogin";
+//                HashMap<String, Object> request = new HashMap<>();
+//                request.put("appkey", appkey);
+//                request.put("token", token);
+//                request.put("opToken", opToken);
+//                request.put("operator", operator);
+//                request.put("timestamp", System.currentTimeMillis());
+//                request.put("sign", SignUtil.getSign(request, appSecret));
+//                String response = null;
+//                try {
+//                    response = postRequestNoSecurity(url, null, request);
+//                    JSONObject jsonObject = JSONObject.parseObject(response);
+//                    if (200 == jsonObject.getInteger("status")) {
+//                        String res = jsonObject.getString("res");
+//                        byte[] decode = DES.decode(Base64Utils.decode(res.getBytes()), appSecret.getBytes());
+//                        jsonObject.put("res", JSONObject.parseObject(new String(decode)));
+//                    }
+//                    System.out.println(jsonObject);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 		//request.getSession().setAttribute("read_file_role", true);
 		//String filePath = request.getSession().getServletContext().getRealPath("WEB-INF/resources/html/Index.html");
 		//GetHtml html = new GetHtml();

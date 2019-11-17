@@ -23,7 +23,7 @@
   <div class="row m-0 pb-2">
     <div class="col card-header p-0 col-9 col-sm-6 col-md-6 col-lg-6">
       <div class="input-group">
-        <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" onkeyup="searchCourses();">
+        <input id="searchCoursesVal" placeholder="输入关键字搜索课程 ..." type="text" class="form-control input-lg" onkeydown="keyup_submit(event);">
         <span class="input-group-addon btn btn-primary" onclick="searchCourses();">
             <i class="fa fa-search"></i>&nbsp;搜索</span>
       </div>
@@ -116,6 +116,9 @@
       </div>
     </div>
   </div>
+
+</div>
+<div class="fixed-bottom" id="hint">
 
 </div>
 <script type="text/javascript" src="<%=basePath%>scripts/teacherCourseIndex.js"></script>

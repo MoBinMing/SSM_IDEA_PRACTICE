@@ -51,6 +51,19 @@ function searchApis(apiRole) {
         }
     });
 }
+function getHint(title,body,sta) {
+    if (sta=="succeed"){
+        return "  <div class=\"alert alert-success alert-dismissible m-0\">\n" +
+            "    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
+            "    <strong >"+title+"</strong> <span>"+body+"</span>\n" +
+            "  </div>";
+    }else {
+        return "  <div class=\"alert alert-danger alert-dismissible m-0\">\n" +
+            "    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
+            "    <strong >"+title+"</strong> <span>"+body+"</span>\n" +
+            "  </div>";
+    }
+}
 function createApiCellHtml(apis,role) {
     var html="";
     if (count(apis) != 0) {

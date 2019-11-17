@@ -254,6 +254,7 @@ public class TeacherController extends BaceController {
 				if (course.getTeacherId().equals(teacher.getTeacherId())){
 					try {
 						map.put("result",courseService.deleteByPrimaryKey(id));
+						map.put("courses",courseService.selectByTeacherId(teacher.getTeacherId()));
 					}catch (Exception e){
 						map.put("result",-1);
 						map.put("e",e.getMessage());
@@ -432,9 +433,9 @@ public class TeacherController extends BaceController {
 
 	@GetMapping("deleteQuestion/{id}")
 	public String deleteQuestion(@PathVariable int id) {
-		int practiceId = (int) request.getSession().getAttribute("thisPracticeId");
+		Practice practice = (Practice) request.getSession().getAttribute("practice");
 		questionsService.deleteByPrimaryKey(id);
-		return "redirect:/Teacher/managingCurrentExercises/" + practiceId;
+		return "redirect:/Teacher/QuestionForPractice/" + practice.getId();
 
 	}
 
