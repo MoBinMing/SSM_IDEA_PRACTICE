@@ -192,6 +192,7 @@
     </dependencies>
 
     <build>
+        <finalName>Practice</finalName>
         <!-- java编译插件,如果maven的设置里配置好jdk版本就不用 -->
         <plugins>
             <plugin>

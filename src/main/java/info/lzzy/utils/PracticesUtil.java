@@ -19,7 +19,7 @@ import info.lzzy.service.PracticeService;
 import info.lzzy.service.QuestionService;
 
 public class PracticesUtil {
-	// region 教师首页章节html
+	// region 教师首页练习html
 	public static String getCoursesHtml(PracticeService practiceService, List<Course> courses) {
 		StringBuilder bodyHtml=new StringBuilder();
 		 bodyHtml.append("<div class=\"container-fluid\">\r\n"

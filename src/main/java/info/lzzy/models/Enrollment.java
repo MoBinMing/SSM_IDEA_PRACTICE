@@ -9,6 +9,16 @@ public class Enrollment {
 
     private Integer takeEffect;
 
+    private String teacherId;
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
     public Integer getId() {
         return id;
     }

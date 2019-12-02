@@ -1,10 +1,7 @@
 package info.lzzy.service.impl;
 
-import info.lzzy.dao.AdminMapper;
 import info.lzzy.dao.ApiMapper;
-import info.lzzy.models.Admin;
 import info.lzzy.models.Api;
-import info.lzzy.service.AdminService;
 import info.lzzy.service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

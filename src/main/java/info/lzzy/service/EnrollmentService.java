@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import info.lzzy.models.Enrollment;
+import org.apache.ibatis.annotations.Param;
 
 public interface EnrollmentService
 {
@@ -21,4 +22,6 @@ public interface EnrollmentService
     int updateByPrimaryKeySelective(Enrollment record);
 
     int updateByPrimaryKey(Enrollment record);
+    int getIdByMax();
+    List<Enrollment> getByTeacherIdAndStudentId(String teacherId,String studentId);
 }

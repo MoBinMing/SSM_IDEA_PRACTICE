@@ -3,7 +3,6 @@ package info.lzzy.utils;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import org.apache.tomcat.util.codec.binary.Base64;
 
 public class UploadImage {

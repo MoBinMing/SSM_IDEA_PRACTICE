@@ -1,16 +1,8 @@
 package info.lzzy.controller;
 
-import info.lzzy.models.Admin;
-import info.lzzy.models.Course;
-import info.lzzy.models.Student;
 import info.lzzy.models.Teacher;
-import info.lzzy.models.view.CourseDao;
-import info.lzzy.utils.DateTimeUtils;
-import info.lzzy.utils.EmailUtils;
 import info.lzzy.utils.Encipher;
-import info.lzzy.utils.PhoneUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;

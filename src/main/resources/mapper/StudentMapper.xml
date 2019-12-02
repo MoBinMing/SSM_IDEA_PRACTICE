@@ -64,6 +64,30 @@
 		#{iphone,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR},
 		#{imghead,jdbcType=VARCHAR})
 	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="info.lzzy.models.Student">
+		update students
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="iphone != null">
+				iphone = #{iphone,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender,jdbcType=VARCHAR},
+			</if>
+			<if test="imghead != null">
+				imgHead = #{imghead,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where student_id = #{studentId,jdbcType=VARCHAR}
+	</update>
 	<!-- <insert id="insertSelective" parameterType="info.lzzy.models.Student">
 		insert into students <trim prefix="(" suffix=")" suffixOverrides=","> <if 
 		test="studentId != null"> student_id, </if> <if test="name != null"> name, 

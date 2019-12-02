@@ -6,23 +6,45 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="完成教师管理">
+    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="完成教师Question部分显示">
+      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/ApiView/ApiCourse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/ApiView/TeacherQuestion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/userImg/17777581901.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Practice.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/Practice_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Practice_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/EnrollmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/EnrollmentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/OptionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/OptionMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/QuestionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/QuestionMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/StudentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/StudentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Enrollment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Enrollment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Teacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/models/Teacher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/EnrollmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/EnrollmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/OptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/OptionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/QuestionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/QuestionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/StudentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/StudentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/AdminServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/AdminServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/ApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/ApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/EnrollmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/EnrollmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/OptionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/OptionServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/QuestionsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/QuestionsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/StudentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/StudentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/utils/PracticesUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/utils/PracticesUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/utils/UploadImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/utils/UploadImage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/utils/VerificationInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/utils/VerificationInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherApiIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherApiIndex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherCourseIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherCourseIndex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherPracticeIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherPracticeIndex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/CourseMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/CourseMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/EnrollmentMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/EnrollmentMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/OptionMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/OptionMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/QuestionMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/QuestionMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/StudentMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/StudentMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherQuestionIndex.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts/teacherQuestionIndex.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherApiIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherApiIndex.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherCourseIndex.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherPracticeIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherPracticeIndex.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherQuestionIndex.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher/TeacherQuestionIndex.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.3.1.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/shared/tags_bootstrap_v4.3.1.jsp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +143,7 @@
     <property name="extract.method.default.visibility" value="private" />
     <property name="findjar.last.used.dir" value="$USER_HOME$/git/Practice/Practice/WebContent/WEB-INF/lib" />
     <property name="full.screen.before.presentation.mode" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/info/lzzy/models/view" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -131,32 +153,32 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.157" />
-    <property name="project.structure.side.proportion" value="0.17381656" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="project.structure.side.proportion" value="0.43639052" />
+    <property name="settings.editor.selected.configurable" value="preferences.updates" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/java/info/lzzy/models/view" />
-      <recent name="$PROJECT_DIR$/src/main/java/info/lzzy/test/phoneLogin" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin" />
-      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Login" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="info.lzzy.controller" />
-      <recent name="info.lzzy.service.impl" />
-      <recent name="info.lzzy.service" />
-      <recent name="info.lzzy.dao" />
-      <recent name="com.xjt.controller" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Teacher" />
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Student" />
       <recent name="$PROJECT_DIR$/src/main/resources/mapper" />
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Api" />
       <recent name="D:\idea\SSM_IDEA_PRACTICE\src\main\webapp\WEB-INF\lib" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="info.lzzy.models.ApiView" />
+      <recent name="info.lzzy.controller" />
+      <recent name="info.lzzy.service.impl" />
+      <recent name="info.lzzy.service" />
+      <recent name="info.lzzy.dao" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/userImg" />
+      <recent name="$PROJECT_DIR$/src/main/java/info/lzzy/models/view" />
+      <recent name="$PROJECT_DIR$/src/main/java/info/lzzy/test/phoneLogin" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/resources/scripts" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/Admin" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -430,6 +452,37 @@
       <workItem from="1573926755377" duration="226000" />
       <workItem from="1573927000287" duration="1759000" />
       <workItem from="1573948381740" duration="48142000" />
+      <workItem from="1574009429745" duration="172000" />
+      <workItem from="1574034879221" duration="38114000" />
+      <workItem from="1574088920540" duration="5591000" />
+      <workItem from="1574101113532" duration="1582000" />
+      <workItem from="1574140470602" duration="1652000" />
+      <workItem from="1574146759841" duration="8211000" />
+      <workItem from="1574225642430" duration="16762000" />
+      <workItem from="1574315697536" duration="1905000" />
+      <workItem from="1574326349846" duration="132000" />
+      <workItem from="1574326502247" duration="431000" />
+      <workItem from="1574337375894" duration="5779000" />
+      <workItem from="1574384392043" duration="22000" />
+      <workItem from="1574409065216" duration="418000" />
+      <workItem from="1574410489089" duration="105000" />
+      <workItem from="1574410870524" duration="6684000" />
+      <workItem from="1574431417226" duration="2296000" />
+      <workItem from="1574466969932" duration="6454000" />
+      <workItem from="1574487271266" duration="8143000" />
+      <workItem from="1574574701624" duration="546000" />
+      <workItem from="1574580550360" duration="10524000" />
+      <workItem from="1574640222061" duration="2078000" />
+      <workItem from="1574677542796" duration="6212000" />
+      <workItem from="1574724925061" duration="8626000" />
+      <workItem from="1574852635474" duration="198000" />
+      <workItem from="1574872243055" duration="1766000" />
+      <workItem from="1574905578232" duration="1857000" />
+      <workItem from="1574985264494" duration="4953000" />
+      <workItem from="1575093065290" duration="6240000" />
+      <workItem from="1575191204181" duration="190000" />
+      <workItem from="1575213299334" duration="598000" />
+      <workItem from="1575263139181" duration="3076000" />
     </task>
     <task id="LOCAL-00001" summary="idea ssm 示例">
       <created>1572527977577</created>
@@ -487,7 +540,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573927273641</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="完成教师Question部分显示">
+      <created>1574009584185</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1574009584185</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -529,10 +589,23 @@
     <MESSAGE value="全新优化" />
     <MESSAGE value="最后改版前" />
     <MESSAGE value="完成教师管理" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成教师管理" />
+    <MESSAGE value="完成教师Question部分显示" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成教师Question部分显示" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/info/lzzy/controller/TeacherController.java</url>
+          <line>470</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
+      <configuration name="http://localhost:8080/Practice/Teacher/QuestionForPractice/5">
+        <watch expression="t" language="JavaScript" />
+      </configuration>
       <configuration name="JavascriptDebugType">
         <watch expression="url" language="JavaScript" />
       </configuration>

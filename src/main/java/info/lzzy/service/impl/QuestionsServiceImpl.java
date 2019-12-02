@@ -40,4 +40,19 @@ public class QuestionsServiceImpl implements QuestionService{
 		// TODO Auto-generated method stub
 		return questionMapper.deleteByPrimaryKey(id);
 	}
+
+	@Override
+	public Question getById(Integer id) {
+		return questionMapper.getById(id);
+	}
+
+	@Override
+	public int getCount() {
+		return questionMapper.getCount();
+	}
+
+	@Override
+	public int getNumberByMax(int practiceId) {
+		return questionMapper.getNumberByMax(practiceId);
+	}
 }

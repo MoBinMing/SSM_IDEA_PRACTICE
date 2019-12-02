@@ -92,7 +92,7 @@
 													</div>
 													<div class="tab-pane fade " id="editQuestionTab${question.id}" role="tabpanel">
 														<form role="form" id="updateForm${question.id}">
-															<input name="id" hidden value="${question.id}">
+															<input name="questionId" hidden value="${question.id}">
 															<input name="number" hidden value="${question.number}">
 															<div class="form-group p-1">
 																<label class="control-label p-0 m-0 form-control-static"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题号：${question.number} </label>
@@ -112,12 +112,13 @@
 																							<c:forEach var="option" items="${question.options}">
 																								<li id='optionItem${question.id}${option.id}'>
 																									<div class='row m-0 p-0 ' style='align-items: center;'>
-																										<input class='col p-0 m-0 ' placeholder='请输入选项内容' value='${option.content}'>
 																										<label class='ml-2 mr-2 mb-0'>
-																											<input type='radio' name='optradio' <c:if test="${option.isAnswer==1}"> checked='checked'</c:if>>设为答案
+																											<input type='radio'  name='optionIsAnswer' value='${option.label}' <c:if test="${option.isAnswer==1}"> checked='checked'</c:if>>${option.label}
 																										</label>
+																										<input class='col p-0 m-0 ' name='optionContent' placeholder='请输入选项内容' value='${option.content}'>
+
 																										<span class='p-0 m-0  text-right'>
-																										  <i class='fa fa-trash-o' aria-hidden='true' onclick='deleteOption(<c:out value="\"#optionItem${question.id}${option.id}\""></c:out>);'>&nbsp;删除</i>
+																										  <i class='fa fa-trash-o ml-2 mr-2' aria-hidden='true' onclick='deleteOption(<c:out value="\"#optionItem${question.id}${option.id}\""></c:out>);'>&nbsp;删除</i>
 																										</span>
 																								</div>
 																								</li>
@@ -132,16 +133,18 @@
 																			<option data-amount="<div id='checkBox_${question.id}' >
 																									<c:forEach var="option" items="${question.options}">
 																									<li id='optionItem${question.id}${option.id}'>
-																										<div class='row m-0 p-0 ' style='align-items: center;'>
-																											<input id='content${question.id}${option.id}' name='content' class='col p-0 m-0 ' placeholder='请输入选项内容' value='${option.content}'>
-																											<label class='ml-2 mr-2 mb-0 pb-0'>
-																												<label class='mb-0'><input type='checkbox' <c:if test="${option.isAnswer==1}"> checked='checked'</c:if>>答案</label>
-																											</label>
-																											<span class='p-0 m-0  text-right'>
-																												  <i class='fa fa-trash-o' aria-hidden='true' onclick='deleteOption(<c:out value="\"#optionItem${question.id}${option.id}\""></c:out>);'>&nbsp;删除</i>
-																												</span>
-																										</div>
-																									</li>
+																									<div class='row m-0 p-0 ' style='align-items: center;'>
+																										<input hidden name='id' value='${option.id}'>
+																										<label class='ml-2 mr-2 mb-0'>
+																											<input type='radio'  name='optionIsAnswer' value='${option.label}' <c:if test="${option.isAnswer==1}"> checked='checked'</c:if>>${option.label}
+																										</label>
+																										<input class='col p-0 m-0 ' name='optionContent${option.label}' placeholder='请输入选项内容' value='${option.content}'>
+
+																										<span class='p-0 m-0  text-right'>
+																										  <i class='fa fa-trash-o ml-2 mr-2' aria-hidden='true' onclick='deleteOption(<c:out value="\"#optionItem${question.id}${option.id}\""></c:out>);'>&nbsp;删除</i>
+																										</span>
+																								</div>
+																								</li>
 																									</c:forEach>
 																							</div>"
 																					<c:if test="${question.questionType==1}">
@@ -154,12 +157,14 @@
 																							<c:forEach var="option" items="${question.options}">
 																								<li id='optionItem${question.id}${option.id}'>
 																									<div class='row m-0 p-0 ' style='align-items: center;'>
-																										<input class='col p-0 m-0 ' placeholder='请输入选项内容' value='${option.content}'>
-																										<label class='ml-2 mr-2 mb-0'>
-																											<input type='radio' name='optradio' <c:if test="${option.isAnswer==1}"> checked='checked'</c:if>>设为答案
+																										<input hidden name='id' value='${option.id}'>
+																									<label class='ml-2 mr-2 mb-0'>
+																											<input type='radio'  name='optionIsAnswer' value='${option.label}' <c:if test="${option.isAnswer==1}"> checked='checked'</c:if>>${option.label}
 																										</label>
+																										<input class='col p-0 m-0 ' name='optionContent${option.label}' placeholder='请输入选项内容' value='${option.content}'>
+
 																										<span class='p-0 m-0  text-right'>
-																										  <i class='fa fa-trash-o' aria-hidden='true' onclick='deleteOption(<c:out value="\"#optionItem${question.id}${option.id}\""></c:out>);'>&nbsp;删除</i>
+																										  <i class='fa fa-trash-o ml-2 mr-2' aria-hidden='true' onclick='deleteOption(<c:out value="\"#optionItem${question.id}${option.id}\""></c:out>);'>&nbsp;删除</i>
 																										</span>
 																								</div>
 																								</li>
@@ -183,19 +188,21 @@
 																</div>
 															</div>
 															<div class="form-group p-1">
-																<ol id="editQuestion${question.id}" class="" type="A">
+																<ol id="editQuestion${question.id}" style="list-style-type:none;" type="A">
 																	<c:if test="${question.questionType==0}">
 
 																		<div id="radio_${question.id}" class="radio" >
 																			<c:forEach var="option" items="${question.options}">
 																				<li id="optionItem${question.id}${option.id}">
-																					<div class="row m-0 p-0 " style="align-items: center;">
-																						<input class="col p-0 m-0 " name="optionContent${question.id}${option.id}" placeholder="请输入选项内容" value="${option.content}">
+																					<div class="row m-0 p-1 " style="align-items: center;">
+																						<input hidden name="id" value="${option.id}">
 																						<label class="ml-2 mr-2 mb-0">
-																							<input type="radio" name="optionIsAnswer${question.id}${option.id}"  <c:if test="${option.isAnswer==1}"> checked="checked"</c:if>>设为答案
+																							<input type="radio" value="${option.label}" name="optionIsAnswer"  <c:if test="${option.isAnswer==1}"> checked="checked"</c:if>>${option.label}
 																						</label>
+																						<input class="col p-0 m-0 " name="optionContent${option.label}" placeholder="请输入选项内容" value="${option.content}">
+
 																						<span class="p-0 m-0  text-right">
-																					  <i class="fa fa-trash-o" aria-hidden="true" onclick="deleteOption('#optionItem${question.id}${option.id}');">&nbsp;删除</i>
+																					  <i class="fa fa-trash-o ml-2 mr-2" aria-hidden="true" onclick="deleteOption('#optionItem${question.id}${option.id}');">&nbsp;删除</i>
 																					</span>
 																					</div>
 																				</li>
@@ -207,10 +214,12 @@
 																			<c:forEach var="option" items="${question.options}">
 																				<li id="optionItem${question.id}${option.id}">
 																					<div class="row m-0 p-0 " style="align-items: center;">
-																						<input id="content${question.id}${option.id}" name="optionContent${question.id}${option.id}" class="col p-0 m-0 " placeholder="请输入选项内容" value="${option.content}">
+																						<input hidden name="id" value="${option.id}">
 																						<label class="ml-2 mr-2 mb-0 pb-0">
-																							<label class="mb-0"><input type="checkbox" name="optionIsAnswer${question.id}${option.id}" value="" <c:if test="${option.isAnswer==1}"> checked="checked"</c:if>>答案</label>
+																							<label class="mb-0"><input type="checkbox" name="optionIsAnswer" value="${option.label}" <c:if test="${option.isAnswer==1}"> checked="checked"</c:if>>${option.label}</label>
 																						</label>
+																						<input name="optionContent${option.label}" class="col p-0 m-0 " placeholder="请输入选项内容" value="${option.content}">
+
 																						<span class="p-0 m-0  text-right">
 																					  <i class="fa fa-trash-o" aria-hidden="true" onclick="deleteOption('#optionItem${question.id}${option.id}');">&nbsp;删除</i>
 																					</span>
@@ -223,13 +232,15 @@
 																		<div id="radio2_${question.id}" class="radio" >
 																			<c:forEach var="option" items="${question.options}">
 																				<li id="optionItem${question.id}${option.id}">
-																					<div class="row m-0 p-0 " style="align-items: center;">
-																						<input class="col p-0 m-0 " name="optionContent${question.id}${option.id}" placeholder="请输入选项内容" value="${option.content}">
+																					<div class="row m-0 p-1 " style="align-items: center;">
+																						<input hidden name="id" value="${option.id}">
 																						<label class="ml-2 mr-2 mb-0">
-																							<input type="radio" name="optionIsAnswer${question.id}${option.id}"  <c:if test="${option.isAnswer==1}"> checked="checked"</c:if>>设为答案
+																							<input type="radio" name="optionIsAnswer" value="${option.label}" <c:if test="${option.isAnswer==1}"> checked="checked"</c:if>>${option.label}
 																						</label>
+																						<input class="col p-0 m-0 " name="optionContent${option.label}" placeholder="请输入选项内容" value="${option.content}">
+
 																						<span class="p-0 m-0  text-right">
-																					  <i class="fa fa-trash-o" aria-hidden="true" onclick="deleteOption('#optionItem${question.id}${option.id}');">&nbsp;删除</i>
+																					  <i class="fa fa-trash-o ml-2 mr-2" aria-hidden="true" onclick="deleteOption('#optionItem${question.id}${option.id}');">&nbsp;删除</i>
 																					</span>
 																					</div>
 																				</li>

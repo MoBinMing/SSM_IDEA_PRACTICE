@@ -50,6 +50,12 @@ public class StudentServiceImpl implements StudentService
 		// TODO Auto-generated method stub
 		return studentMapper.selectAll();
 	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Student student) {
+		return studentMapper.updateByPrimaryKeySelective(student);
+	}
+
 	@Override
 	public List<Student> selectStudentByCourseId(int courseId) {
 		// TODO Auto-generated method stub

@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import info.lzzy.models.Admin;
 import info.lzzy.test.phoneLogin.*;
 import info.lzzy.utils.DateTimeUtils;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import info.lzzy.models.Student;
 import info.lzzy.models.Teacher;
 import info.lzzy.utils.Encipher;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/Login")

@@ -21,8 +21,20 @@
 	<sql id="Blob_Column_List">
 		analysis
 	</sql>
+	<select id="getCount" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM
+		questions;
+	</select>
 	<select id="getIdByMax" resultType="java.lang.Integer">
 		select max(id) from questions
+	</select>
+	<select id="getNumberByMax" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		select max(number) from questions  WHERE practice_id=#{practiceId}
+	</select>
+	<select id="getById" resultMap="ResultMapWithBLOBs">
+		select * from questions where id = #{id}
 	</select>
 	<select id="getQuestionByPracticeId"
 			parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
