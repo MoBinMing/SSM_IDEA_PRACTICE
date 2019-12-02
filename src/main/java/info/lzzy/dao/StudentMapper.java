@@ -27,4 +27,5 @@ public interface StudentMapper {
 	Student selectStudentByIphone(String iphone);
 	List<Student> inquireStudentByKey(String key);
 	List<Student> selectAll();
+	int updateByPrimaryKeySelective(Student student);
 }

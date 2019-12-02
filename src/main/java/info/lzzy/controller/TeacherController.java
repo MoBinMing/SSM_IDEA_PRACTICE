@@ -2,22 +2,18 @@ package info.lzzy.controller;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSONObject;
+import info.lzzy.models.*;
 import info.lzzy.models.view.PracticeDao;
 import info.lzzy.models.view.QuestionDao;
+import info.lzzy.models.view.QuestionType;
 import info.lzzy.utils.DateTimeUtils;
+import javafx.util.Pair;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import info.lzzy.utils.BeanCopyUtil;
 
-import info.lzzy.models.Course;
-import info.lzzy.models.Practice;
-import info.lzzy.models.Question;
-import info.lzzy.models.Teacher;
 import info.lzzy.models.view.CourseDao;
 
 @Controller
@@ -211,6 +207,7 @@ public class TeacherController extends BaceController {
 				course.setAddTime(new Date());
 				course.setTeacherId(teacher.getTeacherId());
 				course.setId(courseService.getIdByMax() + 1);
+				courseService.insert(course);
 				return toCourseIndexUrl();
 			}else {
 				return toExit();
@@ -253,6 +250,7 @@ public class TeacherController extends BaceController {
 				if (course.getTeacherId().equals(teacher.getTeacherId())){
 					try {
 						map.put("result",courseService.deleteByPrimaryKey(id));
+						map.put("courses",courseService.selectByTeacherId(teacher.getTeacherId()));
 					}catch (Exception e){
 						map.put("result",-1);
 						map.put("e",e.getMessage());
@@ -431,12 +429,84 @@ public class TeacherController extends BaceController {
 
 	@GetMapping("deleteQuestion/{id}")
 	public String deleteQuestion(@PathVariable int id) {
-		int practiceId = (int) request.getSession().getAttribute("thisPracticeId");
+		Practice practice = (Practice) request.getSession().getAttribute("practice");
 		questionsService.deleteByPrimaryKey(id);
-		return "redirect:/Teacher/managingCurrentExercises/" + practiceId;
+		return "redirect:/Teacher/QuestionForPractice/" + practice.getId();
 
 	}
+	@PostMapping("/UpdateQuestionUrl")
+	@ResponseBody
+	public Map<String, Object> updateQuestionUrl(@RequestBody JSONObject data) {
+		Map<String, Object> map = new HashMap<>();
+		try {
 
+			Question question=questionsService.getById(data.getInteger("questionId"));
+			question.setContent(data.getString("content"));
+			int type1 = 0;
+			String type=data.getString("questionType");
+			if (type.equals("单项选择")){
+				type1=0;
+			}else if (type.equals("多选选择")){
+				type1=1;
+			}else if (type.equals("判断题")){
+				type1=2;
+			}
+			question.setQuestionType(type1);
+			questionsService.updateByPrimaryKey(question);
+			String optionIsAnswers="";
+			List<Pair<String,String>> optionContents=new ArrayList<>();
+			for(String str:data.keySet()){
+				System.out.println(str + ":" +data.get(str));
+				if (str.contains("optionIsAnswer")){
+					optionIsAnswers=optionIsAnswers + data.getString(str);
+				}
+				if (str.contains("optionContent")&&str.length()>13){
+					Pair<String,String> pair=new Pair<>(str,
+							data.get(str).toString().replace("optionContent",""));
+					optionContents.add(pair);
+				}
+
+
+			}
+			List<Option> options=optionService.getOptionByQuestionKey(question.getId());
+			for (Option option:options){
+				optionService.deleteByPrimaryKey(option.getId());
+			}
+			for (int i = 0; i < optionContents.size(); i++) {
+				Pair<String,String> pair=optionContents.get(i);
+				Option option=new Option();
+				if (optionIsAnswers.contains(pair.getKey())){
+					option.setIsAnswer(1);
+					option.setContent(pair.getValue());
+					try {
+						option.setId(optionService.getIdByMax());
+					}catch (Exception e){
+						option.setId(1);
+					}
+					option.setQuestionId(question.getId());
+					option.setLabel(pair.getKey());
+				}else {
+					option.setIsAnswer(0);
+					option.setContent(pair.getValue());
+					try {
+						option.setId(optionService.getIdByMax());
+					}catch (Exception e){
+						option.setId(1);
+					}
+					option.setQuestionId(question.getId());
+					option.setLabel(pair.getKey());
+				}
+				optionService.insert(option);
+			}
+			map.put("result","ok");
+			map.put("link","/Teacher/QuestionForPractice/"+((Practice)request.getSession().getAttribute("practice")).getId());
+			return map;
+		}catch (Exception e){
+			map.put("result","error:"+e.getMessage());
+			return map;
+		}
+
+	}
 	// region 学生管理
 	@GetMapping("/getStudentManagementHtml")
 	@ResponseBody

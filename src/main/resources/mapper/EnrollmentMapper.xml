@@ -5,10 +5,11 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="student_id" jdbcType="VARCHAR" property="studentId" />
+    <result column="teacher_id" jdbcType="VARCHAR" property="teacherId" />
     <result column="take_effect" jdbcType="INTEGER" property="takeEffect" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, course_id, student_id, take_effect
+    id, course_id, student_id, take_effect,teacher_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -17,10 +18,20 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="getByCourseIdAndStudentId" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from enrollments
     where course_id = #{courseId}
+    and student_id=#{studentId}
+  </select>
+  <select id="getIdByMax" resultType="java.lang.Integer">
+		select max(id) from enrollments
+	</select>
+  <select id="getByTeacherIdAndStudentId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from enrollments
+    where teacher_id = #{teacherId}
     and student_id=#{studentId}
   </select>
   <select id="getByCourseId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -35,9 +46,9 @@
   </delete>
   <insert id="insert" parameterType="info.lzzy.models.Enrollment">
     insert into enrollments (id, course_id, student_id, 
-      take_effect)
+      take_effect,teacher_id)
     values (#{id,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{studentId,jdbcType=VARCHAR}, 
-      #{takeEffect,jdbcType=INTEGER})
+      #{takeEffect,jdbcType=INTEGER},#{teacherId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="info.lzzy.models.Enrollment">
     insert into enrollments
@@ -54,6 +65,9 @@
       <if test="takeEffect != null">
         take_effect,
       </if>
+      <if test="teacherId != null">
+        teacher_id
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -67,6 +81,9 @@
       </if>
       <if test="takeEffect != null">
         #{takeEffect,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null">
+        #{teacherId,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
@@ -82,6 +99,9 @@
       <if test="takeEffect != null">
         take_effect = #{takeEffect,jdbcType=INTEGER},
       </if>
+      <if test="teacherId != null">
+        teacher_id
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -89,7 +109,8 @@
     update enrollments
     set course_id = #{courseId,jdbcType=INTEGER},
       student_id = #{studentId,jdbcType=VARCHAR},
-      take_effect = #{takeEffect,jdbcType=INTEGER}
+      take_effect = #{takeEffect,jdbcType=INTEGER},
+      teacher_id =  #{teacherId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

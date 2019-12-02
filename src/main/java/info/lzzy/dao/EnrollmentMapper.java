@@ -15,6 +15,9 @@ public interface EnrollmentMapper {
     
     List<Enrollment> getByCourseId(Integer courseId);
 
+    List<Enrollment> getByTeacherIdAndStudentId(@Param("teacherId") String teacherId,
+                                                @Param("studentId") String studentId);
+
     int insertSelective(Enrollment record);
 
     Enrollment selectByPrimaryKey(Integer id);
@@ -22,4 +25,6 @@ public interface EnrollmentMapper {
     int updateByPrimaryKeySelective(Enrollment record);
 
     int updateByPrimaryKey(Enrollment record);
+
+    int getIdByMax();
 }

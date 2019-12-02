@@ -27,7 +27,7 @@ public class Teacher {
             json.put("email", email);
             json.put("iphone", iphone);
             json.put("gender", gender);
-            json.put("imgHead", imghead);
+            json.put("imgHead", iphone+".jpg");
             json.put("isMyTeacher", isMyteacher);
         } catch (JSONException e) {
             e.printStackTrace();

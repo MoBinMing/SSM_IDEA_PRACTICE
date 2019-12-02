@@ -75,8 +75,7 @@ public class Student {
         this.imghead = imghead == null ? null : imghead.trim();
     }
     
-    @Override
-    public String toString() {
+    public String toS() {
     	// TODO Auto-generated method stub
 
     	JSONObject json=new JSONObject();
@@ -86,7 +85,7 @@ public class Student {
             json.put("email", email);
             json.put("iphone", iphone);
             json.put("gender", gender);
-            json.put("imgHead", imghead);
+            json.put("imgHead", iphone+".jpg");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -110,7 +109,7 @@ public class Student {
     	return json.toString();
     }
     
-    public String toTeacherJson(Boolean isMyStudent) {
+    public String toTeacherJson(Boolean isMyStudent,int takeEffect) {
     	// TODO Auto-generated method stub
     	JSONObject json=new JSONObject();
         try {
@@ -120,6 +119,7 @@ public class Student {
             json.put("iphone", iphone);
             json.put("gender", gender);
             json.put("imgHead", imghead);
+            json.put("takeEffect", takeEffect);
             json.put("isMyStudent", isMyStudent);
         } catch (JSONException e) {
             e.printStackTrace();

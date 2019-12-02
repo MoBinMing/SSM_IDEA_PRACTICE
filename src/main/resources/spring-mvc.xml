@@ -43,8 +43,6 @@
                    <!--location="/WEB-INF/resources/xml/" cache-period="215566926"/>-->
     <mvc:resources mapping="/shared/**"
                    location="/WEB-INF/views/shared/" cache-period="215566926"/>
-    <mvc:resources mapping="/assets/**"
-                   location="/WEB-INF/resources/assets/" cache-period="215566926"/>
 
 
 
@@ -63,7 +61,7 @@
             <mvc:mapping path="/Teacher/**" />
             <mvc:mapping path="/Student/**" />
             <mvc:mapping path="/Admin/**" />
-            <bean class="info.lzzy.interceptor.CommonInterceptor"></bean>
+            <bean class="info.lzzy.interceptor.CommonInterceptor"/>
         </mvc:interceptor>
         <!--当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
     </mvc:interceptors>

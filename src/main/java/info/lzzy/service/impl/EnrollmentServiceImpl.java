@@ -51,6 +51,16 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 	}
 
 	@Override
+	public int getIdByMax() {
+		return enrollmentMapper.getIdByMax();
+	}
+
+	@Override
+	public List<Enrollment> getByTeacherIdAndStudentId(String teacherId, String studentId) {
+		return enrollmentMapper.getByTeacherIdAndStudentId(teacherId,studentId);
+	}
+
+	@Override
 	public List<Enrollment> getByCourseId(Integer courseId) {
 		// TODO Auto-generated method stub
 		return enrollmentMapper.getByCourseId(courseId);

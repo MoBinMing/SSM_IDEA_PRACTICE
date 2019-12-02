@@ -16,6 +16,9 @@
 		from options
 		where question_id = #{id,jdbcType=INTEGER}
 	</select>
+	<select id="getIdByMax" resultType="java.lang.Integer">
+		select max(id) from options
+	</select>
 	<select id="getOptionById" parameterType="Integer" resultMap="BaseOption">
 		select *
 		from options
@@ -27,10 +30,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="info.lzzy.models.Option">
-    insert into options (id, content, label, 
+   insert into options (id, content, label,
       question_id, is_answer)
-    values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{label,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{label,jdbcType=VARCHAR},
       #{questionId,jdbcType=INTEGER}, #{isAnswer,jdbcType=INTEGER})
+
   </insert>
   <update id="updateByPrimaryKey" parameterType="info.lzzy.models.Option">
     update options

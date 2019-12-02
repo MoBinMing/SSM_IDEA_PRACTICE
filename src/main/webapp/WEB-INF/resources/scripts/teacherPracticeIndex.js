@@ -56,6 +56,9 @@ function searchPractices() {
             //alert(data.practices);
             if (data.practices!="登录超时"){
                 createPracticeCellHtml(data.practices);
+                $("#hint").html(getHint("提示","搜索到\n"+
+                   count(data.practices)+"条数据。","succeed")).show(300).delay(3000).hide(300);
+
             }else {
                 window.location.href = getRootPath();
             }
@@ -63,14 +66,13 @@ function searchPractices() {
     });
 }
 function createPracticeCellHtml(practices) {
-    if (count(practices) !== 0){
         var tableBodyHtml = "";
         for (var j=0;j<practices.length;j++){
             tableBodyHtml = tableBodyHtml + '<tr>';
             // 遍历单条信息
 
             tableBodyHtml = tableBodyHtml +"<td>" +
-                "<a href=\""+ getRootPath() +"/Teacher/toQuestionForPractice/"+ practices[j].id
+                "<a href=\""+ getRootPath() +"/Teacher/QuestionForPractice/"+ practices[j].id
                 +"\" class=\"\">"+ practices[j].name +"</a><br>" + practices[j].outlines + "<br>"
                 +"</td>";
             tableBodyHtml = tableBodyHtml + '<td>' + practices[j].questionCount + '</td>';
@@ -98,7 +100,7 @@ function createPracticeCellHtml(practices) {
                 '         <button type="button" data-toggle="tooltip" title="修改练习" class="btn btn-link <btn-simple-primary"\n' +
                 "                 onclick=\"showUpdatePracticeModal('" + practices[j].id + "','"+ practices[j].name + "','" +
                                     practices[j].outlines +"');event.stopPropagation();\">" +
-                '             <i class="la la-edit">编辑</i>\n' +
+                '             <i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;编辑</i>\n' +
                 '         </button>\n' +
                 '     </div>\n' +
                 '</td>';
@@ -106,22 +108,14 @@ function createPracticeCellHtml(practices) {
                 '                    <div class="form-button-action">\n' +
                 '                      <button type="button" data-toggle="tooltip" title="删除" class="btn btn-link btn-simple-danger"\n' +
                 '                              onclick="deletePractice(\'' + practices[j].id+ '\');event.stopPropagation();">\n' +
-                '                        <i class="la la-times" >删除</i>\n' +
+                '                        <i class="fa fa-trash-o" aria-hidden="true">&nbsp;删除</i>\n' +
                 '                      </button>\n' +
                 '                    </div>\n' +
                 '                  </td>';
             tableBodyHtml = tableBodyHtml + '</tr>';
         }
         $("#practicesTbody").html(tableBodyHtml);
-    }else {
-        $("#practicesTbody").html("<div class=\"alert alert-success alert-dismissable\">\n" +
-            "\t<button type=\"button\" class=\"close\" data-dismiss=\"alert\"\n" +
-            "\t\t\taria-hidden=\"true\">\n" +
-            "\t\t&times;\n" +
-            "\t</button>\n" +
-            "\t当前搜索关键词无数据！!\n" +
-            "</div>");
-    }
+
 }
 
 function deletePractice(id) {
@@ -170,10 +164,12 @@ function SwitchClick(dom) {
             function(data){
                 if(data.updateOk){
                     $(i).attr("checked", "checked");
+                    $("#hint").html(getHint("提示","开发成功","succeed")).show(300).delay(3000).hide(300);
+
                     //location.reload();
                 }else{
                     $(i).removeAttr("checked");
-                    alert("开放失败！");
+                    $("#hint").html(getHint("提示","开发失败","error")).show(300).delay(3000).hide(300);
                 }
             });
     } else {
@@ -181,43 +177,33 @@ function SwitchClick(dom) {
         $.get(getRootPath()+"/Teacher/updatePracticeReadyToOff?pid="+id,function(data,status){
             if(data.updateOk){
                 $(i).removeAttr("checked");
-               // location.reload();
+                $("#hint").html(getHint("提示","取消开放成功","succeed")).show(300).delay(3000).hide(300);
+
+                // location.reload();
             }else{
                 $(i).attr("checked", "checked");
-                alert("停止开放失败！");
+                $("#hint").html(getHint("提示","取消开放失败","error")).show(300).delay(3000).hide(300);
             }
         });
     }
 }
-function deleteQuestion(id) {
-    var an = confirm("确定删除？");
-    if (an == true) {
-        location.href = "/Practice/Teacher/deleteQuestion/" + id;
-    } else {
-        return false;
+
+
+function getHint(title,body,sta) {
+    if (sta=="succeed"){
+        return "  <div class=\"alert alert-success alert-dismissible m-0\">\n" +
+            "    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
+            "    <strong >"+title+"</strong> <span>"+body+"</span>\n" +
+            "  </div>";
+    }else {
+        return "  <div class=\"alert alert-danger alert-dismissible m-0\">\n" +
+            "    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>\n" +
+            "    <strong >"+title+"</strong> <span>"+body+"</span>\n" +
+            "  </div>";
     }
-}
-
-function updateReady(id) {
-    $.get("updateReady/" + id, function(data, status) {
-        if (data.thisBody == (getRootPath() + "Login/LoginIndexUrl")) {
-            location.href = data.thisBody;
-        } else {
-            $("#tbody").html(data.thisBody);
-        }
-    });
-}
-
-function getStudentManagementHtml() {
-    $.get("getStudentManagementHtml", function(data, status) {
-        if (data.ok != "ok") {
-            $("#contentView").html(data.thisBody);
-        } else {
-            $("#contentView").html(data.thisBody);
-        }
-    });
 }
 /* bootstrap开关控件，初始化 */
 function onLi() {
-    $('.mySwitch input').bootstrapSwitch();
+     $('.switch input').bootstrapSwitch();
 }
+

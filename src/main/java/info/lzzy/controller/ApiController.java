@@ -2,7 +2,6 @@ package info.lzzy.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.channels.ScatteringByteChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -10,47 +9,32 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import info.lzzy.models.*;
+import info.lzzy.models.ApiView.ApiCourse;
+import info.lzzy.models.ApiView.TeacherQuestion;
 import net.sf.json.*;
 import org.apache.ibatis.binding.BindingException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 
 import javafx.util.Pair;
 import info.lzzy.connstants.ApiConstants;
-import info.lzzy.models.Course;
-import info.lzzy.models.Enrollment;
-import info.lzzy.models.Option;
-import info.lzzy.models.Practice;
-import info.lzzy.models.PracticeResult;
-import info.lzzy.models.Question;
-import info.lzzy.models.Student;
-import info.lzzy.models.Teacher;
 import info.lzzy.models.view.TeacherValidType;
 import info.lzzy.models.view.UserLogin;
-import info.lzzy.service.StudentService;
 import info.lzzy.service.scoket.SocketServer;
-import info.lzzy.utils.AESUtils;
 import info.lzzy.utils.ApiUtil;
 import info.lzzy.utils.Encipher;
-import info.lzzy.utils.PhoneUtils;
-import info.lzzy.utils.SymmetricEncoder;
 import info.lzzy.utils.UploadImage;
 import info.lzzy.utils.VerificationInfo;
 import info.lzzy.utils.WebKeyUtils;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/api") // 映射路径，一个参数时等同于@RequestMapping(value = "/api")， 如果 value=""，将映射项目根路径
 public class ApiController extends BaceController {
 	public static String ENCODERULES_KEY = "abc123";
-
-	// region 注册 OK
+	//region 注册 -> 学生、教师
 	@PostMapping(value = "/post_register", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String register(@RequestBody String body) {
@@ -66,8 +50,7 @@ public class ApiController extends BaceController {
 		return WebKeyUtils.encryptionReturnRequest(json.toString());
 	}
 	// endregion
-
-	// region 登录 OK
+	// region 登录 -> 学生、教师、管理员
 	@PostMapping(value = "/login", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String studentLogin(@RequestBody String body) {
@@ -87,8 +70,7 @@ public class ApiController extends BaceController {
 		return WebKeyUtils.encryptionReturnRequest(json.toString());
 	}
 	// endregion
-
-	// region 获取所有老师 Ok
+	// region 获取所有教师 -> 学生、教师、管理员
 	@PostMapping(value = "/get_all_teacher", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String get_all_teacher(@RequestBody String body) {
@@ -164,7 +146,92 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 获取老师的课程 Ok
+	// region 上传练习结果 -> 学生、教师、管理员
+	@PostMapping(value = "/post_PracticeResult", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String post_PracticeResult(@RequestBody String body) {
+		JSONObject json = new JSONObject();
+		try {
+			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+					teacherService, adminService);
+			if (pair.getKey()) {
+				// region 验证成功
+				JSONObject bodyObj = pair.getValue();
+				JSONObject userBody = JSONObject.fromObject(bodyObj.getString("userBody"));
+				Gson gson = new Gson();
+				JSONArray jsonArray = userBody.getJSONArray("practiceResults");
+				List<PracticeResult> practiceResults = new ArrayList<>();
+
+				for (Object object : jsonArray) {
+					PracticeResult practiceResult = gson.fromJson(object.toString(), PracticeResult.class);
+					practiceResult.setId(practiceResultService.getIdByMax()+1);
+					practiceResult.setStudentId(bodyObj.getString("studentId"));
+					List<PracticeResult> practiceResults1=practiceResultService.selectBySIdAndPIdAndQId(practiceResult.getPracticeId(),
+							practiceResult.getStudentId(), practiceResult.getQuestionId());
+					if (practiceResults1==null || practiceResults1.size() == 0) {
+						if (!ApiUtil.allFieldIsNULL(practiceResult)) {
+							if (practiceResult.getStudentAnswer().split(",").length > 0) {
+								if (practiceService.getPracticeById(practiceResult.getPracticeId()) != null) {
+									practiceResults.add(practiceResult);
+								} else {
+									json.put("RESULT", "F");
+									json.put("ERRMSG", "参数非法,不存在practice");
+									break;
+								}
+							} else {
+								practiceResults.clear();
+								json.put("RESULT", "F");
+								json.put("ERRMSG", "参数非法");
+								break;
+							}
+
+						} else {
+							practiceResults.clear();
+							json.put("RESULT", "F");
+							json.put("ERRMSG", "参数非法");
+							break;
+						}
+					} else {
+						practiceResults.clear();
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "已提交练习结果");
+						break;
+					}
+
+				}
+				if (practiceResults.size() == jsonArray.size()) {
+					int okSize = 0;
+					for (PracticeResult practiceResult : practiceResults) {
+						int maxId = 0;
+						try {
+							maxId = practiceResultService.getIdByMax();
+						} catch (BindingException e) {
+
+						}
+						practiceResult.setId(maxId + 1);
+						if (practiceResultService.insert(practiceResult) == 1) {
+							okSize++;
+						}
+					}
+					if (okSize == practiceResults.size()) {
+						json.put("RESULT", "S");
+						json.put("ERRMSG", "提交成功");
+					}
+				}
+				// endregion
+
+			} else {
+				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
+			}
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+	// endregion
+
+	// region 获取课程 -> 学生、教师、管理员
 	@PostMapping(value = "/get_course", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String get_course(@RequestBody String body) {
@@ -232,300 +299,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 获取课程下的Practice OK
-	@PostMapping(value = "/get_practice", consumes = "application/json", produces = "text/html;charset=UTF-8")
-	@ResponseBody // 返回给请求着仅仅body的内容
-	public String get_all_Practice(@RequestBody String body) {
-		JSONObject json = new JSONObject();
-		try {
-			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
-					teacherService, adminService);
-			if (pair.getKey()) {
-				// region 验证成功
-				JSONObject bodyObj = pair.getValue();
-				JSONObject userBody = bodyObj.getJSONObject("userBody");
-				if (bodyObj.getString("user").equals("student")) {
-					Integer courseId = userBody.getInt("courseId");
-					String studentId = bodyObj.getString("studentId");
-					Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId, studentId);
-					if (enrollment == null) {
-						json.put("RESULT", "F");
-						json.put("ERRMSG", "未申请该课程");
-					} else {
-						switch (enrollment.getTakeEffect()) {
-						case 0:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "无权限,该课程正在等待审批中");
-							break;
-						case 1:
-							List<Practice> pList = practiceService.getPracticeByCourseId(courseId);
-							JSONArray jsonArray = new JSONArray();
-							if (pList.size() > 0) {
-								for (Practice practice : pList) {
-									JSONObject jObject = new JSONObject();
-									jObject.put("id", practice.getId());
-									jObject.put("name", practice.getName());
-									jObject.put("questionCount", practice.getQuestionCount());
-									jObject.put("upTime", format.format(practice.getUpTime()));
-									jObject.put("isReady", practice.getIsReady());
-									jObject.put("outlines", practice.getOutlines());
-									jObject.put("courseId", practice.getCourseId());
-									jsonArray.add(jObject);
-								}
-							}
-							json = JSONObject.fromObject(RETURN_S_String);
-							json.put("practices", jsonArray.toString());
-							json.put("size", jsonArray.size());
-							break;
-
-						case 2:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "无权限,申请该课程未得到审批");
-							break;
-						default:
-							break;
-						}
-
-					}
-				} else {
-					Integer courseId = userBody.getInt("courseId");
-					Course course = courseService.selectByPrimaryKey(courseId);
-					if (course != null) {
-						if (bodyObj.getString("teacherId").equals(course.getTeacherId())) {
-							List<Practice> pList = practiceService.getPracticeByCourseId(courseId);
-							JSONArray jsonArray = new JSONArray();
-							if (pList.size() > 0) {
-								for (Practice practice : pList) {
-									JSONObject jObject = new JSONObject();
-									jObject.put("id", practice.getId());
-									jObject.put("name", practice.getName());
-									jObject.put("questionCount", practice.getQuestionCount());
-									jObject.put("upTime", format.format(practice.getUpTime()));
-									jObject.put("isReady", practice.getIsReady());
-									jObject.put("outlines", practice.getOutlines());
-									jObject.put("courseId", practice.getCourseId());
-									jsonArray.add(jObject);
-								}
-							}
-							json = JSONObject.fromObject(RETURN_S_String);
-							json.put("practices", jsonArray.toString());
-							json.put("size", jsonArray.size());
-						} else {
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "该课程的练习不是您的练习");
-						}
-					} else {
-						json.put("RESULT", "F");
-						json.put("ERRMSG", "未存在该课程，不存在练习");
-					}
-
-				}
-				// endregion
-			} else {
-				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
-			}
-		} catch (Exception e) {
-			json.put("RESULT", "F");
-			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
-		}
-		return WebKeyUtils.encryptionReturnRequest(json.toString());
-	}
-
-	// endregion
-	// region 获取Practice下的Question
-	@PostMapping(value = "/get_question", consumes = "application/json", produces = "text/html;charset=UTF-8")
-	@ResponseBody // 返回给请求着仅仅body的内容
-	public String get_all_question(@RequestBody String body) {
-		JSONObject json = new JSONObject();
-		try {
-			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
-					teacherService, adminService);
-			if (pair.getKey()) {
-				// region 验证成功
-				JSONObject bodyObj = pair.getValue();
-				JSONObject userBody = bodyObj.getJSONObject("userBody");
-				Integer practiceId = userBody.getInt("practiceId");
-				Integer courseId = userBody.getInt("courseId");
-				if (bodyObj.getString("user").equals("student")) {
-					String studentId = bodyObj.getString("studentId");
-					Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId, studentId);
-					if (enrollment == null) {
-						json.put("RESULT", "F");
-						json.put("ERRMSG", "未申请该课程");
-					} else {
-						switch (enrollment.getTakeEffect()) {
-						case 0:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "无权限,该课程正在等待审批中");
-							break;
-						case 1:
-							json = getQuestions(json, practiceId);
-							break;
-
-						case 2:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "无权限,申请该课程未得到审批");
-							break;
-						default:
-							break;
-						}
-
-					}
-				} else {
-					String teacherId = bodyObj.getString("teacherId");
-					Course course = courseService.selectByPrimaryKey(courseId);
-					if (course != null) {
-						if (course.getTeacherId().equals(teacherId)) {
-							json = getQuestions(json, practiceId);
-						} else {
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "该课程不是您的课程");
-						}
-					} else {
-						json.put("RESULT", "F");
-						json.put("ERRMSG", "未创建该课程");
-					}
-				}
-				// endregion
-			} else {
-				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
-			}
-		} catch (Exception e) {
-			json.put("RESULT", "F");
-			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
-		}
-		return WebKeyUtils.encryptionReturnRequest(json.toString());
-	}
-
-	public JSONObject getQuestions(JSONObject json, Integer practiceId) {
-		Practice practice = practiceService.getPracticeById(practiceId);
-		if (practice != null) {
-			if (practice.getIsReady() == 1) {
-				List<Question> qList = questionsService.getQuestionByPracticeId(practiceId);
-				JSONArray questionArray = new JSONArray();
-				if (qList.size() > 0) {
-					for (Question question : qList) {
-						JSONObject questionjObject = new JSONObject();
-						questionjObject.put("id", question.getId());
-						questionjObject.put("content", question.getContent());
-						questionjObject.put("questionType", question.getQuestionType());
-						questionjObject.put("number", question.getNumber());
-						questionjObject.put("analysis", question.getAnalysis());
-						questionjObject.put("practiceId", practiceId);
-						List<Option> options = optionService.getOptionByQuestionKey(question.getId());
-						JSONArray optionArray = new JSONArray();
-						for (Option option : options) {
-							JSONObject optionjObject = new JSONObject();
-							optionjObject.put("id", option.getId());
-							optionjObject.put("content", option.getId());
-							optionjObject.put("label", option.getLabel());
-							optionjObject.put("questionId", option.getQuestionId());
-							optionjObject.put("isAnswer", option.getIsAnswer());
-							optionArray.add(optionjObject);
-						}
-						questionjObject.put("options", optionArray.toString());
-						questionArray.add(questionjObject);
-					}
-				}
-				json = JSONObject.fromObject(RETURN_S_String);
-				json.put("questions", questionArray.toString());
-				json.put("size", questionArray);
-			} else {
-				json.put("RESULT", "F");
-				json.put("ERRMSG", "练习: \"" + practiceId + "\"未开放");
-			}
-		} else {
-			json.put("RESULT", "F");
-			json.put("ERRMSG", "练习: \"" + practiceId + "\"不存在");
-		}
-		return json;
-	}
-
-	// endregion
-	// region 上传 PracticeResult 练习结果 OK
-	@PostMapping(value = "/post_PracticeResult", consumes = "application/json", produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String post_PracticeResult(@RequestBody String body) {
-		JSONObject json = new JSONObject();
-		try {
-			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
-					teacherService, adminService);
-			if (pair.getKey()) {
-				// region 验证成功
-				JSONObject bodyObj = pair.getValue();
-				JSONObject userBody = JSONObject.fromObject(bodyObj.getString("userBody"));
-				Gson gson = new Gson();
-				JSONArray jsonArray = userBody.getJSONArray("Results");
-				List<PracticeResult> practiceResults = new ArrayList<>();
-
-				for (Object object : jsonArray) {
-					PracticeResult practiceResult = gson.fromJson(object.toString(), PracticeResult.class);
-					int maxId = 0;
-					try {
-						maxId = practiceResultService.getIdByMax();
-					} catch (BindingException e) {
-
-					}
-					practiceResult.setId(maxId + 1);
-					practiceResult.setStudentId(bodyObj.getString("studentId"));
-					if (practiceResultService.selectBySIdAndPIdAndQId(practiceResult.getPracticeId(),
-							practiceResult.getStudentId(), practiceResult.getQuestionId()).size() == 0) {
-						if (!ApiUtil.allFieldIsNULL(practiceResult)) {
-							if (practiceResult.getStudentAnswer().split(",").length > 0) {
-								if (practiceService.getPracticeById(practiceResult.getPracticeId()) != null) {
-									practiceResults.add(practiceResult);
-								} else {
-									json.put("RESULT", "F");
-									json.put("ERRMSG", "参数非法,不存在practice");
-									break;
-								}
-							} else {
-								practiceResults.clear();
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "参数非法");
-								break;
-							}
-
-						} else {
-							practiceResults.clear();
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "参数非法");
-							break;
-						}
-					} else {
-						practiceResults.clear();
-						json.put("RESULT", "F");
-						json.put("ERRMSG", "存在重复结果");
-						break;
-					}
-
-				}
-				if (practiceResults.size() == jsonArray.size()) {
-					int okSize = 0;
-					for (PracticeResult practiceResult : practiceResults) {
-						if (practiceResultService.insert(practiceResult) == 1) {
-							okSize++;
-						}
-					}
-					if (okSize == practiceResults.size()) {
-						json.put("RESULT", "S");
-						json.put("ERRMSG", "提交成功");
-					}
-				}
-				// endregion
-
-			} else {
-				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
-			}
-		} catch (Exception e) {
-			json.put("RESULT", "F");
-			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
-		}
-		return WebKeyUtils.encryptionReturnRequest(json.toString());
-	}
-	// endregion
-
-	// region 添加课程 OK
+	// region 添加课程 -> 教师
 	@PostMapping(value = "/post_add_course", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String add_course(@RequestBody String body) {
@@ -546,56 +320,67 @@ public class ApiController extends BaceController {
 					Teacher teacher = teacherService.selectTeacherById(teacherId);
 					if (teacher != null) {
 						switch (teacher.getValid()) {
-						case 0:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", TeacherValidType.getInstance(0).toString());
-							break;
-						case 1:
-							List<Course> courses = gson.fromJson(userBody.getString("courses"),
-									new TypeToken<List<Course>>() {
-									}.getType());
-							int s = 0;
-							int f = 0;
-							int t = 0;
-							StringBuilder fBuilder = new StringBuilder();
-							StringBuilder tBuilder = new StringBuilder();
-							for (Course course : courses) {
-								course.setTeacherId(teacherId);
-								course.setAddTime(new Date());
-								if (courseService.selectByName(course.getName()) == null) {
-									if (courseService.insert(course) == 1) {
-										s++;
-									} else {
-										f++;
-										fBuilder.append(course.getName() + ",");
-									}
-								} else {
-									t++;
-									tBuilder.append("课程" + course.getName() + "已存在,");
-								}
-
-							}
-							if (s == courses.size()) {
-								json.put("RESULT", "S");
-								json.put("successfulSize", s);
-								json.put("failuresSize", f);
-								json.put("illegalSize", t);
-								json.put("ERRMSG", "添加成功：" + s + "个,添加失败：" + f + "个,不合法：" + t + "个");
-							} else {
+							case 0:
 								json.put("RESULT", "F");
-								json.put("successfulSize", s);
-								json.put("failuresSize", f);
-								json.put("illegalSize", t);
-								json.put("ERRMSG", "添加成功：" + s + "个,添加失败：" + f + "个," + fBuilder.toString() + "不合法：" + t
-										+ "个," + tBuilder.toString());
-							}
-							break;
-						case 2:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", TeacherValidType.getInstance(2).toString());
-							break;
-						default:
-							break;
+								json.put("ERRMSG", TeacherValidType.getInstance(0).toString());
+								break;
+							case 1:
+
+								List<ApiCourse> apiCourses = gson.fromJson(userBody.getString("courses"),
+										new TypeToken<List<ApiCourse>>() {
+										}.getType());
+								if(apiCourses.size()!=0){
+									int s = 0;
+									int f = 0;
+									int t = 0;
+									StringBuilder fBuilder = new StringBuilder();
+									StringBuilder tBuilder = new StringBuilder();
+									for (ApiCourse apiCourse : apiCourses) {
+										Course course=new Course();
+										course.setTeacherId(teacherId);
+										course.setAddTime(new Date());
+										course.setName(apiCourse.getName());
+										course.setIntro(apiCourse.getIntro().equals("") ?"无":apiCourse.getIntro());
+										course.setAge(apiCourse.getAge());
+										course.setId(courseService.getIdByMax()+1);
+										if (courseService.selectByName(course.getName()) == null) {
+											if (courseService.insertSelective(course) == 1) {
+												s++;
+											} else {
+												f++;
+												fBuilder.append(course.getName() + ",");
+											}
+										} else {
+											t++;
+											tBuilder.append("课程" + course.getName() + "已存在,");
+										}
+
+									}
+									if (s == apiCourses.size()) {
+										json.put("RESULT", "S");
+										json.put("successfulSize", s);
+										json.put("failuresSize", f);
+										json.put("illegalSize", t);
+										json.put("ERRMSG", "添加成功：" + s + "个,添加失败：" + f + "个,不合法：" + t + "个");
+									} else {
+										json.put("RESULT", "F");
+										json.put("successfulSize", s);
+										json.put("failuresSize", f);
+										json.put("illegalSize", t);
+										json.put("ERRMSG", "添加成功：" + s + "个,添加失败：" + f + "个," + fBuilder.toString() + "不合法：" + t
+												+ "个," + tBuilder.toString());
+									}
+								}else {
+									json.put("RESULT", "F");
+									json.put("ERRMSG", "请求非法，参数不全");
+								}
+								break;
+							case 2:
+								json.put("RESULT", "F");
+								json.put("ERRMSG", TeacherValidType.getInstance(2).toString());
+								break;
+							default:
+								break;
 						}
 					} else {
 						json.put("RESULT", "F");
@@ -606,54 +391,54 @@ public class ApiController extends BaceController {
 					Teacher teacher = teacherService.selectTeacherById(teacherId);
 					if (teacher != null) {
 						switch (teacher.getValid()) {
-						case 0:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", TeacherValidType.getInstance(0).toString());
-							break;
-						case 1:
-							List<Course> courses = gson.fromJson(userBody.getString("courses"),
-									new TypeToken<List<Course>>() {
-									}.getType());
-							int s = 0;
-							int f = 0;
-							int t = 0;
-							StringBuilder fBuilder = new StringBuilder();
-							StringBuilder tBuilder = new StringBuilder();
-							for (Course course : courses) {
-								if (course.getTeacherId().equals(teacherId)) {
-									course.setAddTime(new Date());
-									if (courseService.insert(course) == 1) {
-										s++;
-									} else {
-										f++;
-										fBuilder.append(course.getName() + ",");
-									}
-								} else {
-									t++;
-									tBuilder.append(course.getName() + ",");
-								}
-							}
-							if (s == courses.size()) {
-								json.put("RESULT", "S");
-								json.put("successfulSize", s);
-								json.put("failuresSize", f);
-								json.put("illegalSize", t);
-								json.put("ERRMSG", "添加成功：" + s + "个\n" + "添加失败：" + f + "个\n" + "不合法：" + t + "个");
-							} else {
+							case 0:
 								json.put("RESULT", "F");
-								json.put("successfulSize", s);
-								json.put("failuresSize", f);
-								json.put("illegalSize", t);
-								json.put("ERRMSG", "添加成功：" + s + "个\n" + "添加失败：" + f + "个\n" + fBuilder.toString()
-										+ "不合法：" + t + "个\n" + tBuilder.toString());
-							}
-							break;
-						case 2:
-							json.put("RESULT", "F");
-							json.put("ERRMSG", TeacherValidType.getInstance(2).toString());
-							break;
-						default:
-							break;
+								json.put("ERRMSG", TeacherValidType.getInstance(0).toString());
+								break;
+							case 1:
+								List<Course> courses = gson.fromJson(userBody.getString("courses"),
+										new TypeToken<List<Course>>() {
+										}.getType());
+								int s = 0;
+								int f = 0;
+								int t = 0;
+								StringBuilder fBuilder = new StringBuilder();
+								StringBuilder tBuilder = new StringBuilder();
+								for (Course course : courses) {
+									if (course.getTeacherId().equals(teacherId)) {
+										course.setAddTime(new Date());
+										if (courseService.insert(course) == 1) {
+											s++;
+										} else {
+											f++;
+											fBuilder.append(course.getName() + ",");
+										}
+									} else {
+										t++;
+										tBuilder.append(course.getName() + ",");
+									}
+								}
+								if (s == courses.size()) {
+									json.put("RESULT", "S");
+									json.put("successfulSize", s);
+									json.put("failuresSize", f);
+									json.put("illegalSize", t);
+									json.put("ERRMSG", "添加成功：" + s + "个\n" + "添加失败：" + f + "个\n" + "不合法：" + t + "个");
+								} else {
+									json.put("RESULT", "F");
+									json.put("successfulSize", s);
+									json.put("failuresSize", f);
+									json.put("illegalSize", t);
+									json.put("ERRMSG", "添加成功：" + s + "个\n" + "添加失败：" + f + "个\n" + fBuilder.toString()
+											+ "不合法：" + t + "个\n" + tBuilder.toString());
+								}
+								break;
+							case 2:
+								json.put("RESULT", "F");
+								json.put("ERRMSG", TeacherValidType.getInstance(2).toString());
+								break;
+							default:
+								break;
 						}
 					} else {
 						json.put("RESULT", "F");
@@ -670,7 +455,7 @@ public class ApiController extends BaceController {
 			}
 		} catch (
 
-		Exception e) {
+				Exception e) {
 			json.put("RESULT", "F");
 			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
 		}
@@ -678,7 +463,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 删除课程 Ok
+	// region 删除课程 -> 教师、管理员
 	@PostMapping(value = "/post_delete_course", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String post_delete_course(@RequestBody String body) {
@@ -748,7 +533,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 更新课程 OK
+	// region 更新课程 -> 教师、管理员
 	@PostMapping(value = "/post_update_course", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String post_update_course(@RequestBody String body) {
@@ -770,10 +555,12 @@ public class ApiController extends BaceController {
 					Course course1 = courseService.selectByPrimaryKey(courseId);
 					if (teacherId.equals(course1.getTeacherId())) {
 						Course course = gson.fromJson(userBody.getString("course"), Course.class);
-						if (course.getName() != null && course.getIntro() != null) {
+						if (course.getName() != null && course.getIntro() != null
+							|| course.getAge()!=null) {
 							course1.setName(course.getName());
 							course1.setIntro(course.getIntro());
-							if (courseService.updateByPrimaryKey(course1) == 1) {
+							course1.setAge(course.getAge());
+							if (courseService.updateByPrimaryKeySelective(course1) == 1) {
 								json.put("RESULT", "S");
 								json.put("ERRMSG", "编辑课程成功");
 							} else {
@@ -808,7 +595,7 @@ public class ApiController extends BaceController {
 					}
 				} else {
 					json.put("RESULT", "F");
-					json.put("ERRMSG", "请求非法：非学生、非教师、非管理员");
+					json.put("ERRMSG", "请求非法：user名称不存在");
 				}
 				// endregion
 
@@ -824,7 +611,107 @@ public class ApiController extends BaceController {
 
 	// endregion
 
-	// region 添加章节
+	// region 获取练习 -> 学生、教师
+	@PostMapping(value = "/get_practice", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String get_all_Practice(@RequestBody String body) {
+		JSONObject json = new JSONObject();
+		try {
+			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+					teacherService, adminService);
+			if (pair.getKey()) {
+				// region 验证成功
+				JSONObject bodyObj = pair.getValue();
+				JSONObject userBody = bodyObj.getJSONObject("userBody");
+				if (bodyObj.getString("user").equals("student")) {
+					Integer courseId = userBody.getInt("courseId");
+					String studentId = bodyObj.getString("studentId");
+					Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId, studentId);
+					if (enrollment == null) {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "未申请该课程");
+					} else {
+						switch (enrollment.getTakeEffect()) {
+							case 0:
+								json.put("RESULT", "F");
+								json.put("ERRMSG", "无权限,该课程正在等待审批中");
+								break;
+							case 1:
+								List<Practice> pList = practiceService.getPracticeByCourseId(courseId);
+								JSONArray jsonArray = new JSONArray();
+								if (pList.size() > 0) {
+									for (Practice practice : pList) {
+										JSONObject jObject = new JSONObject();
+										jObject.put("pId", practice.getId());
+										jObject.put("name", practice.getName());
+										jObject.put("questionCount", practice.getQuestionCount());
+										jObject.put("upTime", format.format(practice.getUpTime()));
+										jObject.put("isReady", practice.getIsReady());
+										jObject.put("outlines", practice.getOutlines());
+										jObject.put("courseId", practice.getCourseId());
+										jsonArray.add(jObject);
+									}
+								}
+								json = JSONObject.fromObject(RETURN_S_String);
+								json.put("practices", jsonArray.toString());
+								json.put("size", jsonArray.size());
+								break;
+
+							case 2:
+								json.put("RESULT", "F");
+								json.put("ERRMSG", "无权限,申请该课程未得到审批");
+								break;
+							default:
+								break;
+						}
+
+					}
+				} else {
+					Integer courseId = userBody.getInt("courseId");
+					Course course = courseService.selectByPrimaryKey(courseId);
+					if (course != null) {
+						if (bodyObj.getString("teacherId").equals(course.getTeacherId())) {
+							List<Practice> pList = practiceService.getPracticeByCourseId(courseId);
+							json = JSONObject.fromObject(RETURN_S_String);
+							JSONArray jsonArray = new JSONArray();
+							if (pList.size() > 0) {
+								for (Practice practice : pList) {
+									JSONObject jObject = new JSONObject();
+									jObject.put("id", practice.getId());
+									jObject.put("name", practice.getName());
+									jObject.put("questionCount", practice.getQuestionCount());
+									jObject.put("upTime", format.format(practice.getUpTime()));
+									jObject.put("isReady", practice.getIsReady());
+									jObject.put("outlines", practice.getOutlines());
+									jObject.put("courseId", practice.getCourseId());
+									jsonArray.add(jObject);
+								}
+							}
+							json.put("practices", jsonArray.toString());
+							json.put("size", pList.size());
+						} else {
+							json.put("RESULT", "F");
+							json.put("ERRMSG", "该课程的练习不是您的练习");
+						}
+					} else {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "未存在该课程，不存在练习");
+					}
+
+				}
+				// endregion
+			} else {
+				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
+			}
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+
+	// endregion
+	// region 添加练习 -> 教师
 	@PostMapping(value = "/add_practice", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String add_practice(@RequestBody String body) {
@@ -838,8 +725,8 @@ public class ApiController extends BaceController {
 				JSONObject userBody = bodyObj.getJSONObject("userBody");
 				if (bodyObj.getString("user").equals("student")) {
 					json.put("RESULT", "F");
-					json.put("ERRMSG", "无权限添加章节");
-				} else {
+					json.put("ERRMSG", "无权限添加练习");
+				} else{
 					Integer courseId = userBody.getInt("courseId");
 					String name = userBody.getString("name");
 					String outlines = userBody.getString("outlines");
@@ -855,6 +742,7 @@ public class ApiController extends BaceController {
 								practice.setUpTime(new Date());
 								practice.setQuestionCount(0);
 								practice.setName(name);
+								practice.setId(practiceService.getIdByMax()+1);
 								if (practiceService.addPractice(practice) == 1) {
 									json.put("RESULT", "S");
 									json.put("ERRMSG", "添加成功");
@@ -888,7 +776,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 删除章节
+	// region 删除练习 -> 教师
 	@PostMapping(value = "/delete_practice", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String delete_practice(@RequestBody String body) {
@@ -902,15 +790,16 @@ public class ApiController extends BaceController {
 				JSONObject userBody = bodyObj.getJSONObject("userBody");
 				if (bodyObj.getString("user").equals("student")) {
 					json.put("RESULT", "F");
-					json.put("ERRMSG", "无权限删除章节");
+					json.put("ERRMSG", "无权限删除练习");
 				} else {
 					Integer practiceId = userBody.getInt("practiceId");
 					Practice practice = practiceService.getPracticeById(practiceId);
 					Course course = courseService.selectByPrimaryKey(practice.getCourseId());
 					if (course != null) {
 						if (bodyObj.getString("teacherId").equals(course.getTeacherId())) {
-							if (practice == null) {
+							if (practice != null) {
 								if (practiceService.deletePracticeByKey(practice.getId()) == 1) {
+
 									json.put("RESULT", "S");
 									json.put("ERRMSG", "删除成功");
 								} else {
@@ -919,7 +808,7 @@ public class ApiController extends BaceController {
 								}
 							} else {
 								json.put("RESULT", "F");
-								json.put("ERRMSG", "不存在该章节");
+								json.put("ERRMSG", "不存在该练习");
 							}
 						} else {
 							json.put("RESULT", "F");
@@ -927,7 +816,7 @@ public class ApiController extends BaceController {
 						}
 					} else {
 						json.put("RESULT", "F");
-						json.put("ERRMSG", "不存在该课程的章节");
+						json.put("ERRMSG", "不存在该课程的练习");
 					}
 
 				}
@@ -943,7 +832,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 更新章节
+	// region 更新练习 -> 教师
 	@PostMapping(value = "/update_practice", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String update_practice(@RequestBody String body) {
@@ -957,20 +846,19 @@ public class ApiController extends BaceController {
 				JSONObject userBody = bodyObj.getJSONObject("userBody");
 				if (bodyObj.getString("user").equals("student")) {
 					json.put("RESULT", "F");
-					json.put("ERRMSG", "无权限更新章节");
+					json.put("ERRMSG", "无权限更新练习");
 				} else {
 					Integer practiceId = userBody.getInt("practiceId");
 					Practice practice = practiceService.getPracticeById(practiceId);
 					Course course = courseService.selectByPrimaryKey(practice.getCourseId());
 					if (course != null) {
 						if (bodyObj.getString("teacherId").equals(course.getTeacherId())) {
-							if (practice == null) {
-								Gson gson = new Gson();
-								String practiceJson = userBody.getString("practice");
-								Practice practice2 = gson.fromJson(practiceJson, Practice.class);
-								practice.setIsReady(practice2.getIsReady());
-								practice.setName(practice2.getName());
-								practice.setOutlines(practice2.getOutlines());
+							if (practice != null) {
+								String name = userBody.getString("name");
+								String outlines = userBody.getString("outlines");
+								//practice.setIsReady(practice2.getIsReady());
+								practice.setName(name);
+								practice.setOutlines(outlines);
 								if (practiceService.updatePracticeSelective(practice) == 1) {
 									json.put("RESULT", "S");
 									json.put("ERRMSG", "更新成功");
@@ -980,7 +868,7 @@ public class ApiController extends BaceController {
 								}
 							} else {
 								json.put("RESULT", "F");
-								json.put("ERRMSG", "不存在该章节");
+								json.put("ERRMSG", "不存在该练习");
 							}
 						} else {
 							json.put("RESULT", "F");
@@ -988,7 +876,7 @@ public class ApiController extends BaceController {
 						}
 					} else {
 						json.put("RESULT", "F");
-						json.put("ERRMSG", "不存在该课程的章节");
+						json.put("ERRMSG", "不存在该课程的练习");
 					}
 
 				}
@@ -1004,11 +892,53 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-
-	// region 添加题目
-	@PostMapping(value = "/add_question", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	// region 上线下线练习 -> 教师
+	@PostMapping(value = "/update_practice_ready", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
-	public String add_question(@RequestBody String body) {
+	public String update_practice_ready(@RequestBody String body) {
+		JSONObject json = new JSONObject();
+		try {
+			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+					teacherService, adminService);
+			if (pair.getKey()) {
+				// region 验证成功
+				JSONObject bodyObj = pair.getValue();
+				JSONObject userBody = bodyObj.getJSONObject("userBody");
+				if (bodyObj.getString("user").equals("student")) {
+					json.put("RESULT", "F");
+					json.put("ERRMSG", "无权限");
+				} else if (bodyObj.getString("user").equals("teacher")) {
+					Integer practiceId = userBody.getInt("practiceId");
+					Integer isReady = userBody.getInt("isReady");
+					if (isReady==1 || isReady==0){
+						Practice practice = practiceService.getPracticeById(practiceId);
+						practice.setIsReady(isReady);
+						if (practiceService.updatePracticeSelective(practice) == 1) {
+							json.put("RESULT", "S");
+							json.put("ERRMSG", "更新成功");
+						} else {
+							json.put("RESULT", "F");
+							json.put("ERRMSG", "更新时失败");
+						}
+					}
+				}
+				// endregion
+			} else {
+				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
+			}
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+
+	// endregion
+
+	// region 获取题目 -> 学生、教师
+	@PostMapping(value = "/get_question", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String get_all_question(@RequestBody String body) {
 		JSONObject json = new JSONObject();
 		try {
 			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
@@ -1018,33 +948,38 @@ public class ApiController extends BaceController {
 				JSONObject bodyObj = pair.getValue();
 				JSONObject userBody = bodyObj.getJSONObject("userBody");
 				Integer practiceId = userBody.getInt("practiceId");
-				String content = userBody.getString("content");
-				int question_type = userBody.getInt("question_type");
-				int number = userBody.getInt("number");
-				String analysis = userBody.getString("analysis");
 				Integer courseId = userBody.getInt("courseId");
 				if (bodyObj.getString("user").equals("student")) {
-					json.put("RESULT", "F");
-					json.put("ERRMSG", "无权限");
+					String studentId = bodyObj.getString("studentId");
+					Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId, studentId);
+					if (enrollment == null) {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "未申请该课程");
+					} else {
+						switch (enrollment.getTakeEffect()) {
+							case 0:
+								json.put("RESULT", "F");
+								json.put("ERRMSG", "无权限,该课程正在等待审批中");
+								break;
+							case 1:
+								json = getQuestions(json, practiceId,studentId);
+								break;
+
+							case 2:
+								json.put("RESULT", "F");
+								json.put("ERRMSG", "无权限,申请该课程未得到审批");
+								break;
+							default:
+								break;
+						}
+
+					}
 				} else {
 					String teacherId = bodyObj.getString("teacherId");
 					Course course = courseService.selectByPrimaryKey(courseId);
 					if (course != null) {
 						if (course.getTeacherId().equals(teacherId)) {
-							Question question = new Question();
-							question.setAnalysis(analysis);
-							question.setContent(content);
-							question.setId(questionsService.getIdByMax());
-							question.setNumber(number);
-							question.setPracticeId(practiceId);
-							question.setQuestionType(question_type);
-							if (questionsService.insert(question) == 1) {
-								json.put("RESULT", "S");
-								json.put("ERRMSG", "添加成功");
-							} else {
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "添加时失败");
-							}
+							json = teacherGetQuestions(json, practiceId);
 						} else {
 							json.put("RESULT", "F");
 							json.put("ERRMSG", "该课程不是您的课程");
@@ -1065,8 +1000,156 @@ public class ApiController extends BaceController {
 		return WebKeyUtils.encryptionReturnRequest(json.toString());
 	}
 
+	public JSONObject getQuestions(JSONObject json, Integer practiceId,String studentId) {
+		Practice practice = practiceService.getPracticeById(practiceId);
+		if (practice != null) {
+			if (practice.getIsReady() == 1) {
+				List<Question> qList = questionsService.getQuestionByPracticeId(practiceId);
+				JSONArray questionArray = new JSONArray();
+				if (qList.size() > 0) {
+					for (Question question : qList) {
+						JSONObject questionjObject = new JSONObject();
+						questionjObject.put("qId", question.getId());
+						questionjObject.put("content", question.getContent());
+						questionjObject.put("questionType", question.getQuestionType());
+						questionjObject.put("number", question.getNumber());
+						questionjObject.put("analysis", question.getAnalysis());
+						//questionjObject.put("practiceId", practiceId);
+						List<Option> options = optionService.getOptionByQuestionKey(question.getId());
+						JSONArray optionArray = new JSONArray();
+						for (Option option : options) {
+							JSONObject optionjObject = new JSONObject();
+							optionjObject.put("id", option.getId());
+							optionjObject.put("content", option.getContent());
+							optionjObject.put("label", option.getLabel());
+							optionjObject.put("questionId", option.getQuestionId());
+							optionjObject.put("isAnswer", option.getIsAnswer());
+							optionArray.add(optionjObject);
+						}
+						questionjObject.put("options", optionArray.toString());
+						if (studentId!=null){
+							questionjObject.put("practiceResults",
+									practiceResultService.selectBySIdAndPIdAndQId(practiceId,studentId,question.getId()));
+						}
+						questionArray.add(questionjObject);
+					}
+				}
+				json = JSONObject.fromObject(RETURN_S_String);
+				json.put("questions", questionArray.toString());
+				json.put("size", questionArray);
+			} else {
+				json.put("RESULT", "F");
+				json.put("ERRMSG", "练习: \"" + practiceId + "\"未开放");
+			}
+		} else {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "练习: \"" + practiceId + "\"不存在");
+		}
+		return json;
+	}
+	public JSONObject teacherGetQuestions(JSONObject json, Integer practiceId) {
+		Practice practice = practiceService.getPracticeById(practiceId);
+		if (practice != null) {
+			if (practice.getIsReady() == 1) {
+				List<Question> qList = questionsService.getQuestionByPracticeId(practiceId);
+				JSONArray questionArray = new JSONArray();
+				if (qList.size() > 0) {
+					for (Question question : qList) {
+						JSONObject questionjObject = new JSONObject();
+						questionjObject.put("id", question.getId());
+						questionjObject.put("content", question.getContent());
+						questionjObject.put("questionType", question.getQuestionType());
+						questionjObject.put("number", question.getNumber());
+						questionjObject.put("analysis", question.getAnalysis());
+						questionjObject.put("practiceId", practiceId);
+						List<Option> options = optionService.getOptionByQuestionKey(question.getId());
+						JSONArray optionArray = new JSONArray();
+						for (Option option : options) {
+							JSONObject optionjObject = new JSONObject();
+							optionjObject.put("id", option.getId());
+							optionjObject.put("content", option.getContent());
+							optionjObject.put("label", option.getLabel());
+							optionjObject.put("questionId", option.getQuestionId());
+							optionjObject.put("isAnswer", option.getIsAnswer());
+							optionArray.add(optionjObject);
+						}
+						questionjObject.put("options", optionArray.toString());
+						questionArray.add(questionjObject);
+					}
+				}
+				json = JSONObject.fromObject(RETURN_S_String);
+				json.put("questions", questionArray.toString());
+				json.put("size", questionArray);
+			} else {
+				json.put("RESULT", "F");
+				json.put("ERRMSG", "练习: \"" + practiceId + "\"未开放");
+			}
+		} else {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "练习: \"" + practiceId + "\"不存在");
+		}
+		return json;
+	}
+
 	// endregion
-	// region 更新题目
+	// region 添加题目 -> 教师
+	@PostMapping(value = "/add_question", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String add_question(@RequestBody String body) {
+		JSONObject json = new JSONObject();
+		try {
+			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+					teacherService, adminService);
+			if (pair.getKey()) {
+				// region 验证成功
+				JSONObject bodyObj = pair.getValue();
+				JSONObject userBody = bodyObj.getJSONObject("userBody");
+				TeacherQuestion teacherQuestion = new Gson().fromJson(userBody.getString("question"),TeacherQuestion.class);
+				if (bodyObj.getString("user").equals("student")) {
+					json.put("RESULT", "F");
+					json.put("ERRMSG", "无权限");
+				} else {
+					Question question=new Question();
+					question.setId(questionsService.getIdByMax()+1);
+					question.setQuestionType(teacherQuestion.getQuestionType());
+					question.setContent(teacherQuestion.getContent());
+					question.setAnalysis(teacherQuestion.getAnalysis());
+					question.setPracticeId(teacherQuestion.getPracticeId());
+					try {
+						question.setNumber(questionsService.getNumberByMax(question.getPracticeId())+1);
+					}catch (Exception e){
+						question.setNumber(1);
+					}
+					List<Option> options=teacherQuestion.getOptions();
+					if (questionsService.insert(question) == 1) {
+						Practice practice = practiceService.getPracticeById(question.getPracticeId());
+						practice.setQuestionCount(questionsService.getQuestionByPracticeId(question.getPracticeId()).size());
+						practiceService.updatePracticeSelective(practice);
+						for (Option option:options) {
+							option.setQuestionId(question.getId());
+							option.setId(optionService.getIdByMax()+1);
+							optionService.insert(option);
+						}
+						json.put("RESULT", "S");
+						json.put("ERRMSG", "添加成功");
+					} else {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "添加时失败");
+					}
+				}
+				// endregion
+			} else {
+				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
+			}
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+
+	// endregion
+	// region 更新题目 -> 教师
 	@PostMapping(value = "/update_question", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String update_question(@RequestBody String body) {
@@ -1124,7 +1207,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 删除题目
+	// region 删除题目 -> 教师
 	@PostMapping(value = "/delete_question", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String delete_question(@RequestBody String body) {
@@ -1146,7 +1229,11 @@ public class ApiController extends BaceController {
 					Course course = courseService.selectByPrimaryKey(courseId);
 					if (course != null) {
 						if (course.getTeacherId().equals(teacherId)) {
+							Integer pId=questionsService.getById(questionId).getPracticeId();
 							if (questionsService.deleteByPrimaryKey(questionId) == 1) {
+								Practice practice2 = practiceService.getPracticeById(pId);
+								practice2.setQuestionCount(questionsService.getQuestionByPracticeId(pId).size());
+								practiceService.updatePracticeSelective(practice2);
 								json.put("RESULT", "S");
 								json.put("ERRMSG", "删除成功");
 							} else {
@@ -1175,7 +1262,7 @@ public class ApiController extends BaceController {
 
 	// endregion
 
-	// region 添加题目选项
+	// region 添加选项 -> 教师、管理员
 	@PostMapping(value = "/add_option", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String add_option(@RequestBody String body) {
@@ -1221,7 +1308,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 删除题目选项
+	// region 删除选项 -> 教师、管理员
 	@PostMapping(value = "/delete_option", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String delete_option(@RequestBody String body) {
@@ -1259,8 +1346,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-
-	// region 更新题目选项
+	// region 更新选项 -> 教师、管理员
 	@PostMapping(value = "/update_option", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String update_option(@RequestBody String body) {
@@ -1299,7 +1385,7 @@ public class ApiController extends BaceController {
 
 	// endregion
 
-	// region 1：学生申请课程；2、教师：授权、取消授权学生申请的课程、3、 OK
+	// region 申请课程 -> 学生
 	@PostMapping(value = "/course_applied", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String course_applied(@RequestBody String body) {
@@ -1330,43 +1416,76 @@ public class ApiController extends BaceController {
 							enrollment.setCourseId(courseId);
 							enrollment.setStudentId(studentId);
 							enrollment.setTakeEffect(0);
+							enrollment.setTeacherId(course.getTeacherId());
 							if (enrollmentService.insertSelective(enrollment) == 1) {
 								json.put("RESULT", "S");
-								json.put("ERRMSG", "已提交申请，等待老师同意");
+								json.put("ERRMSG", "以提交申请");
 							} else {
-								String name = Thread.currentThread().getStackTrace()[1].getFileName();// 获取当前文件名；
-								int line = Thread.currentThread().getStackTrace()[1].getLineNumber() - 5;// 获取当前行号。
 								json.put("RESULT", "F");
-								json.put("ERRMSG", "申请失败\nc错误位置：" + name + "\n错误所在行：" + line);
+								json.put("ERRMSG", "提交申请失败");
 							}
 						} else {
 							switch (enrollment.getTakeEffect()) {
-							case 0:
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "该课程已经申请,等待老师同意");
-								break;
-							case 1:
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "该课程已经申请通过");
-								break;
-							case 2:
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "老师拒绝你对课程”" + course.getName() + "“的申请");
-								break;
-							/*
-							 * case -1: enrollment.setTakeEffect(0); if (condition) {
-							 *
-							 * } enrollmentService.updateByPrimaryKey(enrollment)
-							 */
-							default:
-								break;
+								case 0:
+									json.put("RESULT", "F");
+									json.put("ERRMSG", "已申请该课程,等待老师授权");
+									break;
+								case 1:
+									json.put("RESULT", "F");
+									json.put("ERRMSG", "已授权课程申请");
+									break;
+								case 2:
+									json.put("RESULT", "F");
+									json.put("ERRMSG", "拒绝你对课程”" + course.getName() + "“的申请");
+									break;
+								default:
+									break;
 							}
 						}
 					} else {
 						json.put("RESULT", "F");
 						json.put("ERRMSG", "没有该课程");
 					}
-				} else if (takeEffect == 1 || takeEffect == 0 || takeEffect == -1) {
+				} else {
+					json.put("RESULT", "F");
+					json.put("ERRMSG", "请求非法："+"非学生");
+				}
+			} else {
+				JSONObject j = pair.getValue();
+				j.put("S", ssArray.toString());
+				j.put("E", eeArray.toString());
+				return WebKeyUtils.encryptionReturnRequest(j.toString());
+			}
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+			json.put("S", ssArray.toString());
+			json.put("E", eeArray.toString());
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+	// endregion
+	// region 授权学生 -> 教师、管理员
+	@PostMapping(value = "/course_empower", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String course_empower(@RequestBody String body) {
+		JSONObject json = new JSONObject();
+		JSONArray ssArray = new JSONArray();
+		JSONArray eeArray = new JSONArray();
+		try {
+			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+					teacherService, adminService);
+			if (pair.getKey()) {
+				// region 验证成功
+				JSONObject bodyObj = pair.getValue();
+				JSONObject userBody = bodyObj.getJSONObject("userBody");
+				int takeEffect = -1;
+				try {
+					takeEffect = userBody.getInt("takeEffect");
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				if (takeEffect == 1 || takeEffect == 0 || takeEffect == -1 || takeEffect == 2) {
 					if (bodyObj.getString("user").equals("teacher")) {
 						// region teacher
 						Integer courseId = userBody.getInt("courseId");
@@ -1398,36 +1517,36 @@ public class ApiController extends BaceController {
 												eeArray.add(studentIds.getString(i));
 											}
 										} else {
-											switch (enrollment.getTakeEffect()) {
-											case 0:
-												enrollment.setTakeEffect(takeEffect);
-												if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
+											switch (takeEffect) {
+												case 0:
+													enrollment.setTakeEffect(takeEffect);
+													if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 
-													ssArray.add(studentIds.getString(i));
-												} else {
-													eeArray.add(studentIds.getString(i));
-												}
-												break;
-											case 1:
-												enrollment.setTakeEffect(takeEffect);
-												if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
+														ssArray.add(studentIds.getString(i));
+													} else {
+														eeArray.add(studentIds.getString(i));
+													}
+													break;
+												case 1:
+													enrollment.setTakeEffect(takeEffect);
+													if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 
-													ssArray.add(studentIds.getString(i));
-												} else {
-													eeArray.add(studentIds.getString(i));
-												}
-												break;
-											case 2:
-												enrollment.setTakeEffect(takeEffect);
-												if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
+														ssArray.add(studentIds.getString(i));
+													} else {
+														eeArray.add(studentIds.getString(i));
+													}
+													break;
+												case 2:
+													enrollment.setTakeEffect(takeEffect);
+													if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
 
-													ssArray.add(studentIds.getString(i));
-												} else {
-													eeArray.add(studentIds.getString(i));
-												}
-												break;
-											default:
-												break;
+														ssArray.add(studentIds.getString(i));
+													} else {
+														eeArray.add(studentIds.getString(i));
+													}
+													break;
+												default:
+													break;
 											}
 										}
 
@@ -1439,7 +1558,7 @@ public class ApiController extends BaceController {
 									json.put("S", ssArray.toString());
 									json.put("E", eeArray.toString());
 								} else {
-									json.put("RESULT", "E");
+									json.put("RESULT", "F");
 									json.put("ERRMSG", "失败");
 									json.put("S", ssArray.toString());
 									json.put("E", eeArray.toString());
@@ -1484,38 +1603,43 @@ public class ApiController extends BaceController {
 								} else {
 									JSONObject object = new JSONObject();
 									switch (enrollment.getTakeEffect()) {
-									case 0:
-										enrollment.setTakeEffect(takeEffect);
-										if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
-											object.put(studentIds.getString(i), "成功");
-											ssArray.add(object);
-										} else {
-											object.put(studentIds.getString(i), "报错");
-											eeArray.add(object);
-										}
-										break;
-									case 1:
-										enrollment.setTakeEffect(takeEffect);
-										if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
-											object.put(studentIds.getString(i), "成功");
-											ssArray.add(object);
-										} else {
-											object.put(studentIds.getString(i), "报错");
-											eeArray.add(object);
-										}
-										break;
-									case 2:
-										enrollment.setTakeEffect(takeEffect);
-										if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
-											object.put(studentIds.getString(i), "成功");
-											ssArray.add(object);
-										} else {
-											object.put(studentIds.getString(i), "报错");
-											eeArray.add(object);
-										}
-										break;
-									default:
-										break;
+										case -1:
+											enrollmentService.deleteByPrimaryKey(enrollment.getId());
+											json.put("RESULT", "S");
+											json.put("ERRMSG", "删除成功");
+											break;
+										case 0:
+											enrollment.setTakeEffect(takeEffect);
+											if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
+												object.put(studentIds.getString(i), "成功");
+												ssArray.add(object);
+											} else {
+												object.put(studentIds.getString(i), "报错");
+												eeArray.add(object);
+											}
+											break;
+										case 1:
+											enrollment.setTakeEffect(takeEffect);
+											if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
+												object.put(studentIds.getString(i), "成功");
+												ssArray.add(object);
+											} else {
+												object.put(studentIds.getString(i), "报错");
+												eeArray.add(object);
+											}
+											break;
+										case 2:
+											enrollment.setTakeEffect(takeEffect);
+											if (enrollmentService.updateByPrimaryKey(enrollment) == 1) {
+												object.put(studentIds.getString(i), "成功");
+												ssArray.add(object);
+											} else {
+												object.put(studentIds.getString(i), "报错");
+												eeArray.add(object);
+											}
+											break;
+										default:
+											break;
 									}
 								}
 							}
@@ -1563,8 +1687,7 @@ public class ApiController extends BaceController {
 		return WebKeyUtils.encryptionReturnRequest(json.toString());
 	}
 	// endregion
-
-	//region 获取所有学生 OK
+	//region 获取所有学生 -> 教师、管理员
 	@PostMapping(value = "/get_all_student", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String get_all_student(@RequestBody String body) {
@@ -1575,16 +1698,22 @@ public class ApiController extends BaceController {
 			if (pair.getKey()) {
 				//region 验证成功
 				JSONObject bodyObj = pair.getValue();
-				JSONObject userBody = bodyObj.getJSONObject("userBody");
+				String teacherId = bodyObj.getString("teacherId");
 				if (bodyObj.getString("user").equals("student")) {
 					json.put("RESULT", "F");
 					json.put("ERRMSG", "学生无权限获取");
 				} else if (bodyObj.getString("user").equals("teacher")) {
-
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.add(student.toString());
+						boolean isMyStudent = false;
+						List<Enrollment> enrollments=enrollmentService.getByTeacherIdAndStudentId(teacherId, student.getStudentId());
+						for (Enrollment e:enrollments) {
+							if ( e.getStudentId().equals(student.getStudentId())) {
+								isMyStudent = true;
+							}
+							jsonArray.add(student.toTeacherJson(isMyStudent,e.getTakeEffect()));
+						}
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1594,7 +1723,7 @@ public class ApiController extends BaceController {
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.add(student.toString());
+						jsonArray.add(student.toS());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1616,10 +1745,10 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	//region 获取所有学生 （如果是老师id、课程id下的学生， student模型外多 isMyStudent ）OK
-	@PostMapping(value = "/getAllStudentAndIsTeacherCoursesStudent", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	//region 获取教师的学生 -> 教师、管理员
+	@PostMapping(value = "/getStudentsByTeacher", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
-	public String getAllStudentAndIsTeacherCoursesStudent(@RequestBody String body) {
+	public String getStudentsByTeacher(@RequestBody String body) {
 		JSONObject json = new JSONObject();
 		try {
 			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
@@ -1628,28 +1757,40 @@ public class ApiController extends BaceController {
 				// region 验证成功
 				JSONObject bodyObj = JSONObject.fromObject(pair.getValue());
 				JSONObject userBody = bodyObj.getJSONObject("userBody");
+
+
+				int courseId = userBody.getInt("courseId");
 				if (bodyObj.getString("user").equals("student")) {
 					json.put("RESULT", "F");
 					json.put("ERRMSG", "学生无权限获取");
 				} else if (bodyObj.getString("user").equals("teacher")) {
-					int courseId = userBody.getInt("courseId");
+					String teacherId = bodyObj.getString("teacherId");
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						boolean isMyStudent = false;
-						if (enrollmentService.getByCourseIdAndStudentId(courseId, student.getStudentId()) != null) {
-							isMyStudent = true;
+						List<Enrollment> enrollments=enrollmentService.getByTeacherIdAndStudentId(teacherId, student.getStudentId());
+						for (Enrollment e:enrollments) {
+							if ( e.getStudentId().equals(student.getStudentId())) {
+								jsonArray.add(student.toTeacherJson(true,e.getTakeEffect()));
+							}
+
 						}
-						jsonArray.add(student.toTeacherJson(isMyStudent));
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
 					json.put("students", jsonArray.toString());
 				} else if (bodyObj.getString("user").equals("admin")) {
+					String teacherId = userBody.getString("teacherId");
 					List<Student> students = studentService.selectAll();
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.add(student.toString());
+						List<Enrollment> enrollments=enrollmentService.getByTeacherIdAndStudentId(teacherId, student.getStudentId());
+						for (Enrollment e:enrollments) {
+							if ( e.getStudentId().equals(student.getStudentId())) {
+								jsonArray.add(student.toS());
+							}
+
+						}
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1670,7 +1811,7 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 获取课程下的学生 OK
+	// region 获取教师课程下的学生 -> 教师、管理员
 	@PostMapping(value = "/get_student_by_courseId", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String get_student_by_courseId(@RequestBody String body) {
@@ -1686,6 +1827,28 @@ public class ApiController extends BaceController {
 					json.put("RESULT", "F");
 					json.put("ERRMSG", "学生无权限获取");
 				} else if (bodyObj.getString("user").equals("teacher")) {
+					String teacherId= bodyObj.getString("teacherId");
+					int courseId = userBody.getInt("courseId");
+					if (courseService.selectByPrimaryKey(courseId).getTeacherId().equals(teacherId)){
+						List<Student> students = studentService.selectStudentByCourseId(courseId);
+						List<Enrollment> enrollments = enrollmentService.getByCourseId(courseId);
+						JSONArray jsonArray = new JSONArray();
+						for (Enrollment e : enrollments) {
+							for (Student s : students) {
+								if (e.getStudentId().equals(s.getStudentId())) {
+									jsonArray.add(s.toTeacherJson(true,e.getTakeEffect()));
+								}
+							}
+						}
+						json.put("RESULT", "S");
+						json.put("ERRMSG", "获取成功");
+						json.put("students", jsonArray.toString());
+						json.put("size", jsonArray.size());
+					}else {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "该课程不是您的课程");
+					}
+				} else if (bodyObj.getString("user").equals("admin")) {
 					int courseId = userBody.getInt("courseId");
 					List<Student> students = studentService.selectStudentByCourseId(courseId);
 					List<Enrollment> enrollments = enrollmentService.getByCourseId(courseId);
@@ -1693,25 +1856,14 @@ public class ApiController extends BaceController {
 					for (Enrollment e : enrollments) {
 						for (Student s : students) {
 							if (e.getStudentId().equals(s.getStudentId())) {
-								jsonArray.add(s.toStudentJson(e.getTakeEffect()));
+								jsonArray.add(s.toS());
 							}
 						}
-
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
 					json.put("students", jsonArray.toString());
 					json.put("size", jsonArray.size());
-				} else if (bodyObj.getString("user").equals("admin")) {
-					int courseId = userBody.getInt("courseId");
-					List<Student> students = studentService.selectStudentByCourseId(courseId);
-					JSONArray jsonArray = new JSONArray();
-					for (Student s : students) {
-						jsonArray.add(s.toString());
-					}
-					json.put("RESULT", "S");
-					json.put("ERRMSG", "获取成功");
-					json.put("students", jsonArray.toString());
 				} else {
 					json.put("RESULT", "F");
 					json.put("ERRMSG", "请求非法：非教师、非管理员");
@@ -1729,7 +1881,7 @@ public class ApiController extends BaceController {
 
 	// endregion
 
-	// region 搜索学生（全库） OK
+	// region 搜索学生 -> 教师、管理员
 	@PostMapping(value = "/search_student_by_all", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String search_student(@RequestBody String body) {
@@ -1745,11 +1897,17 @@ public class ApiController extends BaceController {
 					json.put("RESULT", "F");
 					json.put("ERRMSG", "学生无权限获取");
 				} else if (bodyObj.getString("user").equals("teacher")) {
+					String teacherId=bodyObj.getString("teacherId");
 					String key = userBody.getString("searchKey");
 					List<Student> students = studentService.inquireStudentByKey(key);
 					JSONArray jsonArray = new JSONArray();
-					for (Student student : students) {
-						jsonArray.add(student.toString());
+					for (Student s : students) {
+						List<Enrollment> enrollments = enrollmentService.getByTeacherIdAndStudentId(teacherId,s.getStudentId());
+						for (Enrollment e : enrollments) {
+							if (e.getStudentId().equals(s.getStudentId())) {
+								jsonArray.add(s.toTeacherJson(true,e.getTakeEffect()));
+							}
+						}
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1760,7 +1918,7 @@ public class ApiController extends BaceController {
 					List<Student> students = studentService.inquireStudentByKey(key);
 					JSONArray jsonArray = new JSONArray();
 					for (Student student : students) {
-						jsonArray.add(student.toString());
+						jsonArray.add(student.toS());
 					}
 					json.put("RESULT", "S");
 					json.put("ERRMSG", "获取成功");
@@ -1782,7 +1940,7 @@ public class ApiController extends BaceController {
 	}
 	// endregion
 
-	// region 删除老师课程下的学生 off
+	// region 删除老师课程下的学生 -> 教师、管理员
 	@PostMapping(value = "/delete_students_fo_teacher_course", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String delete_students_fo_teacher_course(@RequestBody String body) {
@@ -1799,7 +1957,7 @@ public class ApiController extends BaceController {
 					json.put("ERRMSG", "学生无权限");
 				} else if (bodyObj.getString("user").equals("teacher")) {
 					// region teacher
-					String teachetId = userBody.getString("teachetId");
+					String teachetId = bodyObj.getString("teachetId");
 					int courseId = userBody.getInt("courseId");
 					String studentId = userBody.getString("studentId");
 					Course course = courseService.selectByPrimaryKey(courseId);
@@ -1885,7 +2043,8 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-	// region 授权老师 OK
+
+	// region 授权老师 -> 管理员
 	@PostMapping(value = "/authorization_teacher", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String authorization_teacher(@RequestBody String body) {
@@ -1948,7 +2107,8 @@ public class ApiController extends BaceController {
 	}
 
 	// endregion
-// region 添加学生到老师课程下 off
+
+	// region 添加学生到老师课程下 -> 教师
 	@PostMapping(value = "/add_students_fo_teacher_course", consumes = "application/json", produces = "text/html;charset=UTF-8")
 	@ResponseBody // 返回给请求着仅仅body的内容
 	public String add_students_fo_teacher_course(@RequestBody String body) {
@@ -1965,30 +2125,37 @@ public class ApiController extends BaceController {
 					json.put("ERRMSG", "学生无权限");
 				} else if (bodyObj.getString("user").equals("teacher")) {
 					// region teacher
-					String teachetId = userBody.getString("teachetId");
+					String teacherId = bodyObj.getString("teacherId");
 					int courseId = userBody.getInt("courseId");
 					String studentId = userBody.getString("studentId");
 					Course course = courseService.selectByPrimaryKey(courseId);
-					Teacher teacher = teacherService.selectTeacherById(teachetId);
+					Teacher teacher = teacherService.selectTeacherById(teacherId);
 					if (teacher != null) {
 						if (course != null) {
 							Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId, studentId);
 							if (enrollment != null) {
-								if (teachetId.equals(course.getTeacherId())) {
+								json.put("RESULT", "F");
+								json.put("ERRMSG", "学生" + studentId + "已添加");
+							} else {
+								if (teacherId.equals(course.getTeacherId())) {
+									Enrollment enrollment1=new Enrollment();
+									enrollment1.setTakeEffect(1);
+									enrollment1.setCourseId(courseId);
+									enrollment1.setStudentId(studentId);
+									enrollment1.setTeacherId(teacherId);
+									enrollment1.setId(enrollmentService.getIdByMax());
 									if (enrollmentService.insert(enrollment) == 1) {
 										json.put("RESULT", "S");
 										json.put("ERRMSG", "成功");
 									} else {
 										json.put("RESULT", "F");
-										json.put("ERRMSG", "课程中添加学生失败");
+										json.put("ERRMSG", "添加学生失败");
 									}
 								} else {
 									json.put("RESULT", "F");
-									json.put("ERRMSG", "该课程不归属于教师" + teachetId);
+									json.put("ERRMSG", "该课程不归属于教师" + teacherId);
 								}
-							} else {
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "学生" + studentId + "不存在该课程中");
+
 							}
 						} else {
 							json.put("RESULT", "F");
@@ -1996,48 +2163,12 @@ public class ApiController extends BaceController {
 						}
 					} else {
 						json.put("RESULT", "F");
-						json.put("ERRMSG", "不存在该老师id" + teachetId);
-					}
-					// endregion
-				} else if (bodyObj.getString("user").equals("admin")) {
-					// region admin
-					String teachetId = userBody.getString("teachetId");
-					int courseId = userBody.getInt("courseId");
-					String studentId = userBody.getString("studentId");
-					Course course = courseService.selectByPrimaryKey(courseId);
-					Teacher teacher = teacherService.selectTeacherById(teachetId);
-					if (teacher != null) {
-						if (course != null) {
-							Enrollment enrollment = enrollmentService.getByCourseIdAndStudentId(courseId, studentId);
-							if (enrollment != null) {
-								if (teachetId.equals(course.getTeacherId())) {
-									if (enrollmentService.insert(enrollment) == 1) {
-										json.put("RESULT", "S");
-										json.put("ERRMSG", "成功");
-									} else {
-										json.put("RESULT", "F");
-										json.put("ERRMSG", "课程中添加学生失败");
-									}
-								} else {
-									json.put("RESULT", "F");
-									json.put("ERRMSG", "该课程不归属于教师" + teachetId);
-								}
-							} else {
-								json.put("RESULT", "F");
-								json.put("ERRMSG", "学生" + studentId + "不存在该课程中");
-							}
-						} else {
-							json.put("RESULT", "F");
-							json.put("ERRMSG", "不存在该课程id" + courseId);
-						}
-					} else {
-						json.put("RESULT", "F");
-						json.put("ERRMSG", "不存在该老师id" + teachetId);
+						json.put("ERRMSG", "不存在该老师id" + teacherId);
 					}
 					// endregion
 				} else {
 					json.put("RESULT", "F");
-					json.put("ERRMSG", "请求非法：非教师、非管理员");
+					json.put("ERRMSG", "请求非法：非教师");
 				}
 				// endregion
 			} else {
@@ -2056,33 +2187,70 @@ public class ApiController extends BaceController {
 		@PostMapping(value = "/postImg", consumes = "application/json", produces = "text/html;charset=UTF-8")
 		@ResponseBody // 返回给请求着仅仅body的内容
 		public String postImg(@RequestBody String body ) {
-			JSONObject json = JSONObject.fromObject(body);
+			JSONObject json=new JSONObject();
 			try {
-						String teacherIphone = json.getString("teacherIphone");
-						//Teacher teacher = teacherService.selectTeacherById(teacherId);
-						//if (teacher != null) {
+				Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+						teacherService, adminService);
+				if (pair.getKey()) {
+					// region 验证成功
+					JSONObject bodyObj = pair.getValue();
+					JSONObject userBody = bodyObj.getJSONObject("userBody");
+					String phone="";
+					if (bodyObj.getString("user").equals("student")) {
+						String studentId=bodyObj.getString("studentId");
+						Student student=studentService.selectStudentById(studentId);
+						if (student!=null){
+							student.setImghead(student.getIphone()+".jpg");
+							studentService.updateByPrimaryKeySelective(student);
+							phone=student.getIphone();
+						}
+					}
+					if (bodyObj.getString("user").equals("teacher")) {
+						String teacherId=bodyObj.getString("teacherId");
+						Teacher teacher=teacherService.selectTeacherById(teacherId);
+						if (teacher!=null){
+							teacher.setImghead(teacher.getIphone()+".jpg");
+							teacherService.updateByPrimaryKeySelective(teacher);
+							phone=teacher.getIphone();
+						}
 
+					}
+					if (bodyObj.getString("user").equals("admin")) {
+						String adminId=bodyObj.getString("adminId");
+						Admin admin=adminService.selectByPrimaryKey(adminId);
+						if (admin!=null){
+							admin.setImghead(admin.getIphone()+".jpg");
+							adminService.updateByPrimaryKeySelective(admin);
+							phone=admin.getIphone();
+						}
+					}
+
+					if (!phone.equals("")){
 						String basePath = request.getSession().getServletContext().getRealPath("/");
 						System.out.println(basePath);
-						String strpath=basePath+"WEB-INF/resources/userImg/"+ teacherIphone+".jpg";
+						String strpath=basePath+"WEB-INF/resources/userImg/"+ phone+".jpg";
 						System.out.println(strpath);
 						//如果该文件存在，则删除。
 						try {
-							new File(servletContext.getRealPath("/userImg/"+teacherIphone) + ".jpg").delete();
+							new File(servletContext.getRealPath("/userImg/"+phone) + ".jpg").delete();
 							System.out.println("删除原图片");
 						} catch (Exception e) {
 							System.out.println("删除原图片失败");
 						}
 
-						UploadImage.convertStringtoImage(json.getString("image"), strpath);
-						json=new JSONObject();
-							json.put("RESULT", "S");
-							json.put("ERRMSG", "上传成功");
-
-
+						UploadImage.convertStringtoImage(userBody.getString("image"), strpath);
+						json.put("RESULT", "S");
+						json.put("ERRMSG", "上传成功");
+					}else {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "请求非法");
+					}
+				}else {
+					json.put("RESULT", "F");
+					json.put("ERRMSG", "请求格式非法");
+				}
 					// endregion
 			} catch (Exception e) {
-				json=new JSONObject();
 				json.put("RESULT", "F");
 				json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
 			}
@@ -2090,6 +2258,100 @@ public class ApiController extends BaceController {
 		}
 
 		// endregion
+
+	// region 修改密码 -> 学生、教师
+	@PostMapping(value = "/update_password", consumes = "application/json", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String update_password(@RequestBody String body) {
+		JSONObject json = new JSONObject();
+		try {
+			Pair<Boolean, JSONObject> pair = VerificationInfo.verificationUserRequest(body, studentService,
+					teacherService, adminService);
+			if (pair.getKey()) {
+				// region 验证成功
+				JSONObject bodyObj = pair.getValue();
+				JSONObject userBody = bodyObj.getJSONObject("userBody");
+				if (bodyObj.getString("user").equals("student")) {
+					// region student
+					String password = userBody.getString("password");
+					if (!password.equals("")){
+						Student student=studentService.selectStudentById(bodyObj.getString("studentId"));
+						student.setPassword(Encipher.EncodePasswd(password));
+						if (studentService.updateByPrimaryKeySelective(student)==1) {
+							json.put("RESULT", "S");
+							json.put("ERRMSG", "修改成功");
+						} else {
+							json.put("RESULT", "F");
+							json.put("ERRMSG", "请求非法：valid");
+						}
+					}else {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "请求非法：密码不能为空");
+					}
+					// endregion
+				}else if (bodyObj.getString("user").equals("teacher")) {
+					// region teacher
+					String password = userBody.getString("password");
+					Teacher teacher=teacherService.selectTeacherById(bodyObj.getString("teacherId"));
+					teacher.setPassword(Encipher.EncodePasswd(password));
+					if (teacherService.updateByPrimaryKeySelective(teacher)==1) {
+						json.put("RESULT", "S");
+						json.put("ERRMSG", "修改成功");
+					} else {
+						json.put("RESULT", "F");
+						json.put("ERRMSG", "修改失败");
+					}
+
+					// endregion
+				} else {
+					json.put("RESULT", "F");
+					json.put("ERRMSG", "请求非法");
+				}
+				// endregion
+			} else {
+				return WebKeyUtils.encryptionReturnRequest(pair.getValue().toString());
+			}
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+
+	// endregion
+
+	//region 手机号判断是否存在学生
+	@GetMapping(value = "/exist_student/{phone}", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String exist_student(@PathVariable String phone) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("RESULT","S");
+			json.put("exist",studentService.selectStudentByIphone(phone)!=null);
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+	//endregion
+
+	//region 手机号判断是否存在教师
+	@GetMapping(value = "/exist_teacher/{phone}", produces = "text/html;charset=UTF-8")
+	@ResponseBody // 返回给请求着仅仅body的内容
+	public String exist_teacher(@PathVariable String phone) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("RESULT","S");
+			json.put("exist",teacherService.selectTeacherByIphone(phone)!=null);
+		} catch (Exception e) {
+			json.put("RESULT", "F");
+			json.put("ERRMSG", "请求格式非法，\n" + e.getMessage() + "");
+		}
+		return WebKeyUtils.encryptionReturnRequest(json.toString());
+	}
+	//endregion
+
 		@RequestMapping( "/startSocketServer" )
 		@ResponseBody // 返回给请求着仅仅body的内容
 		public String startSocketServer() {

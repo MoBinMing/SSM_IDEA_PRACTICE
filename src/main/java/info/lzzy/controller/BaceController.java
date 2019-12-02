@@ -3,20 +3,10 @@ package info.lzzy.controller;
 import java.text.SimpleDateFormat;
 
 
-
+import info.lzzy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
-import info.lzzy.service.AdminService;
-import info.lzzy.service.CourseService;
-import info.lzzy.service.EnrollmentService;
-import info.lzzy.service.OptionService;
-import info.lzzy.service.PracticeResultService;
-import info.lzzy.service.PracticeService;
-import info.lzzy.service.QuestionService;
-import info.lzzy.service.StudentService;
-import info.lzzy.service.TeacherService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +42,8 @@ public class BaceController {
 	protected CourseService courseService;
 	@Autowired
 	protected AdminService adminService;
+	@Autowired
+	protected ApiService apiService;
 	public BaceController() {
 		super();
 		

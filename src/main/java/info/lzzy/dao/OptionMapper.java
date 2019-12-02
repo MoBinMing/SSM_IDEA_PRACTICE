@@ -14,4 +14,6 @@ public interface OptionMapper {
 	List<Option> getOptionByQuestionKey(Integer id);
 	
 	Option getOptionById(Integer id);
+
+    int getIdByMax();
 }

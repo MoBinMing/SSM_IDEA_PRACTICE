@@ -31,6 +31,11 @@ public class OptionServiceImpl implements OptionService {
 	}
 
 	@Override
+	public int getIdByMax() {
+		return optionMapper.getIdByMax();
+	}
+
+	@Override
 	public int deleteByPrimaryKey(Integer id) {
 		// TODO Auto-generated method stub
 		return optionMapper.deleteByPrimaryKey(id);

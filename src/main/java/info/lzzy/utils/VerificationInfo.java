@@ -22,7 +22,6 @@ import info.lzzy.service.EnrollmentService;
 import info.lzzy.service.StudentService;
 import info.lzzy.service.TeacherService;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 public class VerificationInfo {
@@ -77,7 +76,7 @@ public class VerificationInfo {
 					}
 					object.put("key", WebKeyUtils.encryption(userLogin.toString()));
 					object.put("userRole", userLogin.getUser());
-					object.put("student", student.toString());
+					object.put("student", student.toS());
 					object.put("teachers", jsonArray.toString());
 					object.put("RESULT", "S");
 					object.put("ERRMSG", "登录成功");
@@ -159,7 +158,7 @@ public class VerificationInfo {
 		Pair<Boolean, JSONObject> rPair = null;
 		try {
 			// 获取请求内容
-			String imghead="165451";
+			String imghead;
 			Pair<String, Long> contentPair = WebKeyUtils.convertBodyReqest(body);
 			Long userRequest = contentPair.getValue();
 			Gson gson = new Gson();
@@ -172,7 +171,7 @@ public class VerificationInfo {
 				JSONObject userBody = JSONObject.fromObject(contentPair.getKey());
 				if (userBody.getString("role").equals("student")) {
 					// region 注册学生
-					Student student = gson.fromJson(userBody.toString(), Student.class);
+					Student student = gson.fromJson(userBody.getString("student"), Student.class);
 					imghead=student.getImghead();
 					student.setImghead(student.getIphone()+".png");
 
@@ -228,30 +227,38 @@ public class VerificationInfo {
 								jsonObject.put("RESULT", "F");
 								jsonObject.put("ERRMSG", "Gender==null");
 								rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
-							} else {
-								student.setPassword(Encipher.EncodePasswd(student.getPassword()));
-								if (studentService.insert(student) == 1) {
-									String basePath = request.getSession().getServletContext().getRealPath("/");
-									System.out.println(basePath);
-									String strpath=basePath+"WEB-INF\\resources\\userImg\\"+ student.getIphone()+".jpg";
-									System.out.println(strpath);
-									//如果该文件存在，则删除。
-									try {
-										new File(servletContext.getRealPath("/userImg/"+student.getIphone()) + ".jpg").delete();
-										System.out.println("删除原图片");
-									} catch (Exception e) {
-										System.out.println("删除原图片失败");
+							} else if (studentService.selectStudentByIphone(student.getIphone())!=null) {
+								jsonObject.put("RESULT", "F");
+								jsonObject.put("ERRMSG", "phone："+student.getIphone()+"已注册");
+								rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
+							}else {
+									boolean postImg=postImage(servletContext, request,student.getIphone(),student.getImghead());
+									student.setImghead(student.getIphone()+".jpg");
+									//endregion
+									student.setPassword(Encipher.EncodePasswd(student.getPassword()));
+									if (studentService.insert(student) == 1) {
+//									String basePath = request.getSession().getServletContext().getRealPath("/");
+//									System.out.println(basePath);
+//									String strpath=basePath+"WEB-INF\\resources\\userImg\\"+ student.getIphone()+".jpg";
+//									System.out.println(strpath);
+//									//如果该文件存在，则删除。
+//									try {
+//										new File(servletContext.getRealPath("/userImg/"+student.getIphone()) + ".jpg").delete();
+//										System.out.println("删除原图片");
+//									} catch (Exception e) {
+//										System.out.println("删除原图片失败");
+//									}
+//
+//									UploadImage.convertStringtoImage(imghead, basePath+"WEB-INF\\resources\\userImg\\"+ student.getIphone()+".jpg");
+										jsonObject.put("RESULT", "S");
+										jsonObject.put("POST_IMG", postImg);
+										jsonObject.put("ERRMSG", "注册成功");
+										rPair = new Pair<Boolean, JSONObject>(true, jsonObject);
+									} else {
+										jsonObject.put("RESULT", "F");
+										jsonObject.put("ERRMSG", "尝试注册失败");
+										rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
 									}
-									
-									UploadImage.convertStringtoImage(imghead, basePath+"WEB-INF\\resources\\userImg\\"+ student.getIphone()+".jpg");
-									jsonObject.put("RESULT", "S");
-									jsonObject.put("ERRMSG", "注册成功");
-									rPair = new Pair<Boolean, JSONObject>(true, jsonObject);
-								} else {
-									jsonObject.put("RESULT", "F");
-									jsonObject.put("ERRMSG", "尝试注册失败");
-									rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
-								}
 							}
 						} else {
 							jsonObject.put("RESULT", "F");
@@ -264,7 +271,7 @@ public class VerificationInfo {
 					// region 注册教师
 					Teacher teacher = gson.fromJson(userBody.toString(), Teacher.class);
 					imghead=teacher.getImghead();
-					teacher.setImghead(teacher.getIphone()+".png");
+					teacher.setImghead(teacher.getIphone()+".jpg");
 					teacher.setValid(0);
 					if (ApiUtil.allFieldIsNULL(teacher)) {
 						jsonObject.put("RESULT", "F");
@@ -321,7 +328,11 @@ public class VerificationInfo {
 								jsonObject.put("RESULT", "F");
 								jsonObject.put("ERRMSG", "Gender==null");
 								rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
-							} else {
+							} else if (teacherService.selectTeacherByIphone(teacher.getIphone())!=null){
+								jsonObject.put("RESULT", "F");
+								jsonObject.put("ERRMSG", "phone"+teacher.getIphone()+"已注册");
+								rPair = new Pair<Boolean, JSONObject>(false, jsonObject);
+							}else {
 								teacher.setPassword(Encipher.EncodePasswd(teacher.getPassword()));
 								if (teacherService.insert(teacher) == 1) {
 									String basePath = request.getSession().getServletContext().getRealPath("/");
@@ -358,6 +369,29 @@ public class VerificationInfo {
 		}
 
 		return rPair;
+	}
+
+	private static boolean postImage(ServletContext servletContext, HttpServletRequest request,String iphioe,String image) {
+		//region 上传图片
+		try {
+			String basePath = request.getSession().getServletContext().getRealPath("/");
+			System.out.println(basePath);
+			String strpath=basePath+"WEB-INF/resources/userImg/"+ iphioe+".jpg";
+			System.out.println(strpath);
+			//如果该文件存在，则删除。
+			try {
+				new File(servletContext.getRealPath("/userImg/"+iphioe) + ".jpg").delete();
+				System.out.println("删除原图片");
+			} catch (Exception e) {
+				System.out.println("删除原图片失败");
+			}
+
+			UploadImage.convertStringtoImage(image, strpath);
+			return true;
+			// endregion
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/**
