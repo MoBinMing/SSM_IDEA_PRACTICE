@@ -7,7 +7,7 @@ public class ApiConstants {
     /**
      * 登录验证超时时间
      */
-    public static final long EFFICACY_OF_TIME=1000*5L;
+    public static final long EFFICACY_OF_TIME=1000*10L;
     /**
      * 请求会话key超时时间
      */

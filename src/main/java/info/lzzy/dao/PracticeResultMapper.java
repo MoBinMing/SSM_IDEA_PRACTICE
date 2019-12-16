@@ -10,7 +10,7 @@ public interface PracticeResultMapper {
     
 	List<PracticeResult> selectBySIdAndPIdAndQId(@Param("practiceId") Integer practiceId,
                                                  @Param("studentId") String studentId, @Param("questionId") Integer questionId);
-	int getIdByMax();
+	Integer getIdByMax();
     int insert(PracticeResult practiceResult);
 /*int deleteByPrimaryKey(Integer id);
     int insertSelective(PracticeResults record);

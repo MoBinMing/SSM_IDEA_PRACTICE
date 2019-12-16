@@ -10,5 +10,5 @@ public interface PracticeResultService
 	List<PracticeResult> selectBySIdAndPIdAndQId(Integer practiceId,
                                                  String studentId, Integer questionId);
 	int insert(PracticeResult practiceResult);
-	int getIdByMax();
+	Integer getIdByMax();
 }

@@ -164,7 +164,8 @@ public class ApiController extends BaceController {
 
 				for (Object object : jsonArray) {
 					PracticeResult practiceResult = gson.fromJson(object.toString(), PracticeResult.class);
-					practiceResult.setId(practiceResultService.getIdByMax()+1);
+					Integer maxId=practiceResultService.getIdByMax();
+					practiceResult.setId(maxId==null?1:maxId+1);
 					practiceResult.setStudentId(bodyObj.getString("studentId"));
 					List<PracticeResult> practiceResults1=practiceResultService.selectBySIdAndPIdAndQId(practiceResult.getPracticeId(),
 							practiceResult.getStudentId(), practiceResult.getQuestionId());
@@ -202,13 +203,13 @@ public class ApiController extends BaceController {
 				if (practiceResults.size() == jsonArray.size()) {
 					int okSize = 0;
 					for (PracticeResult practiceResult : practiceResults) {
-						int maxId = 0;
+						Integer maxId = 0;
 						try {
 							maxId = practiceResultService.getIdByMax();
 						} catch (BindingException e) {
 
 						}
-						practiceResult.setId(maxId + 1);
+						practiceResult.setId(maxId==null?1:maxId+1);
 						if (practiceResultService.insert(practiceResult) == 1) {
 							okSize++;
 						}

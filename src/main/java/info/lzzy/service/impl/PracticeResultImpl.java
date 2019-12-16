@@ -24,7 +24,7 @@ public class PracticeResultImpl implements PracticeResultService{
 	}
 
 	@Override
-	public int getIdByMax() {
+	public Integer getIdByMax() {
 		// TODO Auto-generated method stub
 		return practiceResultMapper.getIdByMax();
 	}
