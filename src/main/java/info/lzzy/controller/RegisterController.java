@@ -29,6 +29,7 @@ public class RegisterController extends BaceController{
 				Student student2=studentService.selectStudentById(user.getStudentId());
 				if (student==null&&student2==null) {
 					user.setPassword(Encipher.EncodePasswd(user.getPassword()));
+					user.setImghead(user.getIphone()+".jpg");
 					if (studentService.insert(user)==0) {
 						//注册失败
 						return "register/registrationFailed";
@@ -44,6 +45,7 @@ public class RegisterController extends BaceController{
 		Teacher teacher2=teacherService.selectTeacherById(user.getTeacherId());
 				if (teacher==null&&teacher2==null) {
 					user.setPassword(Encipher.EncodePasswd(user.getPassword()));
+					user.setImghead(user.getIphone()+".jpg");
 					if (teacherService.insert(user)==0) {
 						//注册失败
 						return "register/registrationFailed";

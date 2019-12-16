@@ -6,15 +6,13 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="完成教师Question部分显示">
+    <list default="true" id="3ed2de65-36ae-42bb-a61a-85ec5b375942" name="Default" comment="修复练习查询最大id bug">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Practice_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Practice_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/connstants/ApiConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/connstants/ApiConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/ApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/PracticeResultMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/dao/PracticeResultMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/PracticeResultService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/PracticeResultService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/PracticeResultImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/service/impl/PracticeResultImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/jdbc.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/jdbc.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/info/lzzy/controller/RegisterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/ThisMailboxIsRegistered.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/ThisMailboxIsRegistered.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/registeredSuccessfully.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/registeredSuccessfully.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/registrationFailed.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/register/registrationFailed.jsp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -462,7 +460,8 @@
       <workItem from="1576223542302" duration="1432000" />
       <workItem from="1576296610588" duration="39000" />
       <workItem from="1576306303159" duration="852000" />
-      <workItem from="1576485263638" duration="1321000" />
+      <workItem from="1576485263638" duration="2237000" />
+      <workItem from="1576490056257" duration="831000" />
     </task>
     <task id="LOCAL-00001" summary="idea ssm 示例">
       <created>1572527977577</created>
@@ -527,7 +526,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574009584185</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="修复练习查询最大id bug">
+      <created>1576487786982</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1576487786982</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -570,7 +576,8 @@
     <MESSAGE value="最后改版前" />
     <MESSAGE value="完成教师管理" />
     <MESSAGE value="完成教师Question部分显示" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成教师Question部分显示" />
+    <MESSAGE value="修复练习查询最大id bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复练习查询最大id bug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
